@@ -1,0 +1,10 @@
+fecha#dni#importe#motivo
+21/04/21#11222333A#80.0€#recibo de la luz#E
+01/04/21#11222555A#60.0€#recibo del gas#E
+15/03/21#99888777S#50.0€#regalo para los papás#I
+23/03/21#22333444T#150.0€#el corte ingles#E
+5/03/21#44555666M#48.0€#peluqueria#E
+1/03/21#11222333Z#--€#loteria#I
+1/02/21#11222333Z#--€#XXXXXXXXXX#I
+12/02/21#66555444M#32€#carrefour#E
+5/02/21#66555444M#248.0€#albañil#E
