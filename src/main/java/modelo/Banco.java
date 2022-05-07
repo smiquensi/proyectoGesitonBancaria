@@ -2,6 +2,7 @@ package modelo;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -87,7 +88,8 @@ public class Banco {
   
   //DEVUELVE TODAS LAS   CUENTAS
   public Set<CuentaBancaria> listaCuentasBancarias(){
-    return (Set<CuentaBancaria>) cuentasBancarias.values();
+      
+    return (new HashSet<>(cuentasBancarias.values()));
   }
 
 }
