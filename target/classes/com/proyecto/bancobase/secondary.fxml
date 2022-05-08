@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefWidth="600.0" spacing="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.SecondaryController">
+<VBox alignment="CENTER" prefWidth="600.0" spacing="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.SecondaryController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -147,10 +147,13 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <TableView fx:id="tablaMovimientos" prefHeight="132.0" prefWidth="581.0">
+                                          <TableView fx:id="tablaMovimientos" prefHeight="132.0" prefWidth="581.0" tableMenuButtonVisible="true">
                                             <columns>
-                                              <TableColumn prefWidth="75.0" text="C1" />
-                                              <TableColumn prefWidth="75.0" text="C2" />
+                                              <TableColumn fx:id="columnaFecha" prefWidth="90.0" text="Fecha" />
+                                                <TableColumn fx:id="columnaDni" prefWidth="102.0" text="DNI" />
+                                                <TableColumn fx:id="columnaImporte" prefWidth="101.0" text="Importe" />
+                                                <TableColumn fx:id="columnaMotivo" prefWidth="177.0" text="Motivo" />
+                                                <TableColumn fx:id="columnaTipo" prefWidth="76.0" text="Tipo" />
                                             </columns>
                                           </TableView>
                                           <GridPane GridPane.rowIndex="1">

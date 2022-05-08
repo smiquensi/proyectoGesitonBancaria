@@ -39,9 +39,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
 import modelo.CuentaBancaria;
 import modelo.Persona;
 
@@ -122,7 +125,16 @@ public class SecondaryController implements Initializable {
     private CuentaBancaria cuentaMostrada;
     private double dineroDonado;
     private static double dineroDonadoTotal;
-    
+    @FXML
+    private TableColumn<?, ?> columnaFecha;
+    @FXML
+    private TableColumn<?, ?> columnaDni;
+    @FXML
+    private TableColumn<?, ?> columnaImporte;
+    @FXML
+    private TableColumn<?, ?> columnaMotivo;
+    @FXML
+    private TableColumn<?, ?> columnaTipo;
 
     /**
      * Initializes the controller class.
@@ -212,10 +224,10 @@ public class SecondaryController implements Initializable {
         dineroDonado = cantidadIngreso.getValue() * 0.01;
         return dineroDonado;
     }
-    
+
     // REVISAR ESTE METODO POR EL LIMITE DE 75 DEL ENUNCIADO
-    private void donacionTotal(double donativo){
-        dineroDonadoTotal += donativo; 
+    private void donacionTotal(double donativo) {
+        dineroDonadoTotal += donativo;
         totalDonacion = new ProgressIndicator(); // NO FUNCIONA
         totalDonacion.setProgress(dineroDonadoTotal); // NO FUNCIONA
     }
@@ -226,7 +238,7 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         return tipoAvisoExtracto;
     }
-    
+
     @FXML
     private void importarMovimientos(ActionEvent event) {
     }
@@ -234,10 +246,12 @@ public class SecondaryController implements Initializable {
     @FXML
     private void exportarMovimiento(ActionEvent event) {
     }
-    
+
     // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS. !!INVESTIGAR¡¡
-    private void cargarMovimientos(){
-        
+    private void cargarMovimientos() {
+      //  System.out.println(cuentaMostrada.listarMovimientos('E'));
+        tablaMovimientos.column
+               
     }
 
     public void cargarSpinnerIngreso() {
