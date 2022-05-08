@@ -87,6 +87,8 @@ public class PrimaryController implements Initializable {
 
     public static CuentaBancaria getCuentaElegida() {
         return cuentaElegida;
+        
+        
     }
 
     @FXML
@@ -95,4 +97,5 @@ public class PrimaryController implements Initializable {
         App.setRoot("secondary");
     }
 
+    
 }

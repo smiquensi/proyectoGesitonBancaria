@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -126,9 +128,9 @@ public class SecondaryController implements Initializable {
     private double dineroDonado;
     private static double dineroDonadoTotal;
     @FXML
-    private TableColumn<?, ?> columnaFecha;
+    private TableColumn<String, String> columnaFecha;
     @FXML
-    private TableColumn<?, ?> columnaDni;
+    private TableColumn<String, String> columnaDni;
     @FXML
     private TableColumn<?, ?> columnaImporte;
     @FXML
@@ -249,9 +251,22 @@ public class SecondaryController implements Initializable {
 
     // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS. !!INVESTIGAR¡¡
     private void cargarMovimientos() {
-      //  System.out.println(cuentaMostrada.listarMovimientos('E'));
-        tablaMovimientos.column
-               
+
+        /*  String[] lineas = cuentaMostrada.listarMovimientos('T').split("\\r?\\n");
+       
+        for (int i = 0; i < lineas.length; i++) {
+            
+             String[] splited = lineas[i].split("\\s+");
+             for (int j = 0; j < splited.length; j++) {
+                
+            }
+
+        }*/
+columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(cuentaMostrada.listarMovimientos('T'))));
+
+
+
+tablaMovimientos.getItems().addAll("Column one's data", "Column two's data");
     }
 
     public void cargarSpinnerIngreso() {
