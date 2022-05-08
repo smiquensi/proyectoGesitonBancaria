@@ -152,4 +152,11 @@ public class CuentaBancaria {
         return listado;
     }
 
+    //Añado metodo toString
+    @Override
+    public String toString() {
+        return "NºCuenta ->" + numCuenta + ", titulares ->" + titulares + ", saldo ->" + saldo + '}';
+    }
+    
+
 }

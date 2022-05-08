@@ -92,4 +92,10 @@ public class Banco {
     return (new HashSet<>(cuentasBancarias.values()));
   }
 
+  //AÑADO METODO TOSTRING
+    @Override
+    public String toString() {
+        return "Banco{" + "cuentasBancarias=" + cuentasBancarias + '}';
+    }
+
 }
