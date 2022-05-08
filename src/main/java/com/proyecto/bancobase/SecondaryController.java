@@ -22,9 +22,14 @@ import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
@@ -35,8 +40,10 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -44,9 +51,12 @@ import javafx.scene.control.ToggleGroup;
  * @author Enrique
  */
 public class SecondaryController implements Initializable {
+ 
+ 
+    
+    
+     
 
-    @FXML
-    private ListView<?> datosCuenta;
     @FXML
     private Button volver;
     @FXML
@@ -107,6 +117,8 @@ public class SecondaryController implements Initializable {
     private Button importarMovimientos;
     @FXML
     private Button exportarMovimiento;
+    @FXML
+    private TextArea infoGeneral;
 
     /**
      * Initializes the controller class.
@@ -114,6 +126,9 @@ public class SecondaryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+            
+
     }
 
     @FXML
@@ -149,4 +164,9 @@ public class SecondaryController implements Initializable {
     private void exportarMovimiento(ActionEvent event) {
     }
 
+    
+    public void displayInformacionGeneral (String informacion){
+        infoGeneral.setText(informacion);
+    }
+    
 }

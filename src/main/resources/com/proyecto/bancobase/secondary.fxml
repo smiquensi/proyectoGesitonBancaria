@@ -5,7 +5,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
@@ -13,6 +12,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -39,11 +39,6 @@
                   <RowConstraints maxHeight="292.2000122070312" minHeight="10.0" prefHeight="292.2000122070312" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ListView fx:id="datosCuenta" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets left="10.0" right="10.0" />
-                     </padding>
-                  </ListView>
                   <Button fx:id="volver" mnemonicParsing="false" onAction="#volverInicio" text="Inicio" />
                   <TabPane prefHeight="575.0" prefWidth="560.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="2">
                     <tabs>
@@ -181,6 +176,7 @@
                         </Tab>
                     </tabs>
                   </TabPane>
+                  <TextArea fx:id="infoGeneral" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
