@@ -5,6 +5,7 @@
 package auxiliar;
 
 import com.proyecto.bancobase.PrimaryController;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -42,8 +43,9 @@ public class TextControl {
         }
         return false;
     }
-        // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
-        public void splitString() {
+    // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
+
+    public void splitString() {
         String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
 
         for (int i = 0; i < lineas.length; i++) {
@@ -55,8 +57,23 @@ public class TextControl {
 
         }
     }
-        public void cortaPalabras(){
-            
-      
+
+    public void splitAlmohadilla(String texto) {
+        
+        
+        StringTokenizer st = new StringTokenizer(texto, "#");
+
+        while (st.hasMoreTokens()) {
+            String fecha = st.nextToken();
+            String dni = st.nextToken();
+            String importe = st.nextToken();
+            String motivo = st.nextToken();
+            String tipoOperacion = st.nextToken();
+//            System.out.println(fecha + dni + importe + motivo + tipoOperacion);
+
+//         AQUI SE DEBERIA LLAMAR A OTRO METODO QUE CARGARA ESTOS STRING COMO 
+//         ATRIBUTOS DE UN OBJETO MOVIMIENTO.
+        }
+
     }
 }

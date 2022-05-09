@@ -22,7 +22,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,6 +55,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import modelo.CuentaBancaria;
+import modelo.Movimiento;
 import modelo.Persona;
 
 /**
@@ -126,15 +132,15 @@ public class SecondaryController implements Initializable {
     @FXML
     private Button exportarMovimiento;
     @FXML
-    private TableColumn<String, String> columnaFecha;
+    private TableColumn<Movimiento, String> columnaFecha;
     @FXML
-    private TableColumn<String, String> columnaDni;
+    private TableColumn<Movimiento, String> columnaDni;
     @FXML
-    private TableColumn<?, ?> columnaImporte;
+    private TableColumn<Movimiento, String> columnaImporte;
     @FXML
-    private TableColumn<?, ?> columnaMotivo;
+    private TableColumn<Movimiento, String> columnaMotivo;
     @FXML
-    private TableColumn<?, ?> columnaTipo;
+    private TableColumn<Movimiento, String> columnaTipo;
 
     private CuentaBancaria cuentaMostrada;
     private double dineroDonado;
@@ -156,7 +162,8 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
-        cargarMovimientos();
+        listarMovimientos();
+//        cargarMovimientos();
 
     }
 
@@ -242,14 +249,14 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void hacerIngreso(ActionEvent event) {
-
+        listarMovimientos();
         // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
 
         if (comprobarRadioButonDonacion()) {
             if (comprobarDatosIngreso()) {
                 donacionTotal(calcularDonacion());
-                
+
                 tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
                 conceptoDonacion();
 
@@ -363,7 +370,7 @@ public class SecondaryController implements Initializable {
     private void conceptoDonacion() {
         if (donacionIglesia.isSelected()) {
             cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a la iglesia");
-            
+
         }
         if (donacionSocial.isSelected()) {
             cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a organizacion social");
@@ -425,15 +432,31 @@ public class SecondaryController implements Initializable {
 
     // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS
     // A LA ESPERA DE Q RAQUEL DEJE CARGAR OBJETOS DE LA CLASE MOVIMIENTO
-    private void cargarMovimientos() {
+    private void listarMovimientos() { // Aqui filtraremos por char
+        char tipoMov = 'T';
+        Deque listaMovimientos = new ArrayDeque(cuentaMostrada.listarObjectoMovimientos(tipoMov));
+        for (Object movimiento : listaMovimientos) {
+            cargarMovimientos((Movimiento)movimiento);            
+        }    
+    }
 
-        columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(cuentaMostrada.listarMovimientos('T'))));
-
-        tablaMovimientos.getItems().addAll("Column one's data");
+    private void cargarMovimientos(Movimiento mov) {
+        LocalDateTime fecha = mov.getFecha();
+        String dni = mov.getDni();
+        double cantidad = mov.getCantidad();
+        String motivo = mov.getMotivo();
+        char tipo = mov.getTipo();
+        columnaFecha.setCellValueFactory(c -> new SimpleStringProperty(new String(fecha.toString())));
+        columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(dni)));
+        columnaImporte.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(cantidad))));
+        columnaMotivo.setCellValueFactory(c -> new SimpleStringProperty(new String(motivo)));
+        columnaTipo.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(tipo))));
+        
+        tablaMovimientos.getItems().addAll("1");
     }
 
     private void lanzarAviso(char caracter) {
-        aviso.cambioAviso(caracter);
+        aviso.cambioAviso(caracter); 
         aviso.showAndWait();
     }
 
@@ -453,17 +476,13 @@ public class SecondaryController implements Initializable {
         nombreInput.setText(null);
 
     }
-    
 
-    public void santi(){
-        
+    public void santi() {
+
     }
 
     private void Quique() {
-    
 
     }
-    
-
 
 }

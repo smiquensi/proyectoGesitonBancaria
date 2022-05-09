@@ -26,8 +26,6 @@ public class Movimiento {
         fecha = LocalDateTime.now();
     }
 
-
-
     public LocalDateTime getFecha() {
         return fecha;
     }
@@ -36,7 +34,6 @@ public class Movimiento {
         return tipo;
     }
 
-    
     public String getDni() {
         return dni;
     }
@@ -45,10 +42,16 @@ public class Movimiento {
         return cantidad;
     }
 
+    // ESTE GETTER LO HE CREADO YO.
+    public String getMotivo() {
+        return motivo;
+    }
+   
+
     @Override
     public String toString() {
-        char signo=' ';
-        if(tipo=='E'){
+        char signo = ' ';
+        if (tipo == 'E') {
             signo = '-';
         }
         return fecha + "  " + signo + cantidad + "€  " + motivo;

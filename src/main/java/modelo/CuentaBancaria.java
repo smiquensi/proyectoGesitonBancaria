@@ -3,9 +3,11 @@ package modelo;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 
 import java.util.Set;
 
@@ -68,7 +70,6 @@ public class CuentaBancaria {
             movimientos.add(mov);
             return (cantidad >= LIMITEHACIENDA) ? 1 : 0; //1 avisar a hacienda    0 ingreso ok
         }
-        
 
         return -1; //-1 cantidad negativa
     }
@@ -153,11 +154,30 @@ public class CuentaBancaria {
         return listado;
     }
 
+    // ESTE METODO LO HE CREADO POR QUE PIDE EN EL ENUNCIADO UNA TABLEVIEW DE OBJETOS MOVIMIENTO
+    public Deque listarObjectoMovimientos(char tipoMovBuscado) {
+//        String listado = "LISTADO MOVIMIENTOS DE " + getNumCuenta() + "\n";
+        Deque<Movimiento> listaMovimientos = new ArrayDeque<Movimiento>();
+        if (tipoMovBuscado == 'T') {
+            for (Movimiento movimiento : movimientos) {
+                listaMovimientos.add(movimiento);
+            }
+        } else {
+            for (Movimiento movimiento : movimientos) {
+                if (movimiento.getTipo() == tipoMovBuscado) {
+                    listaMovimientos.add(movimiento);
+
+                }
+            }
+        }
+
+        return listaMovimientos;
+    }
+
     //Añado metodo toString
     @Override
     public String toString() {
         return "NºCuenta ->" + numCuenta + ", titulares ->" + titulares + ", saldo ->" + saldo + '}';
     }
-    
 
 }
