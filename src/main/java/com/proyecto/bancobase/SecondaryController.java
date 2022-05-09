@@ -4,7 +4,7 @@
  */
 package com.proyecto.bancobase;
 
-import auxiliar.Avisos;
+import auxiliar.Aviso;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -140,7 +140,7 @@ public class SecondaryController implements Initializable {
     @FXML
     private TableColumn<?, ?> columnaTipo;
 
-    Avisos aviso = new Avisos('W');
+    Aviso aviso = new Aviso('W');
 
     /**
      * Initializes the controller class.
@@ -169,6 +169,7 @@ public class SecondaryController implements Initializable {
     @FXML
     private void volverInicio(ActionEvent event) throws IOException {
         App.setRoot("primary");
+
     }
 
     // METODO PARA SABER SI HAY MENOS DE 5 TITULARES
@@ -177,8 +178,10 @@ public class SecondaryController implements Initializable {
         if (cuentaMostrada.getTitulares().size() < 5) {
             masTitulares = true;
         } else {
-            aviso.cambioAviso('I');
-            aviso.showAndWait();
+            nombreInput.setDisable(true); // desactivar la entrada de datos cuando hay mas de 5 titulares
+            nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
+            lanzarAviso('I');
+
             masTitulares = false;
 
         }
@@ -191,40 +194,74 @@ public class SecondaryController implements Initializable {
         if (anyadirTitulares()) {
             if (nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) {
 
-                aviso.cambioAviso('W');
-                aviso.showAndWait();
+                lanzarAviso('V');
 
             } else {
-                cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText());
+                if (cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText())) {
+                    // Devuelve true, el titular se ha añadido correctamente. 
+                    // mostarlo por aviso o por label
+                } else {
+                    // El titular esta duplicado, lanzar mensaje de aviso
+                }
             }
         }
         // RELLAMAMOS AL METODO CARGAR CUENTA PARA ACTUALICE LA INFO DE LA VENTANA
         // ESTATICA (LA VENTANA DE ARRIBA)
         cargarCuenta();
+        limpiarCampos();
     }
 
     @FXML
     private void desautorizarTitular(ActionEvent event) {
-        if (nifInput.getText().isEmpty()) {
-            aviso.cambioAviso('W');
-            aviso.showAndWait();
+        if (cuentaMostrada.getTitulares().size() < 1) {
+            if (nifInput.getText().isEmpty()) {
+                lanzarAviso('V');
 
+            } else {
+                cuentaMostrada.eliminaTitular(nifInput.getText());
+                cargarCuenta();
+            }
         } else {
-            cuentaMostrada.eliminaTitular(nifInput.getText());
-            cargarCuenta();
+            lanzarAviso('W');
         }
     }
 
     @FXML
-    private int hacerIngreso(ActionEvent event) {
+    private void hacerIngreso(ActionEvent event) {
         // EL METODO INGRESAR DE CUENTA BANCARIA DEVUELVO UN ENTERO QUE NECEISTAMOS
         // PARA SABER QUE TIPO DE ALERTA MOSTRAR
-        
-       
-        int tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
-        cargarCuenta();
-        return tipoAvisoIngreso;
+        int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
+        if (comprobarDatosIngreso()) {
+            tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
+            cargarCuenta();
+        }
+        switch (tipoAvisoIngreso) {
+            case -1: // CANTIDAD NEGATIVA 
+                lanzarAviso('D');
 
+                break;
+            case 0: // INGRESO OK
+                lanzarAviso('C');
+
+                break;
+            case 1: // AVISAR HACIENDA
+                lanzarAviso('H');
+                break;
+
+        }
+
+//        return tipoAvisoIngreso;
+    }
+
+    private boolean comprobarDatosIngreso() {
+        boolean comprobarDatosIngreso = true;
+
+        if (nifIngreso.getText().isEmpty() || conceptoIngreso.getText().isEmpty()) {
+            comprobarDatosIngreso = false;
+            lanzarAviso('V');
+
+        }
+        return comprobarDatosIngreso;
     }
 
     @FXML
@@ -260,15 +297,46 @@ public class SecondaryController implements Initializable {
         totalDonacion.setProgress(dineroDonadoTotal); // NO FUNCIONA
     }
 
+    private boolean comprobarDatosExtracto() {
+        boolean comprobarDatosExtracto = true;
+
+        if (nifExtracto.getText().isEmpty() || conceptoExtracto.getText().isEmpty()) {
+            comprobarDatosExtracto = false;
+            lanzarAviso('V');
+
+        }
+        return comprobarDatosExtracto;
+    }
+
     @FXML
-    private char hacerExtracto(ActionEvent event) {
-        char tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
+    private void hacerExtracto(ActionEvent event) {
+        if (comprobarDatosExtracto()) {
+            char tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
+            switch (tipoAvisoExtracto) {
+                case 'X': // no hay dinero suficiente - FALTA el aviso
+                    lanzarAviso('W');
+                    break;
+                case 'R': // numeros rojos - FALTA el aviso
+                    lanzarAviso('W');
+                    break;
+                case 'V': // extraccion ok
+                    lanzarAviso('C');
+                    break;
+                case '0': // importe igual a 0 - CREO QUE ESTE NO FUNCIONA BIEN 
+                    lanzarAviso('D');
+                    break;
+
+            }
+        } else {
+//            lanzarAviso('W');
+        }
         cargarCuenta();
-        return tipoAvisoExtracto;
+//        return tipoAvisoExtracto;
     }
 
     @FXML
     private void importarMovimientos(ActionEvent event) {
+
     }
 
     @FXML
@@ -281,7 +349,12 @@ public class SecondaryController implements Initializable {
 
         columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(cuentaMostrada.listarMovimientos('T'))));
 
-        tablaMovimientos.getItems().addAll("Column one's data", "Column two's data");
+        tablaMovimientos.getItems().addAll("Column one's data");
+    }
+
+    private void lanzarAviso(char caracter) {
+        aviso.cambioAviso(caracter);
+        aviso.showAndWait();
     }
 
     // METODO PROVISONAL PARA PARTIR STRING 
@@ -306,6 +379,12 @@ public class SecondaryController implements Initializable {
     public void cargarSpinnerExtracto() {
         SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadExtracto.setValueFactory(dinero);
+    }
+
+    private void limpiarCampos() {
+        nifInput.setText(null);
+        nombreInput.setText(null);
+
     }
 
 }

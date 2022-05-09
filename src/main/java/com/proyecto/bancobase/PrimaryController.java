@@ -4,7 +4,7 @@
  */
 package com.proyecto.bancobase;
 
-import auxiliar.Avisos;
+import auxiliar.Aviso;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.URL;
@@ -54,7 +54,7 @@ public class PrimaryController implements Initializable {
     @FXML
     private Button selecionarCuenta;
 
-    Avisos avisoCuentaNula = new Avisos('W');
+    Aviso avisoCuentaNula = new Aviso('W');
 
     /**
      * Initializes the controller class.
@@ -101,6 +101,7 @@ public class PrimaryController implements Initializable {
         }
 
     }
+
 
     public static CuentaBancaria getCuentaElegida() {
         return cuentaElegida;
