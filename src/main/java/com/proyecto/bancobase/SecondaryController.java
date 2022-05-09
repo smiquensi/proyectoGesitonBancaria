@@ -129,6 +129,7 @@ public class SecondaryController implements Initializable {
     private CuentaBancaria cuentaMostrada;
     private double dineroDonado;
     private static double dineroDonadoTotal;
+    private final int MAXIMODONADO = 75;
     @FXML
     private TableColumn<String, String> columnaFecha;
     @FXML
@@ -151,6 +152,7 @@ public class SecondaryController implements Initializable {
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
         cargarMovimientos();
+       
 
     }
 
@@ -158,6 +160,7 @@ public class SecondaryController implements Initializable {
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setItems(resultadoCuenta);
+         //totalDonacion.setProgress(0.25F);
     }
 
     // METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
@@ -179,7 +182,7 @@ public class SecondaryController implements Initializable {
             masTitulares = true;
         } else {
             nombreInput.setDisable(true); // desactivar la entrada de datos cuando hay mas de 5 titulares
-            nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
+            // nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
             lanzarAviso('I');
 
             masTitulares = false;
@@ -191,8 +194,10 @@ public class SecondaryController implements Initializable {
     // METODO PARA BUSCAR SI EL NIF YA ESTA DE TITULAR
     @FXML
     private void autorizarTitular(ActionEvent event) {
+        System.out.println(cuentaMostrada.getTitulares().size());
         if (anyadirTitulares()) {
-            if (nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) {
+            if (nifInput.getText() == null || nombreInput.getText() == null
+                    || nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) { // ya funcionan por separado con ==null, pero hay que poner .isEmpty porque sino cargaria el primero vacio, al no iniciarse como null sino como empty
 
                 lanzarAviso('V');
 
@@ -213,23 +218,29 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void desautorizarTitular(ActionEvent event) {
-        if (cuentaMostrada.getTitulares().size() < 1) {
+        System.out.println(cuentaMostrada.getTitulares().size());
+        if (cuentaMostrada.getTitulares().size() > 1) {
             if (nifInput.getText().isEmpty()) {
                 lanzarAviso('V');
 
             } else {
                 cuentaMostrada.eliminaTitular(nifInput.getText());
-                cargarCuenta();
+                if (cuentaMostrada.getTitulares().size() == 4) {
+                    nombreInput.setDisable(false);
+                }
             }
         } else {
             lanzarAviso('W');
         }
+        limpiarCampos();
+        cargarCuenta();
     }
 
     @FXML
     private void hacerIngreso(ActionEvent event) {
         // EL METODO INGRESAR DE CUENTA BANCARIA DEVUELVO UN ENTERO QUE NECEISTAMOS
         // PARA SABER QUE TIPO DE ALERTA MOSTRAR
+
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
         if (comprobarDatosIngreso()) {
             tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
@@ -274,6 +285,7 @@ public class SecondaryController implements Initializable {
             String donacionString = String.valueOf(donativo);
             cantidadDonada.setText(donacionString + " €");
             donacionTotal(donativo);
+
         } else {
             donativo = 0;
             donacionIglesia.setDisable(true);
@@ -293,8 +305,13 @@ public class SecondaryController implements Initializable {
     // REVISAR ESTE METODO POR EL LIMITE DE 75 DEL ENUNCIADO
     private void donacionTotal(double donativo) {
         dineroDonadoTotal += donativo;
-        totalDonacion = new ProgressIndicator(); // NO FUNCIONA
-        totalDonacion.setProgress(dineroDonadoTotal); // NO FUNCIONA
+     
+        double reglaDeTresDonacion = ((100 *dineroDonadoTotal)/MAXIMODONADO)/100;
+        System.out.println(reglaDeTresDonacion);
+        totalDonacion.setProgress(reglaDeTresDonacion); 
+        totalDonacionText.setText(totalDonacionText.getText() + " " + dineroDonadoTotal + "€");
+        
+        cargarCuenta();
     }
 
     private boolean comprobarDatosExtracto() {
