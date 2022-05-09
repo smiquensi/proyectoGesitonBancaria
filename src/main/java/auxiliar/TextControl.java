@@ -10,11 +10,11 @@ import com.proyecto.bancobase.PrimaryController;
  *
  * @author santimiquel
  */
-public class ControlInput {
+public class TextControl {
 
     private String txt;
 
-    public ControlInput(String txt) {
+    public TextControl(String txt) {
         this.txt = txt;
     }
 
@@ -43,7 +43,7 @@ public class ControlInput {
         return false;
     }
         // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
-        private void splitString() {
+        public void splitString() {
         String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
 
         for (int i = 0; i < lineas.length; i++) {
@@ -54,5 +54,9 @@ public class ControlInput {
             }
 
         }
+    }
+        public void cortaPalabras(){
+            
+      
     }
 }
