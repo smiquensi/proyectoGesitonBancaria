@@ -455,14 +455,7 @@ public class SecondaryController implements Initializable {
     }
     
 
-    public void santi(){
-        
-    }
-
-    private void Quique() {
-    
-
-    }
+   
     
 
 
