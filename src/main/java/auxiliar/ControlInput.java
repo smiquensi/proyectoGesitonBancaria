@@ -4,6 +4,8 @@
  */
 package auxiliar;
 
+import com.proyecto.bancobase.PrimaryController;
+
 /**
  *
  * @author santimiquel
@@ -39,5 +41,18 @@ public class ControlInput {
             esCorrecto = true;
         }
         return false;
+    }
+        // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
+        private void splitString() {
+        String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
+
+        for (int i = 0; i < lineas.length; i++) {
+
+            String[] splited = lineas[i].split("\\s+");
+            for (int j = 0; j < splited.length; j++) {
+
+            }
+
+        }
     }
 }

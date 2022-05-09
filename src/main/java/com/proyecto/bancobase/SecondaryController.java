@@ -125,11 +125,6 @@ public class SecondaryController implements Initializable {
     private Button importarMovimientos;
     @FXML
     private Button exportarMovimiento;
-
-    private CuentaBancaria cuentaMostrada;
-    private double dineroDonado;
-    private static double dineroDonadoTotal;
-    private final int MAXIMODONADO = 75;
     @FXML
     private TableColumn<String, String> columnaFecha;
     @FXML
@@ -141,18 +136,27 @@ public class SecondaryController implements Initializable {
     @FXML
     private TableColumn<?, ?> columnaTipo;
 
+    private CuentaBancaria cuentaMostrada;
+    private double dineroDonado;
+    private static double dineroDonadoTotal;
+    private final int MAXIMODONADO = 75;
+
     Aviso aviso = new Aviso('W');
+
+    private double cantidadIngresada;
+    private boolean isDonacionSelected;
+    private boolean isCheckOutSelected;
 
     /**
      * Initializes the controller class.
      */
     @Override
+
     public void initialize(URL url, ResourceBundle rb) {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
         cargarMovimientos();
-       
 
     }
 
@@ -160,7 +164,7 @@ public class SecondaryController implements Initializable {
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setItems(resultadoCuenta);
-         //totalDonacion.setProgress(0.25F);
+        //totalDonacion.setProgress(0.25F);
     }
 
     // METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
@@ -238,30 +242,55 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void hacerIngreso(ActionEvent event) {
-        // EL METODO INGRESAR DE CUENTA BANCARIA DEVUELVO UN ENTERO QUE NECEISTAMOS
-        // PARA SABER QUE TIPO DE ALERTA MOSTRAR
 
+        // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
-        if (comprobarDatosIngreso()) {
-            tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
-            cargarCuenta();
+
+        if (comprobarRadioButonDonacion()) {
+            if (comprobarDatosIngreso()) {
+                donacionTotal(calcularDonacion());
+                
+                tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
+                conceptoDonacion();
+
+                cargarCuenta();
+            }
+            switch (tipoAvisoIngreso) {
+                case -1: // CANTIDAD NEGATIVA 
+                    lanzarAviso('D');
+
+                    break;
+                case 0: // INGRESO OK
+                    lanzarAviso('C');
+                    totalDonacionText.setText("Total donado: " + dineroDonadoTotal + "€");
+                    cargarProgresoDonacion();
+
+                    break;
+                case 1: // AVISAR HACIENDA
+                    lanzarAviso('H');
+                    totalDonacionText.setText("Total donado: " + dineroDonadoTotal + "€");
+                    cargarProgresoDonacion();
+
+                    break;
+            }
         }
-        switch (tipoAvisoIngreso) {
-            case -1: // CANTIDAD NEGATIVA 
-                lanzarAviso('D');
 
-                break;
-            case 0: // INGRESO OK
-                lanzarAviso('C');
+    }
 
-                break;
-            case 1: // AVISAR HACIENDA
-                lanzarAviso('H');
-                break;
+    private boolean comprobarRadioButonDonacion() {
+        boolean isSelected = true;
+        if (donacion.isSelected()) {
+            if (donacionIglesia.isSelected() || donacionSocial.isSelected()) {
+                cantidadIngresada = cantidadIngreso.getValue() - dineroDonado;
+                isSelected = true;
+            } else {
+                lanzarAviso('O');
+                isSelected = false;
 
+            }
         }
 
-//        return tipoAvisoIngreso;
+        return isSelected;
     }
 
     private boolean comprobarDatosIngreso() {
@@ -276,24 +305,42 @@ public class SecondaryController implements Initializable {
     }
 
     @FXML
-    private double hacerDonacion(ActionEvent event) {
+    private boolean cargarDonacion(ActionEvent event) { // REVISARLO PARA SIMPLIFICAR
+        isCheckOutSelected = false;
         double donativo = 0;
+        String donacionString = "";
         if (donacion.isSelected()) {
+
+            isCheckOutSelected = true;
             donativo = calcularDonacion();
             donacionIglesia.setDisable(false);
             donacionSocial.setDisable(false);
-            String donacionString = String.valueOf(donativo);
-            cantidadDonada.setText(donacionString + " €");
-            donacionTotal(donativo);
 
+            donacionString = String.valueOf(donativo);
+            cantidadDonada.setText(donacionString + " €");
+            cargarProgresoDonacion();
+            totalDonacion.setProgress(cargarProgresoDonacion());
+
+            totalDonacionText.setText(dineroDonadoTotal + "€");
+            isDonacionSelected = true;
         } else {
-            donativo = 0;
+
             donacionIglesia.setDisable(true);
             donacionSocial.setDisable(true);
             cantidadDonada.setText(null);
-        }
+            isDonacionSelected = false;
 
-        return donativo;
+            if (dineroDonadoTotal > 0) {
+                cantidadDonada.setText(donacionString + " €");
+                cargarProgresoDonacion();
+                totalDonacion.setProgress(cargarProgresoDonacion());
+            } else {
+                totalDonacion.setProgress(0);
+                totalDonacionText.setText(null);
+            }
+
+        }
+        return isCheckOutSelected;
 
     }
 
@@ -304,14 +351,30 @@ public class SecondaryController implements Initializable {
 
     // REVISAR ESTE METODO POR EL LIMITE DE 75 DEL ENUNCIADO
     private void donacionTotal(double donativo) {
-        dineroDonadoTotal += donativo;
-     
-        double reglaDeTresDonacion = ((100 *dineroDonadoTotal)/MAXIMODONADO)/100;
-        System.out.println(reglaDeTresDonacion);
-        totalDonacion.setProgress(reglaDeTresDonacion); 
-        totalDonacionText.setText(totalDonacionText.getText() + " " + dineroDonadoTotal + "€");
-        
-        cargarCuenta();
+        cantidadIngresada = cantidadIngreso.getValue();
+
+        if (isDonacionSelected) {
+            dineroDonadoTotal += donativo;
+            cantidadIngresada -= donativo;
+        }
+
+    }
+
+    private void conceptoDonacion() {
+        if (donacionIglesia.isSelected()) {
+            cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a la iglesia");
+            
+        }
+        if (donacionSocial.isSelected()) {
+            cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a organizacion social");
+        }
+    }
+
+    // DEPRECATED
+    private double cargarProgresoDonacion() {
+        double reglaDeTresDonacion = ((100 * dineroDonadoTotal) / MAXIMODONADO) / 100;
+        totalDonacion.setProgress(reglaDeTresDonacion);
+        return reglaDeTresDonacion;
     }
 
     private boolean comprobarDatosExtracto() {
@@ -374,20 +437,7 @@ public class SecondaryController implements Initializable {
         aviso.showAndWait();
     }
 
-    // METODO PROVISONAL PARA PARTIR STRING 
-    private void splitString() {
-        String[] lineas = cuentaMostrada.listarMovimientos('T').split("\\r?\\n");
-
-        for (int i = 0; i < lineas.length; i++) {
-
-            String[] splited = lineas[i].split("\\s+");
-            for (int j = 0; j < splited.length; j++) {
-
-            }
-
-        }
-    }
-
+    // METODO PROVISONAL PARA PARTIR STRING -- METERLOS EN CONTROL
     public void cargarSpinnerIngreso() {
         SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadIngreso.setValueFactory(dinero);

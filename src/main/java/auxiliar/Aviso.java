@@ -44,7 +44,14 @@ public class Aviso {
     private final String headerTextHacienda = "Esta operación será reportada a hacienda";
     private final String contentTextHacienda = "Por motivos legales debemos informar de las operaciones superiores a 3000 €";
 
-    
+    private final String tituloWarningDonacion = "Aviso de motivo de donación";
+    private final String headerTextWarningDonacion = "No se ha introducido una entidad social para esta donación.";
+    private final String contentTextWarningDonacion = "Por favor, elija iglesia u organización social .";
+
+    private final String tituloNumberFormatException = "Aviso de formato incorrecto";
+    private final String headerTextNumberFormatException = "No puede introducir texto en la selección de importe";
+    private final String contentTextNumberFormatException = "Por favor, elija una cantidad cantidad correcta.";
+
     // FALTAN AVISO DE TITULAR AÑADIDO, DE TITULAR DUPLICADO, NO HAY DINERO SUFICIENTE
     // NUMEROS ROJOS
     public Aviso(String title, String headerText, String contentText) {
@@ -109,7 +116,21 @@ public class Aviso {
                 aviso.setContentText(contentTextHacienda);
 
                 break;
-               
+            case 'O': // WARNING -> AVISO NO HA ELEGIDO LA ENTIDAD DE DONACION
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloWarningDonacion);
+                aviso.setHeaderText(headerTextWarningDonacion);
+                aviso.setContentText(contentTextWarningDonacion);
+
+                break;
+            case 'N': // WARNING -> AVISO DE EXCEPCION NumberFormatException
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloNumberFormatException);
+                aviso.setHeaderText(headerTextNumberFormatException);
+                aviso.setContentText(contentTextNumberFormatException);
+
+                break;
+
             default:
 
                 throw new AssertionError();
