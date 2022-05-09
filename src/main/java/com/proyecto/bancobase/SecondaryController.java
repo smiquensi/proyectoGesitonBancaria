@@ -139,9 +139,9 @@ public class SecondaryController implements Initializable {
     private TableColumn<?, ?> columnaMotivo;
     @FXML
     private TableColumn<?, ?> columnaTipo;
-    
-    Avisos aviso = new Avisos("no mames guye", "alñsaf", "sdjhfsajkd");
-    
+
+    Avisos aviso = new Avisos('W');
+
     /**
      * Initializes the controller class.
      */
@@ -151,7 +151,7 @@ public class SecondaryController implements Initializable {
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
         cargarMovimientos();
-        aviso.cambioAviso('W');
+
     }
 
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
@@ -173,9 +173,14 @@ public class SecondaryController implements Initializable {
 
     // METODO PARA SABER SI HAY MENOS DE 5 TITULARES
     public boolean anyadirTitulares() {
-        boolean masTitulares = false;
+        boolean masTitulares;
         if (cuentaMostrada.getTitulares().size() < 5) {
             masTitulares = true;
+        } else {
+            aviso.cambioAviso('I');
+            aviso.showAndWait();
+            masTitulares = false;
+
         }
         return masTitulares;
     }
@@ -184,7 +189,14 @@ public class SecondaryController implements Initializable {
     @FXML
     private void autorizarTitular(ActionEvent event) {
         if (anyadirTitulares()) {
-            cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText());
+            if (nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) {
+
+                aviso.cambioAviso('W');
+                aviso.showAndWait();
+
+            } else {
+                cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText());
+            }
         }
         // RELLAMAMOS AL METODO CARGAR CUENTA PARA ACTUALICE LA INFO DE LA VENTANA
         // ESTATICA (LA VENTANA DE ARRIBA)
@@ -193,14 +205,22 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void desautorizarTitular(ActionEvent event) {
-        cuentaMostrada.eliminaTitular(nifInput.getText());
-        cargarCuenta();
+        if (nifInput.getText().isEmpty()) {
+            aviso.cambioAviso('W');
+            aviso.showAndWait();
+
+        } else {
+            cuentaMostrada.eliminaTitular(nifInput.getText());
+            cargarCuenta();
+        }
     }
 
     @FXML
     private int hacerIngreso(ActionEvent event) {
         // EL METODO INGRESAR DE CUENTA BANCARIA DEVUELVO UN ENTERO QUE NECEISTAMOS
         // PARA SABER QUE TIPO DE ALERTA MOSTRAR
+        
+       
         int tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
         cargarCuenta();
         return tipoAvisoIngreso;
@@ -287,6 +307,5 @@ public class SecondaryController implements Initializable {
         SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadExtracto.setValueFactory(dinero);
     }
-    
 
 }

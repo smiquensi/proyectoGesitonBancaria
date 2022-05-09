@@ -68,6 +68,7 @@ public class CuentaBancaria {
             movimientos.add(mov);
             return (cantidad >= LIMITEHACIENDA) ? 1 : 0; //1 avisar a hacienda    0 ingreso ok
         }
+        
 
         return -1; //-1 cantidad negativa
     }

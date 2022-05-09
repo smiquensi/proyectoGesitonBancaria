@@ -90,27 +90,16 @@ public class PrimaryController implements Initializable {
 
     }
 
-    public boolean cuentaIsNull() {
-        boolean cuentaIsNull;
-        if (cuentaSeleccionada().equals(null)) {
-            avisoCuentaNula.showAndWait();
-            cuentaIsNull = true;
-        } else {
-            cuentaIsNull = false;
-        }
-        System.out.println(cuentaSeleccionada());
-        System.out.println(cuentaIsNull);
-        return cuentaIsNull;
-    }
-
     @FXML
     private void cargarCuentaBancaria(ActionEvent event) throws IOException {
-        cuentaSeleccionada();
-        App.setRoot("secondary");
 
-//        App.setRoot("secondary");
-//        System.out.println(cuentaSeleccionada() + "AJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJ");
-//        cuentaIsNull(cuentaSeleccionada());
+        try {
+            cuentaSeleccionada();
+            App.setRoot("secondary");
+        } catch (RuntimeException e) {
+           avisoCuentaNula.showAndWait();
+        }
+
     }
 
     public static CuentaBancaria getCuentaElegida() {
