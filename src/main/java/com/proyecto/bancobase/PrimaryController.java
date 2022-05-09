@@ -4,6 +4,7 @@
  */
 package com.proyecto.bancobase;
 
+import auxiliar.Avisos;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +54,8 @@ public class PrimaryController implements Initializable {
     @FXML
     private Button selecionarCuenta;
 
+    Avisos avisoCuentaNula = new Avisos('W');
+
     /**
      * Initializes the controller class.
      */
@@ -77,25 +80,41 @@ public class PrimaryController implements Initializable {
 
     }
 
-    public void cuentaSeleccionada() {
+    public Integer cuentaSeleccionada() {
 
-        int numeroEleccion = listadoCuentasBancarias.getSelectionModel().getSelectedIndex();
+        Integer numeroEleccion = listadoCuentasBancarias.getSelectionModel().getSelectedIndex();
         CuentaBancaria cuentaSeleccionada = listadoClientes.get(numeroEleccion);
         cuentaElegida = cuentaSeleccionada;
 
+        return numeroEleccion;
+
     }
 
-    public static CuentaBancaria getCuentaElegida() {
-        return cuentaElegida;
-        
-        
+    public boolean cuentaIsNull() {
+        boolean cuentaIsNull;
+        if (cuentaSeleccionada().equals(null)) {
+            avisoCuentaNula.showAndWait();
+            cuentaIsNull = true;
+        } else {
+            cuentaIsNull = false;
+        }
+        System.out.println(cuentaSeleccionada());
+        System.out.println(cuentaIsNull);
+        return cuentaIsNull;
     }
 
     @FXML
     private void cargarCuentaBancaria(ActionEvent event) throws IOException {
         cuentaSeleccionada();
         App.setRoot("secondary");
+
+//        App.setRoot("secondary");
+//        System.out.println(cuentaSeleccionada() + "AJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJAJJAJAJAJAJAJAJAJAJAJAJAJ");
+//        cuentaIsNull(cuentaSeleccionada());
     }
 
-    
+    public static CuentaBancaria getCuentaElegida() {
+        return cuentaElegida;
+
+    }
 }

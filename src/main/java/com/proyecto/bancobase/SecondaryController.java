@@ -4,6 +4,7 @@
  */
 package com.proyecto.bancobase;
 
+import auxiliar.Avisos;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
@@ -137,7 +139,9 @@ public class SecondaryController implements Initializable {
     private TableColumn<?, ?> columnaMotivo;
     @FXML
     private TableColumn<?, ?> columnaTipo;
-
+    
+    Avisos aviso = new Avisos("no mames guye", "alñsaf", "sdjhfsajkd");
+    
     /**
      * Initializes the controller class.
      */
@@ -147,6 +151,7 @@ public class SecondaryController implements Initializable {
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
         cargarMovimientos();
+        aviso.cambioAviso('W');
     }
 
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
@@ -199,6 +204,7 @@ public class SecondaryController implements Initializable {
         int tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngreso.getValue(), conceptoIngreso.getText());
         cargarCuenta();
         return tipoAvisoIngreso;
+
     }
 
     @FXML
@@ -249,24 +255,27 @@ public class SecondaryController implements Initializable {
     private void exportarMovimiento(ActionEvent event) {
     }
 
-    // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS. !!INVESTIGAR¡¡
+    // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS
+    // A LA ESPERA DE Q RAQUEL DEJE CARGAR OBJETOS DE LA CLASE MOVIMIENTO
     private void cargarMovimientos() {
 
-        /*  String[] lineas = cuentaMostrada.listarMovimientos('T').split("\\r?\\n");
-       
+        columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(cuentaMostrada.listarMovimientos('T'))));
+
+        tablaMovimientos.getItems().addAll("Column one's data", "Column two's data");
+    }
+
+    // METODO PROVISONAL PARA PARTIR STRING 
+    private void splitString() {
+        String[] lineas = cuentaMostrada.listarMovimientos('T').split("\\r?\\n");
+
         for (int i = 0; i < lineas.length; i++) {
-            
-             String[] splited = lineas[i].split("\\s+");
-             for (int j = 0; j < splited.length; j++) {
-                
+
+            String[] splited = lineas[i].split("\\s+");
+            for (int j = 0; j < splited.length; j++) {
+
             }
 
-        }*/
-columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(cuentaMostrada.listarMovimientos('T'))));
-
-
-
-tablaMovimientos.getItems().addAll("Column one's data", "Column two's data");
+        }
     }
 
     public void cargarSpinnerIngreso() {
@@ -278,5 +287,6 @@ tablaMovimientos.getItems().addAll("Column one's data", "Column two's data");
         SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadExtracto.setValueFactory(dinero);
     }
+    
 
 }
