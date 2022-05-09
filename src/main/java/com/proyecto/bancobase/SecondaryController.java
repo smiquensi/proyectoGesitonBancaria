@@ -476,13 +476,4 @@ public class SecondaryController implements Initializable {
         nombreInput.setText(null);
 
     }
-
-    public void santi() {
-
-    }
-
-    private void Quique() {
-
-    }
-
 }
