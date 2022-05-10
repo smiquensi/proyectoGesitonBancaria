@@ -28,6 +28,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -54,6 +55,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import modelo.CuentaBancaria;
 import modelo.Movimiento;
@@ -154,6 +156,14 @@ public class SecondaryController implements Initializable {
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
     ObservableList<Movimiento> movList = FXCollections.observableArrayList();
+    @FXML
+    private ListView<Persona> listarTitulares;
+    List<Persona> arrayTitulares = new ArrayList();
+    ObservableList<Persona> listadoTitulares;
+    int controlTitulares = -1;
+    private static Persona titularElegido;
+    @FXML
+    private Label titularSeleccionadoLabel;
 
     /**
      * Initializes the controller class.
@@ -173,10 +183,30 @@ public class SecondaryController implements Initializable {
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setItems(resultadoCuenta);
-        //totalDonacion.setProgress(0.25F);
+        cargarTitulares();
     }
 
-    // METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
+    public void cargarTitulares() {
+
+        if (controlTitulares != cuentaMostrada.getTitulares().size()) {
+
+            for (Persona temp : obtenerCuenta().getTitulares()) {
+
+                if (!arrayTitulares.contains(temp)) {
+
+                    arrayTitulares.add(temp);
+
+                    listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+
+                    listarTitulares.setItems(listadoTitulares);
+                }
+            }
+
+            controlTitulares = cuentaMostrada.getTitulares().size();
+        }
+    }
+
+// METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
     public CuentaBancaria obtenerCuenta() {
         cuentaMostrada = PrimaryController.getCuentaElegida();
         return cuentaMostrada;
@@ -185,6 +215,18 @@ public class SecondaryController implements Initializable {
     @FXML
     private void volverInicio(ActionEvent event) throws IOException {
         App.setRoot("primary");
+
+    }
+
+    @FXML
+    private void titularSeleccionado(MouseEvent event) {
+        
+        int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
+        
+        String cicloSeleccionado;
+        cicloSeleccionado = arrayTitulares.get(posSeleccionado).getNombre()  + " " + arrayTitulares.get(posSeleccionado).getNif();
+        
+        titularSeleccionadoLabel.setText(cicloSeleccionado);
 
     }
 
@@ -207,7 +249,6 @@ public class SecondaryController implements Initializable {
     // METODO PARA BUSCAR SI EL NIF YA ESTA DE TITULAR
     @FXML
     private void autorizarTitular(ActionEvent event) {
-        System.out.println(cuentaMostrada.getTitulares().size());
         if (anyadirTitulares()) {
             if (nifInput.getText() == null || nombreInput.getText() == null
                     || nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) { // ya funcionan por separado con ==null, pero hay que poner .isEmpty porque sino cargaria el primero vacio, al no iniciarse como null sino como empty
@@ -226,6 +267,7 @@ public class SecondaryController implements Initializable {
         // RELLAMAMOS AL METODO CARGAR CUENTA PARA ACTUALICE LA INFO DE LA VENTANA
         // ESTATICA (LA VENTANA DE ARRIBA)
         cargarCuenta();
+
         limpiarCampos();
     }
 
@@ -246,6 +288,7 @@ public class SecondaryController implements Initializable {
             lanzarAviso('W');
         }
         limpiarCampos();
+
         cargarCuenta();
     }
 
@@ -446,7 +489,7 @@ public class SecondaryController implements Initializable {
     }
 
     private void cargarMovimientos(Movimiento mov) { // ESTO NO VA BIEN
-        
+
         LocalDateTime fecha = mov.getFecha();
         String dni = mov.getDni();
         double cantidad = mov.getCantidad();
@@ -454,14 +497,13 @@ public class SecondaryController implements Initializable {
         char tipo = mov.getTipo();
         Movimiento newMov = new Movimiento(fecha, dni, cantidad, motivo, tipo);
         movList.add(newMov);
-        
-        
+
         columnaFecha.setCellValueFactory(c -> new SimpleStringProperty(new String(fecha.toString())));
         columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(dni)));
         columnaImporte.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(cantidad))));
         columnaMotivo.setCellValueFactory(c -> new SimpleStringProperty(new String(motivo)));
         columnaTipo.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(tipo))));
-        
+
         tablaMovimientos.getItems().add("1");
     }
 
@@ -486,4 +528,5 @@ public class SecondaryController implements Initializable {
         nombreInput.setText(null);
 
     }
+
 }
