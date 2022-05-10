@@ -4,6 +4,7 @@
  */
 package com.proyecto.bancobase;
 
+import auxiliar.Archivo;
 import auxiliar.Aviso;
 import java.io.IOException;
 import java.net.URL;
@@ -152,6 +153,7 @@ public class SecondaryController implements Initializable {
     private double cantidadIngresada;
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
+    ObservableList<Movimiento> movList = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
@@ -423,7 +425,10 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientos(ActionEvent event) {
-
+        Archivo archivo = new Archivo();
+        archivo.ImportarArchivo();
+//        String fileString = fichero.getName();
+//        String fileString = fileString.substring(fileString.indexOf(".");
     }
 
     @FXML
@@ -436,27 +441,32 @@ public class SecondaryController implements Initializable {
         char tipoMov = 'T';
         Deque listaMovimientos = new ArrayDeque(cuentaMostrada.listarObjectoMovimientos(tipoMov));
         for (Object movimiento : listaMovimientos) {
-            cargarMovimientos((Movimiento)movimiento);            
-        }    
+            cargarMovimientos((Movimiento) movimiento);
+        }
     }
 
-    private void cargarMovimientos(Movimiento mov) {
+    private void cargarMovimientos(Movimiento mov) { // ESTO NO VA BIEN
+        
         LocalDateTime fecha = mov.getFecha();
         String dni = mov.getDni();
         double cantidad = mov.getCantidad();
         String motivo = mov.getMotivo();
         char tipo = mov.getTipo();
+        Movimiento newMov = new Movimiento(fecha, dni, cantidad, motivo, tipo);
+        movList.add(newMov);
+        
+        
         columnaFecha.setCellValueFactory(c -> new SimpleStringProperty(new String(fecha.toString())));
         columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(dni)));
         columnaImporte.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(cantidad))));
         columnaMotivo.setCellValueFactory(c -> new SimpleStringProperty(new String(motivo)));
         columnaTipo.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(tipo))));
         
-        tablaMovimientos.getItems().addAll("1");
+        tablaMovimientos.getItems().add("1");
     }
 
     private void lanzarAviso(char caracter) {
-        aviso.cambioAviso(caracter); 
+        aviso.cambioAviso(caracter);
         aviso.showAndWait();
     }
 

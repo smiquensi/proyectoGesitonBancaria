@@ -155,9 +155,9 @@ public class CuentaBancaria {
     }
 
     // ESTE METODO LO HE CREADO POR QUE PIDE EN EL ENUNCIADO UNA TABLEVIEW DE OBJETOS MOVIMIENTO
-    public Deque listarObjectoMovimientos(char tipoMovBuscado) {
+    public List listarObjectoMovimientos(char tipoMovBuscado) {
 //        String listado = "LISTADO MOVIMIENTOS DE " + getNumCuenta() + "\n";
-        Deque<Movimiento> listaMovimientos = new ArrayDeque<Movimiento>();
+        List<Movimiento> listaMovimientos = new ArrayList<Movimiento>();
         if (tipoMovBuscado == 'T') {
             for (Movimiento movimiento : movimientos) {
                 listaMovimientos.add(movimiento);

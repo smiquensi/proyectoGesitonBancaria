@@ -15,11 +15,11 @@ import javafx.stage.FileChooser;
  *
  * @author Enrique
  */
-public class Archivos {
+public class Archivo {
 
     Aviso aviso = new Aviso('W');
 
-    private File ImportarArchivo() {
+    public File ImportarArchivo() {
         boolean seguir = true;
         File fichero = null;
         while (seguir) {
@@ -31,24 +31,25 @@ public class Archivos {
 
             fichero = fileChooser.showOpenDialog(null);
 
-            //String fileString = fichero.getName();
-            //String fileString = fileString.substring(fileString.indexOf(".");
+            
             if (fichero == null) {
-                lanzarAviso('W');
+                aviso.showAndWait(); // PERSONALIZAR AVISO
+                
                 break;
 
             } else {
                 seguir = false;
+                
             }
 
         }
         return fichero;
     }
-
-    private void lanzarAviso(char caracter) {
-        aviso.cambioAviso(caracter);
-        aviso.showAndWait();
-
-    }
+    
+//    private void lanzarAviso(char caracter) {
+//        aviso.cambioAviso(caracter);
+//        aviso.showAndWait();
+//
+//    }
 
 }
