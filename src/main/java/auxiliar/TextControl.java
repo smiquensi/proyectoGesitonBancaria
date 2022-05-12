@@ -4,7 +4,7 @@
  */
 package auxiliar;
 
-import com.proyecto.bancobase.PrimaryController;
+import com.proyecto.bancobase.*;
 import java.util.StringTokenizer;
 
 /**

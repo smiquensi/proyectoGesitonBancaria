@@ -149,6 +149,8 @@ public class SecondaryController implements Initializable {
     @FXML
     private Button exportarMovimiento;
 
+    Archivo archivo = new Archivo();
+
     private static CuentaBancaria cuentaMostrada;
     private double dineroDonado;
     private static double dineroDonadoTotal;
@@ -454,18 +456,30 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientos(ActionEvent event) {
-        Archivo archivo = new Archivo();
-        archivo.ImportarArchivo();
+        archivo.importarArchivo();
 //        String fileString = fichero.getName();
 //        String fileString = fileString.substring(fileString.indexOf(".");
     }
 
     @FXML
     private void exportarMovimiento(ActionEvent event) {
+
+        archivo.exportarArchivo(recolectarMovimiento());
+
     }
 
-    // METODO PARA CARGAR LA TABLELIST CON LOS MOVIMIENTOS
-    // A LA ESPERA DE Q RAQUEL DEJE CARGAR OBJETOS DE LA CLASE MOVIMIENTO
+    public List<Movimiento> recolectarMovimiento() {
+        char tipoMov = 'T';
+
+        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
+            if (!arrayListMovimientos.contains(emp)) {
+                arrayListMovimientos.add(emp);
+            }
+        }
+
+        return arrayListMovimientos;
+    }
+
     private void listarMovimientos() { // Aqui filtraremos por char
         char tipoMov = 'T';
         tablaMovimientos.getItems().clear();
@@ -473,8 +487,8 @@ public class SecondaryController implements Initializable {
 
         listadoMovimientosObservableList = FXCollections.observableArrayList();
         for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
-            if(!arrayListMovimientos.contains(emp)){
-            arrayListMovimientos.add(emp);
+            if (!arrayListMovimientos.contains(emp)) {
+                arrayListMovimientos.add(emp);
             }
         }
         listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
