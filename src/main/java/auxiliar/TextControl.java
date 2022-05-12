@@ -45,7 +45,7 @@ public class TextControl {
     }
     // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
 
-    public void splitString() {
+   /* public void splitString() {
         String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
 
         for (int i = 0; i < lineas.length; i++) {
@@ -56,7 +56,7 @@ public class TextControl {
             }
 
         }
-    }
+    }*/
 
     public void splitAlmohadilla(String texto) {
         

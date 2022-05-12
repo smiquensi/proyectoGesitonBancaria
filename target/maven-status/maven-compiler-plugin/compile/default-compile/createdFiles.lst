@@ -1,0 +1,9 @@
+com\proyecto\bancobase\PrimaryController.class
+modelo\Banco.class
+auxiliar\Aviso.class
+com\proyecto\bancobase\App.class
+com\proyecto\bancobase\SecondaryController.class
+modelo\Persona.class
+auxiliar\Archivo.class
+modelo\CuentaBancaria.class
+modelo\Movimiento.class

@@ -1,6 +1,7 @@
 package modelo;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,9 +88,14 @@ public class Banco {
   
   
   //DEVUELVE TODAS LAS   CUENTAS
-  public Set<CuentaBancaria> listaCuentasBancarias(){
+/*  public Set<CuentaBancaria> listaCuentasBancarias(){
       
     return (new HashSet<>(cuentasBancarias.values()));
+  }*/
+  
+  public Collection<CuentaBancaria> listaCuentasBancarias(){
+      
+    return cuentasBancarias.values();
   }
 
   //AÑADO METODO TOSTRING

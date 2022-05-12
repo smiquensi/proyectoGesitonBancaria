@@ -137,7 +137,7 @@ public class CuentaBancaria {
         return respuesta;
     }
 
-    public String listarMovimientos(char tipoMovBuscado) {
+    /*public String listarMovimientos(char tipoMovBuscado) {
         String listado = "LISTADO MOVIMIENTOS DE " + getNumCuenta() + "\n";
         if (tipoMovBuscado == 'T') {
             for (Movimiento movimiento : movimientos) {
@@ -152,26 +152,40 @@ public class CuentaBancaria {
         }
 
         return listado;
-    }
-
+    }*/
     // ESTE METODO LO HE CREADO POR QUE PIDE EN EL ENUNCIADO UNA TABLEVIEW DE OBJETOS MOVIMIENTO
-    public List listarObjectoMovimientos(char tipoMovBuscado) {
-//        String listado = "LISTADO MOVIMIENTOS DE " + getNumCuenta() + "\n";
-        List<Movimiento> listaMovimientos = new ArrayList<Movimiento>();
+    
+    public Deque<Movimiento> listarMovimientos(char tipoMovBuscado) {
+        Deque<Movimiento> movimientosFiltrados = new ArrayDeque<>();
+
         if (tipoMovBuscado == 'T') {
-            for (Movimiento movimiento : movimientos) {
-                listaMovimientos.add(movimiento);
-            }
+            return movimientos;
         } else {
             for (Movimiento movimiento : movimientos) {
                 if (movimiento.getTipo() == tipoMovBuscado) {
-                    listaMovimientos.add(movimiento);
-
+                    movimientosFiltrados.add(movimiento);
                 }
             }
         }
 
-        return listaMovimientos;
+        return movimientosFiltrados;
+    }
+
+    // fechasssssssssssssssssssssssssssssss
+    public Deque<Movimiento> listarMovimientos(LocalDateTime fechaTope) {
+        Deque<Movimiento> movimientosFiltrados = new ArrayDeque<>();
+
+        if (fechaTope == null) {
+            return movimientos;
+        }
+
+        for (Movimiento movimiento : movimientos) {
+            if (movimiento.getFecha().isBefore(fechaTope)) {
+                movimientosFiltrados.add(movimiento);
+            }
+        }
+
+        return movimientosFiltrados;
     }
 
     //Añado metodo toString

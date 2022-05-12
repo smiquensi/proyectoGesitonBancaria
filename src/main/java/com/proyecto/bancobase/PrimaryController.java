@@ -40,7 +40,7 @@ import javafx.scene.input.MouseEvent;
 public class PrimaryController implements Initializable {
 
     // Creamos instaciacion del objeto banco
-    private Banco banco = new Banco();
+    private static Banco banco = new Banco();
 
     List<CuentaBancaria> arrayCuentas = new ArrayList();
 

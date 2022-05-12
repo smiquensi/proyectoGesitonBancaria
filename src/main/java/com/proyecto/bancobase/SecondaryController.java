@@ -90,12 +90,11 @@ public class SecondaryController implements Initializable {
     private TextField nifIngreso;
     @FXML
     private TextField conceptoIngreso;
-    @FXML
     private CheckBox donacion;
     @FXML
-    private RadioButton donacionIglesia;
+    private CheckBox donacionIglesia;
     @FXML
-    private RadioButton donacionSocial;
+    private CheckBox donacionSocial;
     @FXML
     private Label cantidadDonada;
     @FXML
@@ -118,24 +117,15 @@ public class SecondaryController implements Initializable {
     private TextField conceptoExtracto;
     @FXML
     private Button extraer;
+
+    //Movimientos//--------------------------------------------------------------------------------
     @FXML
-    private TableView<String> tablaMovimientos;
+    private TableView<Movimiento> tablaMovimientos;
+    List<Movimiento> arrayListMovimientos = new ArrayList();
+    ObservableList<Movimiento> listadoMovimientosObservableList;
+
     @FXML
-    private RadioButton filtrarIngresos;
-    @FXML
-    private ToggleGroup filtrarMovimientos;
-    @FXML
-    private ToggleGroup grupoDonacion;
-    @FXML
-    private RadioButton filtrarExtractos;
-    @FXML
-    private DatePicker filtrarFecha;
-    @FXML
-    private Button importarMovimientos;
-    @FXML
-    private Button exportarMovimiento;
-    @FXML
-    private TableColumn<Movimiento, String> columnaFecha;
+    private TableColumn<Movimiento, LocalDateTime> columnaFecha;
     @FXML
     private TableColumn<Movimiento, String> columnaDni;
     @FXML
@@ -145,7 +135,21 @@ public class SecondaryController implements Initializable {
     @FXML
     private TableColumn<Movimiento, String> columnaTipo;
 
-    private CuentaBancaria cuentaMostrada;
+    //--------------------------------------------------------------------------------  
+    @FXML
+    private RadioButton filtrarIngresos;
+    @FXML
+    private ToggleGroup filtrarMovimientos;
+    @FXML
+    private RadioButton filtrarExtractos;
+    @FXML
+    private DatePicker filtrarFecha;
+    @FXML
+    private Button importarMovimientos;
+    @FXML
+    private Button exportarMovimiento;
+
+    private static CuentaBancaria cuentaMostrada;
     private double dineroDonado;
     private static double dineroDonadoTotal;
     private final int MAXIMODONADO = 75;
@@ -155,7 +159,6 @@ public class SecondaryController implements Initializable {
     private double cantidadIngresada;
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
-    ObservableList<Movimiento> movList = FXCollections.observableArrayList();
     @FXML
     private ListView<Persona> listarTitulares;
     List<Persona> arrayTitulares = new ArrayList();
@@ -174,7 +177,6 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
-        listarMovimientos();
 //        cargarMovimientos();
 
     }
@@ -184,6 +186,8 @@ public class SecondaryController implements Initializable {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setItems(resultadoCuenta);
         cargarTitulares();
+        listarMovimientos();
+
     }
 
     public void cargarTitulares() {
@@ -220,12 +224,12 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void titularSeleccionado(MouseEvent event) {
-        
+
         int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
-        
+
         String cicloSeleccionado;
-        cicloSeleccionado = arrayTitulares.get(posSeleccionado).getNombre()  + " " + arrayTitulares.get(posSeleccionado).getNif();
-        
+        cicloSeleccionado = arrayTitulares.get(posSeleccionado).getNombre() + " " + arrayTitulares.get(posSeleccionado).getNif();
+
         titularSeleccionadoLabel.setText(cicloSeleccionado);
 
     }
@@ -298,15 +302,14 @@ public class SecondaryController implements Initializable {
         // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
 
-        if (comprobarRadioButonDonacion()) {
-            if (comprobarDatosIngreso()) {
-                donacionTotal(calcularDonacion());
+        if (comprobarDatosIngreso()) {
+            donacionTotal(calcularDonacion());
 
-                tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
-                conceptoDonacion();
+            tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
+            conceptoDonacion();
 
-                cargarCuenta();
-            }
+            cargarCuenta();
+
             switch (tipoAvisoIngreso) {
                 case -1: // CANTIDAD NEGATIVA 
                     lanzarAviso('D');
@@ -329,22 +332,6 @@ public class SecondaryController implements Initializable {
 
     }
 
-    private boolean comprobarRadioButonDonacion() {
-        boolean isSelected = true;
-        if (donacion.isSelected()) {
-            if (donacionIglesia.isSelected() || donacionSocial.isSelected()) {
-                cantidadIngresada = cantidadIngreso.getValue() - dineroDonado;
-                isSelected = true;
-            } else {
-                lanzarAviso('O');
-                isSelected = false;
-
-            }
-        }
-
-        return isSelected;
-    }
-
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
 
@@ -357,30 +344,31 @@ public class SecondaryController implements Initializable {
     }
 
     @FXML
-    private boolean cargarDonacion(ActionEvent event) { // REVISARLO PARA SIMPLIFICAR
-        isCheckOutSelected = false;
+    private void cargarDonacion(ActionEvent event) {
         double donativo = 0;
         String donacionString = "";
-        if (donacion.isSelected()) {
 
-            isCheckOutSelected = true;
-            donativo = calcularDonacion();
-            donacionIglesia.setDisable(false);
-            donacionSocial.setDisable(false);
+        if (donacionIglesia.isSelected() || donacionSocial.isSelected()) {
 
-            donacionString = String.valueOf(donativo);
-            cantidadDonada.setText(donacionString + " €");
-            cargarProgresoDonacion();
-            totalDonacion.setProgress(cargarProgresoDonacion());
+            if (donacionIglesia.isSelected()) {
 
-            totalDonacionText.setText(dineroDonadoTotal + "€");
-            isDonacionSelected = true;
-        } else {
+                donativo = calcularDonacion();
+                donacionString = String.valueOf(donativo);
+                cantidadDonada.setText(donacionString + " €");
+                cargarProgresoDonacion();
+                totalDonacion.setProgress(cargarProgresoDonacion());
 
-            donacionIglesia.setDisable(true);
-            donacionSocial.setDisable(true);
-            cantidadDonada.setText(null);
-            isDonacionSelected = false;
+            }
+
+            /*if (donacionSocial.isSelected()) {
+
+                donativo = calcularDonacion();
+                donacionString = String.valueOf(donativo);
+                cantidadDonada.setText(donacionString + " €");
+                cargarProgresoDonacion();
+                totalDonacion.setProgress(cargarProgresoDonacion());
+
+            }
 
             if (dineroDonadoTotal > 0) {
                 cantidadDonada.setText(donacionString + " €");
@@ -389,10 +377,9 @@ public class SecondaryController implements Initializable {
             } else {
                 totalDonacion.setProgress(0);
                 totalDonacionText.setText(null);
-            }
 
+            }*/
         }
-        return isCheckOutSelected;
 
     }
 
@@ -422,7 +409,6 @@ public class SecondaryController implements Initializable {
         }
     }
 
-    // DEPRECATED
     private double cargarProgresoDonacion() {
         double reglaDeTresDonacion = ((100 * dineroDonadoTotal) / MAXIMODONADO) / 100;
         totalDonacion.setProgress(reglaDeTresDonacion);
@@ -482,29 +468,24 @@ public class SecondaryController implements Initializable {
     // A LA ESPERA DE Q RAQUEL DEJE CARGAR OBJETOS DE LA CLASE MOVIMIENTO
     private void listarMovimientos() { // Aqui filtraremos por char
         char tipoMov = 'T';
-        Deque listaMovimientos = new ArrayDeque(cuentaMostrada.listarObjectoMovimientos(tipoMov));
-        for (Object movimiento : listaMovimientos) {
-            cargarMovimientos((Movimiento) movimiento);
+        tablaMovimientos.getItems().clear();
+        tablaMovimientos.refresh();
+
+        listadoMovimientosObservableList = FXCollections.observableArrayList();
+        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
+            if(!arrayListMovimientos.contains(emp)){
+            arrayListMovimientos.add(emp);
+            }
         }
-    }
+        listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
+        tablaMovimientos.setItems(listadoMovimientosObservableList);
 
-    private void cargarMovimientos(Movimiento mov) { // ESTO NO VA BIEN
+        columnaFecha.setCellValueFactory(new PropertyValueFactory<Movimiento, LocalDateTime>("fecha"));
+        columnaDni.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("dni"));
+        columnaImporte.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("cantidad"));
+        columnaMotivo.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("motivo"));
+        columnaTipo.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("tipo"));
 
-        LocalDateTime fecha = mov.getFecha();
-        String dni = mov.getDni();
-        double cantidad = mov.getCantidad();
-        String motivo = mov.getMotivo();
-        char tipo = mov.getTipo();
-        Movimiento newMov = new Movimiento(fecha, dni, cantidad, motivo, tipo);
-        movList.add(newMov);
-
-        columnaFecha.setCellValueFactory(c -> new SimpleStringProperty(new String(fecha.toString())));
-        columnaDni.setCellValueFactory(c -> new SimpleStringProperty(new String(dni)));
-        columnaImporte.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(cantidad))));
-        columnaMotivo.setCellValueFactory(c -> new SimpleStringProperty(new String(motivo)));
-        columnaTipo.setCellValueFactory(c -> new SimpleStringProperty(new String(String.valueOf(tipo))));
-
-        tablaMovimientos.getItems().add("1");
     }
 
     private void lanzarAviso(char caracter) {

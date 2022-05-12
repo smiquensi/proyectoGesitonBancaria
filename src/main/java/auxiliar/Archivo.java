@@ -25,9 +25,12 @@ public class Archivo {
         while (seguir) {
             // creamos un nuevo objeto filechoser
             FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt"));
+
             //elegimos la ruta de apertura default en 
             String userDir = System.getProperty("user.home");
-            fileChooser.setInitialDirectory(new File(userDir + "/Documents"));
+            fileChooser.getSelectedExtensionFilter();
+            fileChooser.setInitialDirectory(new File(userDir + "/Documents/Pruebatxt"));
 
             fichero = fileChooser.showOpenDialog(null);
 
