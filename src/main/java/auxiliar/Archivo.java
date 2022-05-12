@@ -58,34 +58,38 @@ public class Archivo {
     }
 
     public void exportarArchivo(List<Movimiento> movimiento, String nombrePersona) {
-        String directoryName =nombrePersona;
 
-        Path archivo = Paths.get(directoryName + "/" + "Movimientos.txt");
+        //directorio
+        String directoryName = "datos/" + nombrePersona;
+        String nombreArchivo= "Movimientos.txt";
+        File file = new File("datos/" + nombrePersona + "/Movimientos.txt");
+        File directorio = new File("datos/" + nombrePersona);
 
-        File file = new File(directoryName + "/" + "Movimientos.txt");
-        File directorio = new File(nombrePersona);
+        //fichero
+        Path archivo = Paths.get("./datos/" + nombrePersona + "/Movimientos.txt");
         if (!directorio.exists()) {
             directorio.mkdir();
         }
+        
         if (file.exists()) {
             file.delete();
+        
         }
+      
 
         try (BufferedWriter out = Files.newBufferedWriter(archivo,
                 Charset.defaultCharset(),
                 StandardOpenOption.CREATE)) {
             out.write("fecha#dni#importe#motivo");
-
             out.newLine();
             for (Movimiento emp : movimiento) {
                 out.write(emp.getFecha() + "#" + emp.getDni() + "#" + emp.getCantidad() + "#" + emp.getMotivo() + "#" + emp.getTipo()); //escribimos la ñ
                 out.newLine();
             }
 
-            System.out.println("ARCHIVO CREADO CON EXITO \nREVISA EN EL DIRECTORIO DE ESTE PROYECTO");
 
         } catch (IOException e) {
-            System.out.println("Error al escribir en el fichero");
+            System.out.println("Error al escribir en el fichero");//falta aviso
         }
 
     }
