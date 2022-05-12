@@ -57,16 +57,26 @@ public class Archivo {
         return fichero;
     }
 
-    public void exportarArchivo(List<Movimiento> movimiento) {
+    public void exportarArchivo(List<Movimiento> movimiento, String nombrePersona) {
+        String directoryName =nombrePersona;
 
-        Path archivo = Paths.get("Movimientos.txt");
+        Path archivo = Paths.get(directoryName + "/" + "Movimientos.txt");
+
+        File file = new File(directoryName + "/" + "Movimientos.txt");
+        File directorio = new File(nombrePersona);
+        if (!directorio.exists()) {
+            directorio.mkdir();
+        }
+        if (file.exists()) {
+            file.delete();
+        }
 
         try (BufferedWriter out = Files.newBufferedWriter(archivo,
                 Charset.defaultCharset(),
                 StandardOpenOption.CREATE)) {
-            out.write("fecha#dni#importe#motivo"); 
-           
-                out.newLine();
+            out.write("fecha#dni#importe#motivo");
+
+            out.newLine();
             for (Movimiento emp : movimiento) {
                 out.write(emp.getFecha() + "#" + emp.getDni() + "#" + emp.getCantidad() + "#" + emp.getMotivo() + "#" + emp.getTipo()); //escribimos la ñ
                 out.newLine();

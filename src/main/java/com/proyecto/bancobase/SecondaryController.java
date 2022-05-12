@@ -157,6 +157,7 @@ public class SecondaryController implements Initializable {
     private final int MAXIMODONADO = 75;
 
     Aviso aviso = new Aviso('W');
+    List<Persona> arrayMovimientosExportar = new ArrayList();
 
     private double cantidadIngresada;
     private boolean isDonacionSelected;
@@ -463,8 +464,15 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void exportarMovimiento(ActionEvent event) {
+        Set<Persona> tmp = cuentaMostrada.getTitulares();
+         String nombrePersona="" ;
+        for (Persona tmpFor : tmp) {
 
-        archivo.exportarArchivo(recolectarMovimiento());
+            arrayMovimientosExportar.add(tmpFor);
+             
+        }
+        nombrePersona = arrayMovimientosExportar.get(0).getNombre();
+        archivo.exportarArchivo(recolectarMovimiento(),nombrePersona);
 
     }
 
