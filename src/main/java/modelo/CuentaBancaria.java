@@ -157,7 +157,7 @@ public class CuentaBancaria {
     
     public Deque<Movimiento> listarMovimientos(char tipoMovBuscado) {
         Deque<Movimiento> movimientosFiltrados = new ArrayDeque<>();
-
+        
         if (tipoMovBuscado == 'T') {
             return movimientos;
         } else {

@@ -6,6 +6,7 @@ package com.proyecto.bancobase;
 
 import auxiliar.Archivo;
 import auxiliar.Aviso;
+import auxiliar.TextControl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -57,9 +58,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import modelo.CuentaBancaria;
-import modelo.Movimiento;
-import modelo.Persona;
+import modelo.*;
+import auxiliar.*;
 
 /**
  * FXML Controller class
@@ -450,9 +450,18 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientos(ActionEvent event) {
-        archivo.importarArchivo();
-//        String fileString = fichero.getName();
-//        String fileString = fileString.substring(fileString.indexOf(".");
+
+        Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
+        while (it.hasNext()) {
+         Movimiento tmp = it.next();
+         cuentaMostrada.listarMovimientos('T').add(tmp);
+     // falta que podamos meter los movimientos estos a los movimientos reales de la cuenta
+            System.out.println(arrayListMovimientos);
+        }
+        System.out.println("hemos salidooooo");
+        cargarCuenta();
+
+        System.out.println(arrayListMovimientos);
     }
 
     @FXML

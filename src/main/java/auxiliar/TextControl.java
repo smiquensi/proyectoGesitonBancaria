@@ -5,7 +5,19 @@
 package auxiliar;
 
 import com.proyecto.bancobase.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Stream;
+import modelo.Movimiento;
+import modelo.Persona;
 
 /**
  *
@@ -14,6 +26,10 @@ import java.util.StringTokenizer;
 public class TextControl {
 
     private String txt;
+    private static List<String> arrayLineas = new ArrayList();
+    private static List<Movimiento> arrayMovimientosImportados = new ArrayList();
+    boolean isFirst = true;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public TextControl(String txt) {
         this.txt = txt;
@@ -45,7 +61,7 @@ public class TextControl {
     }
     // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
 
-   /* public void splitString() {
+    /* public void splitString() {
         String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
 
         for (int i = 0; i < lineas.length; i++) {
@@ -57,23 +73,51 @@ public class TextControl {
 
         }
     }*/
+    public static List<Movimiento> splitAlmohadilla(File archivo) {
+        boolean esPrimera = true; // evitamos que nos cree la primera que son los encabezados
 
-    public void splitAlmohadilla(String texto) {
-        
-        
-        StringTokenizer st = new StringTokenizer(texto, "#");
+        try (Stream<String> contenidoArchivo = Files.lines(archivo.toPath(), Charset.defaultCharset())) {
+            Iterator<String> it = contenidoArchivo.iterator();
+            while (it.hasNext()) {
 
-        while (st.hasMoreTokens()) {
-            String fecha = st.nextToken();
-            String dni = st.nextToken();
-            String importe = st.nextToken();
-            String motivo = st.nextToken();
-            String tipoOperacion = st.nextToken();
-//            System.out.println(fecha + dni + importe + motivo + tipoOperacion);
+                if (!esPrimera) {
+                    arrayLineas.add(it.next());
+                } else {
+                    it.next();
+                    esPrimera = false;
+                }
 
-//         AQUI SE DEBERIA LLAMAR A OTRO METODO QUE CARGARA ESTOS STRING COMO 
-//         ATRIBUTOS DE UN OBJETO MOVIMIENTO.
+            }
+        } catch (IOException ex) {
+            System.out.println("Error en la lectura del archivo");
         }
+
+        Iterator<String> it = arrayLineas.iterator();
+
+        while (it.hasNext()) {
+            StringTokenizer st = new StringTokenizer(it.next(), "#");
+
+            while (st.hasMoreTokens()) {
+
+                String fecha = st.nextToken();
+
+                LocalDateTime fechaFormat = LocalDateTime.parse(fecha);
+
+                String dni = st.nextToken();
+
+                double importe = Double.parseDouble(st.nextToken());
+
+                String motivo = st.nextToken();
+
+                char tipoOperacion = st.nextToken().charAt(0);
+
+                Movimiento mov = new Movimiento(fechaFormat, dni, importe, motivo, tipoOperacion);
+
+                arrayMovimientosImportados.add(mov);
+            }
+        }
+
+        return arrayMovimientosImportados;
 
     }
 }
