@@ -171,7 +171,7 @@ public class CuentaBancaria {
         return movimientosFiltrados;
     }
 
-    // fechasssssssssssssssssssssssssssssss
+    // Lista movimientos por fechas
     public Deque<Movimiento> listarMovimientos(LocalDateTime fechaTope) {
         Deque<Movimiento> movimientosFiltrados = new ArrayDeque<>();
 

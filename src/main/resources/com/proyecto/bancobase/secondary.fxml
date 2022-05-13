@@ -183,16 +183,21 @@
                                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
-                                                <RadioButton fx:id="filtrarIngresos" mnemonicParsing="false" text="Ingresos" GridPane.rowIndex="1">
-                                                   <toggleGroup>
-                                                      <ToggleGroup fx:id="filtrarMovimientos" />
-                                                   </toggleGroup>
-                                                </RadioButton>
-                                                <RadioButton fx:id="filtrarExtractos" mnemonicParsing="false" text="Extractos" toggleGroup="$filtrarMovimientos" GridPane.rowIndex="2" />
                                                 <DatePicker fx:id="filtrarFecha" nodeOrientation="LEFT_TO_RIGHT" promptText="Filtrar Fecha" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                                                 <Button fx:id="importarMovimientos" mnemonicParsing="false" onAction="#importarMovimientos" text="Importar Movimientos" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                                                 <Button fx:id="exportarMovimiento" mnemonicParsing="false" onAction="#exportarMovimiento" text="Exportar Movimientos" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                                <CheckBox fx:id="filtrarMovimientosCheck" mnemonicParsing="false" text="Filtrar Movimientos" />
+                                                <Button fx:id="filtrarMovimientosButton" mnemonicParsing="false" onAction="#cargarFiltrado" text="Filtrar" GridPane.halignment="CENTER" />
+                                                <Line endX="16.092941284179688" endY="-0.3417620360851288" startX="-100.0" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="-10.0" />
+                                                   </GridPane.margin>
+                                                </Line>
+                                                <RadioButton fx:id="filtrarIngresos" mnemonicParsing="false" text="Ingresos" GridPane.rowIndex="1">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="grupoFiltradoMovimientos" />
+                                                   </toggleGroup></RadioButton>
+                                                <RadioButton fx:id="filtrarExtractos" mnemonicParsing="false" text="Extractos" toggleGroup="$grupoFiltradoMovimientos" GridPane.rowIndex="2" />
+                                                <Button fx:id="filtrarMovimientosButton1" mnemonicParsing="false" onAction="#cargarTodosMovimientos" text="Mostrar Todo" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                                              </children>
                                           </GridPane>
                                        </children>

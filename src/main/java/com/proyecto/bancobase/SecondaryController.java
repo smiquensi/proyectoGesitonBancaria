@@ -139,8 +139,6 @@ public class SecondaryController implements Initializable {
     @FXML
     private RadioButton filtrarIngresos;
     @FXML
-    private ToggleGroup filtrarMovimientos;
-    @FXML
     private RadioButton filtrarExtractos;
     @FXML
     private DatePicker filtrarFecha;
@@ -170,8 +168,13 @@ public class SecondaryController implements Initializable {
     int controlTitulares = -1;
     private static Persona titularElegido;
     private Label titularSeleccionadoLabel;
-    @FXML
     private CheckBox filtrarMovimientosCheck;
+    @FXML
+    private Button filtrarMovimientosButton;
+    @FXML
+    private ToggleGroup grupoFiltradoMovimientos;
+    @FXML
+    private Button filtrarMovimientosButton1;
 
     /**
      * Initializes the controller class.
@@ -186,7 +189,6 @@ public class SecondaryController implements Initializable {
     }
 
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
-    
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + "  Saldo: " + cuentaMostrada.getSaldo());
@@ -397,6 +399,7 @@ public class SecondaryController implements Initializable {
             cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a la iglesia");
 
         }
+
         if (donacionSocial.isSelected()) {
             cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a organizacion social");
         }
@@ -478,27 +481,53 @@ public class SecondaryController implements Initializable {
         return arrayListMovimientos;
     }
 
+    @FXML
+    private void cargarFiltrado(ActionEvent event) {
+        listarMovimientos();
+    }
+
+    @FXML
+    private void cargarTodosMovimientos(ActionEvent event) {
+        filtrarIngresos.setSelected(false);
+        filtrarExtractos.setSelected(false);
+        filtrarFecha.getEditor().clear();
+        filtrarFecha.setValue(null);
+        listarMovimientos();
+
+    }
+
     private void listarMovimientos() { // Aqui filtraremos por char
         char tipoMov = 'T';
-        if (filtrarMovimientosCheck.isSelected()) {
-            if (filtrarExtractos.isSelected()) {
-                tipoMov = 'E';
+        if (filtrarIngresos.isSelected()) {
+            tipoMov = 'I';
 
-            } else {
-                tipoMov = 'I';
-
-            }
+        }
+        if (filtrarExtractos.isSelected()) {
+            tipoMov = 'E';
 
         }
 
         listadoMovimientosObservableList = FXCollections.observableArrayList();
-        arrayListMovimientos.removeAll(arrayTitulares);
+        arrayListMovimientos.removeAll(arrayListMovimientos);
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
+        if (filtrarFecha.getValue() != null) {
+            System.out.println("dentro de fecha");
+            for (Movimiento emp : cuentaMostrada.listarMovimientos(filtrarFecha.getValue().atStartOfDay())) {
+                if (!arrayListMovimientos.contains(emp) && emp.getTipo() == tipoMov) {
+                    System.out.println("dentro de fecha y tipo igual");
 
-        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
-            if (!arrayListMovimientos.contains(emp)) {
-                arrayListMovimientos.add(emp);
+                    arrayListMovimientos.add(emp);
+                }
+            }
+
+        } else {
+            System.out.println("dentro tipo igual");
+
+            for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
+                if (!arrayListMovimientos.contains(emp)) {
+                    arrayListMovimientos.add(emp);
+                }
             }
         }
         listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
