@@ -455,13 +455,9 @@ public class SecondaryController implements Initializable {
         while (it.hasNext()) {
          Movimiento tmp = it.next();
          cuentaMostrada.listarMovimientos('T').add(tmp);
-     // falta que podamos meter los movimientos estos a los movimientos reales de la cuenta
-            System.out.println(arrayListMovimientos);
         }
-        System.out.println("hemos salidooooo");
         cargarCuenta();
 
-        System.out.println(arrayListMovimientos);
     }
 
     @FXML
