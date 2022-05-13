@@ -69,7 +69,7 @@ import modelo.Persona;
 public class SecondaryController implements Initializable {
 
     @FXML
-    private ListView<CuentaBancaria> datosCuenta;
+    private TextField datosCuenta;
     @FXML
     private Button volver;
     @FXML
@@ -165,10 +165,10 @@ public class SecondaryController implements Initializable {
     @FXML
     private ListView<Persona> listarTitulares;
     List<Persona> arrayTitulares = new ArrayList();
+    List<Persona> arrayTitularesDelete = new ArrayList();
     ObservableList<Persona> listadoTitulares;
     int controlTitulares = -1;
     private static Persona titularElegido;
-    @FXML
     private Label titularSeleccionadoLabel;
 
     /**
@@ -187,7 +187,7 @@ public class SecondaryController implements Initializable {
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
-        datosCuenta.setItems(resultadoCuenta);
+        datosCuenta.setText( "Nº Cuenta: " + cuentaMostrada.getNumCuenta() + "  Saldo: " + cuentaMostrada.getSaldo());
         cargarTitulares();
         listarMovimientos();
 
@@ -225,18 +225,6 @@ public class SecondaryController implements Initializable {
 
     }
 
-    @FXML
-    private void titularSeleccionado(MouseEvent event) {
-
-        int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
-
-        String cicloSeleccionado;
-        cicloSeleccionado = arrayTitulares.get(posSeleccionado).getNombre() + " " + arrayTitulares.get(posSeleccionado).getNif();
-
-        titularSeleccionadoLabel.setText(cicloSeleccionado);
-
-    }
-
     // METODO PARA SABER SI HAY MENOS DE 5 TITULARES
     public boolean anyadirTitulares() {
         boolean masTitulares;
@@ -244,7 +232,7 @@ public class SecondaryController implements Initializable {
             masTitulares = true;
         } else {
             nombreInput.setDisable(true); // desactivar la entrada de datos cuando hay mas de 5 titulares
-            // nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
+            nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
             lanzarAviso('I');
 
             masTitulares = false;
@@ -280,23 +268,56 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void desautorizarTitular(ActionEvent event) {
-        System.out.println(cuentaMostrada.getTitulares().size());
+        //System.out.println(cuentaMostrada.getTitulares().size());
         if (cuentaMostrada.getTitulares().size() > 1) {
-            if (nifInput.getText().isEmpty()) {
+            if (titularSeleccionado() == null) {
                 lanzarAviso('V');
 
             } else {
-                cuentaMostrada.eliminaTitular(nifInput.getText());
-                if (cuentaMostrada.getTitulares().size() == 4) {
-                    nombreInput.setDisable(false);
+                cuentaMostrada.eliminaTitular(titularSeleccionado());
+
+                for (Persona temp : arrayTitulares) {
+
+                    if (!cuentaMostrada.getTitulares().contains(temp)) {
+
+                        arrayTitularesDelete.add(temp);
+//                        listarTitulares.getSelectionModel().clearSelection();
+//                        listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+//                        listarTitulares.setItems(listadoTitulares);
+                    }
+
                 }
+
+                for (Persona temp : arrayTitularesDelete) {
+
+                    arrayTitulares.remove(temp);
+
+                }
+                listarTitulares.getSelectionModel().clearSelection();
+                listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+                listarTitulares.setItems(listadoTitulares);
+
+                if (cuentaMostrada.getTitulares().size() <= 4) {
+                    nombreInput.setDisable(false);
+                    nifInput.setDisable(false);
+                }
+
             }
         } else {
             lanzarAviso('W');
         }
+        cargarCuenta();
         limpiarCampos();
 
-        cargarCuenta();
+    }
+
+    private String titularSeleccionado() {
+
+        int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
+
+        String titularSeleccionadoDni = arrayTitulares.get(posSeleccionado).getNif();
+
+        return titularSeleccionadoDni;
     }
 
     @FXML
@@ -350,39 +371,6 @@ public class SecondaryController implements Initializable {
     private void cargarDonacion(ActionEvent event) {
         double donativo = 0;
         String donacionString = "";
-
-        if (donacionIglesia.isSelected() || donacionSocial.isSelected()) {
-
-            if (donacionIglesia.isSelected()) {
-
-                donativo = calcularDonacion();
-                donacionString = String.valueOf(donativo);
-                cantidadDonada.setText(donacionString + " €");
-                cargarProgresoDonacion();
-                totalDonacion.setProgress(cargarProgresoDonacion());
-
-            }
-
-            /*if (donacionSocial.isSelected()) {
-
-                donativo = calcularDonacion();
-                donacionString = String.valueOf(donativo);
-                cantidadDonada.setText(donacionString + " €");
-                cargarProgresoDonacion();
-                totalDonacion.setProgress(cargarProgresoDonacion());
-
-            }
-
-            if (dineroDonadoTotal > 0) {
-                cantidadDonada.setText(donacionString + " €");
-                cargarProgresoDonacion();
-                totalDonacion.setProgress(cargarProgresoDonacion());
-            } else {
-                totalDonacion.setProgress(0);
-                totalDonacionText.setText(null);
-
-            }*/
-        }
 
     }
 
@@ -465,14 +453,14 @@ public class SecondaryController implements Initializable {
     @FXML
     private void exportarMovimiento(ActionEvent event) {
         Set<Persona> tmp = cuentaMostrada.getTitulares();
-         String nombrePersona="" ;
+        String nombrePersona = "";
         for (Persona tmpFor : tmp) {
 
             arrayMovimientosExportar.add(tmpFor);
-             
+
         }
         nombrePersona = arrayMovimientosExportar.get(0).getNombre();
-        archivo.exportarArchivo(recolectarMovimiento(),nombrePersona);
+        archivo.exportarArchivo(recolectarMovimiento(), nombrePersona);
 
     }
 
