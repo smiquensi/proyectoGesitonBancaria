@@ -170,6 +170,8 @@ public class SecondaryController implements Initializable {
     int controlTitulares = -1;
     private static Persona titularElegido;
     private Label titularSeleccionadoLabel;
+    @FXML
+    private CheckBox filtrarMovimientosCheck;
 
     /**
      * Initializes the controller class.
@@ -180,14 +182,14 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
-//        cargarMovimientos();
 
     }
 
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
+    
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
-        datosCuenta.setText( "Nº Cuenta: " + cuentaMostrada.getNumCuenta() + "  Saldo: " + cuentaMostrada.getSaldo());
+        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + "  Saldo: " + cuentaMostrada.getSaldo());
         cargarTitulares();
         listarMovimientos();
 
@@ -478,10 +480,22 @@ public class SecondaryController implements Initializable {
 
     private void listarMovimientos() { // Aqui filtraremos por char
         char tipoMov = 'T';
+        if (filtrarMovimientosCheck.isSelected()) {
+            if (filtrarExtractos.isSelected()) {
+                tipoMov = 'E';
+
+            } else {
+                tipoMov = 'I';
+
+            }
+
+        }
+
+        listadoMovimientosObservableList = FXCollections.observableArrayList();
+        arrayListMovimientos.removeAll(arrayTitulares);
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
 
-        listadoMovimientosObservableList = FXCollections.observableArrayList();
         for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
             if (!arrayListMovimientos.contains(emp)) {
                 arrayListMovimientos.add(emp);
