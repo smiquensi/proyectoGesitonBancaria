@@ -26,6 +26,7 @@ import modelo.Movimiento;
  */
 public class Archivo {
 
+   private double cantidadHacienda;
     Aviso aviso = new Aviso('W');
 
     public File importarArchivo() {
@@ -93,5 +94,12 @@ public class Archivo {
         }
 
     }
+
+    public void setCantidadHacienda(double cantidadHacienda) {
+        
+        this.cantidadHacienda = cantidadHacienda;
+    }
+    
+    
 
 }

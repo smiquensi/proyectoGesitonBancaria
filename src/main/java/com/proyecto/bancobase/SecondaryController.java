@@ -199,7 +199,7 @@ public class SecondaryController implements Initializable {
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
-        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + cuentaMostrada.getSaldo());
+        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + cuentaMostrada.getSaldoFormateado());
         cargarTitulares();
         listarMovimientos();
         desactivarDiasFuturos();
@@ -211,6 +211,8 @@ public class SecondaryController implements Initializable {
         if (controlTitulares != cuentaMostrada.getTitulares().size()) {
 
             for (Persona temp : obtenerCuenta().getTitulares()) {
+
+                temp.setNombre(temp.getNombre().toUpperCase());
 
                 if (!arrayTitulares.contains(temp)) {
 
@@ -335,7 +337,7 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void hacerIngreso(ActionEvent event) {
-        limpiarDonacion();
+
         // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
 
@@ -365,6 +367,7 @@ public class SecondaryController implements Initializable {
                     break;
                 case 1: // AVISAR HACIENDA
                     lanzarAviso('H');
+                    aviso.setCantidadHacienda(99999999999.0);
                     totalDonacionText.setText("Total donado: " + dineroDonadoTotal + "€");
                     cargarProgresoDonacion();
 
@@ -376,6 +379,7 @@ public class SecondaryController implements Initializable {
         listarMovimientos();
         limpiarCamposIngreso();
         cargarCuenta();
+        limpiarDonacion();
 
     }
 
@@ -462,8 +466,8 @@ public class SecondaryController implements Initializable {
                 dineroDonadoTotal += donativo;
                 //cantidadIngresada -= donativo;
             } else {
-             dineroDonadoTotal=   75;
-                     }
+                dineroDonadoTotal = 75;
+            }
 
         } catch (NumberFormatException e) {
             System.out.println("Has metido letras en vez de numeros. donacionTotal()");
@@ -663,8 +667,8 @@ public class SecondaryController implements Initializable {
     private void limpiarCamposIngreso() {
         dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadIngreso.setValueFactory(dinero);
-        nifIngreso.setText(null);
-        conceptoIngreso.setText(null);
+        nifIngreso.setText("");
+        conceptoIngreso.setText("");
         donacionIglesia.setSelected(false);
         donacionSocial.setSelected(false);
         cantidadDonada.setText(null);

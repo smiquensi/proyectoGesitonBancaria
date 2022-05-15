@@ -17,6 +17,18 @@ public class Aviso {
     private String headerText;
     private String contentText;
     private char tipoAviso;
+    private double cantidadHacienda;
+    
+    double prueba;
+    
+    
+ public double setCantidadHacienda(double cantidadHacienda) {
+     
+        this.cantidadHacienda = cantidadHacienda;
+        return cantidadHacienda;
+    }
+ 
+
 
     private final String tituloWarning = "Aviso de selección de cuenta";
     private final String headerTextWarning = "No se ha seleccionado ninguna cuenta.";
@@ -41,7 +53,7 @@ public class Aviso {
     private final String contentTextConfirmacion = "Esta operación se ha añadido a su lista de movimientos";
 
     private final String tituloHacienda = "Información importante";
-    private final String headerTextHacienda = "Esta operación será reportada a hacienda";
+    private final String headerTextHacienda = "Esta operación por importe de " + cantidadHacienda +  "€ será reportada a hacienda";
     private final String contentTextHacienda = "Por motivos legales debemos informar de las operaciones superiores a 3000 €";
 
     private final String tituloWarningDonacion = "Aviso de motivo de donación";
@@ -111,7 +123,7 @@ public class Aviso {
                 break;
             case 'H': // INFO -> AVISO A HACIENDA
                 aviso.setAlertType(Alert.AlertType.WARNING);
-                aviso.setTitle(tituloHacienda);
+                aviso.setTitle(tituloHacienda);                  
                 aviso.setHeaderText(headerTextHacienda);
                 aviso.setContentText(contentTextHacienda);
 
@@ -139,4 +151,7 @@ public class Aviso {
 
     }
 
+    
+    
+   
 }
