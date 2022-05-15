@@ -342,13 +342,13 @@ public class SecondaryController implements Initializable {
         if (comprobarDatosIngreso()) {
 
             // donacionTotal(calcularDonacion());
-            if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+            if ((donacionSocial.isSelected() || donacionIglesia.isSelected()) && limiteDonacion()) {
 
                 extraerDonacion();
 
-            } else {
-                cantidadIngresada = cantidadIngreso.getValue();
             }
+            cantidadIngresada = cantidadIngreso.getValue();
+
             tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
 
 //            cargarCuenta();   
@@ -375,15 +375,34 @@ public class SecondaryController implements Initializable {
 //        extraerDonacion();
         listarMovimientos();
         limpiarCamposIngreso();
-        iglesiaLabel.setText("");
-        socialLabel.setText("");
+        cargarCuenta();
+
+    }
+
+    private boolean limiteDonacion() {
+        boolean seguir = false;
+
+        if (dineroDonadoTotal <= 75) {
+
+            seguir = true;
+
+        }
+
+        return seguir;
 
     }
 
     private void extraerDonacion() {
+        double donacionExtraccion = 0;
         if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+
             String nifExtracion = nifIngreso.getText();
-            double donacionExtraccion = donacionTotal(calcularDonacion());
+            donacionExtraccion = donacionTotal(calcularDonacion());
+            if (donacionExtraccion >= 75) {
+
+                donacionExtraccion = 75 - dineroDonadoTotal;
+
+            }
             String conceptoExtraccion = conceptoDonacion();
             cuentaMostrada.sacar(nifExtracion, donacionExtraccion, conceptoExtraccion);
         }
@@ -439,12 +458,12 @@ public class SecondaryController implements Initializable {
     private double donacionTotal(double donativo) {
         try { // NO HACE NADA
             cantidadIngresada = cantidadIngreso.getValue();
-            if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+            if (donacionSocial.isSelected() || donacionIglesia.isSelected() && limiteDonacion()) {
                 dineroDonadoTotal += donativo;
-                cantidadIngresada -= donativo;
+                //cantidadIngresada -= donativo;
             } else {
-                cantidadIngresada = cantidadIngreso.getValue();
-            }
+             dineroDonadoTotal=   75;
+                     }
 
         } catch (NumberFormatException e) {
             System.out.println("Has metido letras en vez de numeros. donacionTotal()");
@@ -649,6 +668,8 @@ public class SecondaryController implements Initializable {
         donacionIglesia.setSelected(false);
         donacionSocial.setSelected(false);
         cantidadDonada.setText(null);
+        iglesiaLabel.setText("");
+        socialLabel.setText("");
 
     }
 
