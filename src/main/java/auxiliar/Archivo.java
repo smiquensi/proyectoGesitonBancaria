@@ -62,11 +62,11 @@ public class Archivo {
         //directorio
         String directoryName = "datos/" + nombrePersona;
         String nombreArchivo= "Movimientos.txt";
-        File file = new File("datos/" + nombrePersona + "/Movimientos.txt");
+        File file = new File("datos/" + nombrePersona + "/" + nombrePersona + " Movimientos.txt");
         File directorio = new File("datos/" + nombrePersona);
 
         //fichero
-        Path archivo = Paths.get("./datos/" + nombrePersona + "/Movimientos.txt");
+        Path archivo = Paths.get("./datos/" + nombrePersona + "/" + nombrePersona + " Movimientos.txt");
         if (!directorio.exists()) {
             directorio.mkdir();
         }

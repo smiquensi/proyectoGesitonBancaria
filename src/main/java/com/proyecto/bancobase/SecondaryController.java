@@ -375,6 +375,8 @@ public class SecondaryController implements Initializable {
 //        extraerDonacion();
         listarMovimientos();
         limpiarCamposIngreso();
+        iglesiaLabel.setText("");
+        socialLabel.setText("");
 
     }
 
@@ -401,15 +403,30 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void cargarDonacion(ActionEvent event) {
+        iglesiaLabel.setText("");
+        socialLabel.setText("");
+
         if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
             cantidadDonada.setText("Cantidad donada: " + String.valueOf(calcularDonacion()) + " €");
 
+            if (donacionIglesia.isSelected()) {
+                iglesiaLabel.setText("-> " + calcularDonacion() + "€");
+            }
+            if (donacionSocial.isSelected()) {
+                socialLabel.setText("-> " + calcularDonacion() + "€");
+
+            }
+            if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
+                iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
+                socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
+
+            }
         } else {
             cantidadDonada.setText("Cantidad donada");
         }
+
 //        double donativo = 0;
 //        String donacionString = "";
-
     }
 
     // METODO CALCULA EL PORCENTAGE DEL INGRESO QUE SE VA A DONAR
@@ -571,17 +588,14 @@ public class SecondaryController implements Initializable {
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
         if (filtrarFecha.getValue() != null) {
-            System.out.println("dentro de fecha");
             for (Movimiento emp : cuentaMostrada.listarMovimientos(filtrarFecha.getValue().atStartOfDay())) {
                 if (!arrayListMovimientos.contains(emp) && emp.getTipo() == tipoMov) {
-                    System.out.println("dentro de fecha y tipo igual");
 
                     arrayListMovimientos.add(emp);
                 }
             }
 
         } else {
-            System.out.println("dentro tipo igual");
 
             for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
                 if (!arrayListMovimientos.contains(emp)) {
@@ -635,8 +649,6 @@ public class SecondaryController implements Initializable {
         donacionIglesia.setSelected(false);
         donacionSocial.setSelected(false);
         cantidadDonada.setText(null);
-        
-        
 
     }
 
