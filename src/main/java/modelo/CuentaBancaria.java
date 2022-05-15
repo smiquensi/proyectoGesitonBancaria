@@ -27,6 +27,14 @@ public class CuentaBancaria {
         titulares.add(titular);
         this.saldo = 0;
     }
+    
+    // Probar este metodo de Raquel para importar movimientos de un archivo y registrarlos. 
+//    public boolean registrarMovimiento(Movimiento mov) {
+//        if (mov.getCantidad() != 0) {
+//            return movimientos.add(mov);
+//        }
+//        return false;
+//    }
 
     public double getDonaciones() {
         return donaciones;

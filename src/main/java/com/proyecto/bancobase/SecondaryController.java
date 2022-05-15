@@ -60,6 +60,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
+import java.time.LocalDate;
+import javafx.scene.control.DateCell;
 
 /**
  * FXML Controller class
@@ -169,12 +171,18 @@ public class SecondaryController implements Initializable {
     private static Persona titularElegido;
     private Label titularSeleccionadoLabel;
     private CheckBox filtrarMovimientosCheck;
+    SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
+
     @FXML
     private Button filtrarMovimientosButton;
     @FXML
     private ToggleGroup grupoFiltradoMovimientos;
     @FXML
     private Button filtrarMovimientosButton1;
+    @FXML
+    private Label iglesiaLabel;
+    @FXML
+    private Label socialLabel;
 
     /**
      * Initializes the controller class.
@@ -191,9 +199,10 @@ public class SecondaryController implements Initializable {
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
-        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + "  Saldo: " + cuentaMostrada.getSaldo());
+        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + cuentaMostrada.getSaldo());
         cargarTitulares();
         listarMovimientos();
+        desactivarDiasFuturos();
 
     }
 
@@ -235,7 +244,7 @@ public class SecondaryController implements Initializable {
         if (cuentaMostrada.getTitulares().size() < 5) {
             masTitulares = true;
         } else {
-            nombreInput.setDisable(true); // desactivar la entrada de datos cuando hay mas de 5 titulares
+            nombreInput.setDisable(true); // desactiva la entrada de datos cuando hay mas de 5 titulares
             nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
             lanzarAviso('I');
 
@@ -326,18 +335,23 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void hacerIngreso(ActionEvent event) {
-        listarMovimientos();
+        limpiarDonacion();
         // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
         int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
 
         if (comprobarDatosIngreso()) {
-            donacionTotal(calcularDonacion());
 
+            // donacionTotal(calcularDonacion());
+            if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+
+                extraerDonacion();
+
+            } else {
+                cantidadIngresada = cantidadIngreso.getValue();
+            }
             tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
-            conceptoDonacion();
 
-            cargarCuenta();
-
+//            cargarCuenta();   
             switch (tipoAvisoIngreso) {
                 case -1: // CANTIDAD NEGATIVA 
                     lanzarAviso('D');
@@ -356,6 +370,20 @@ public class SecondaryController implements Initializable {
 
                     break;
             }
+
+        }
+//        extraerDonacion();
+        listarMovimientos();
+        limpiarCamposIngreso();
+
+    }
+
+    private void extraerDonacion() {
+        if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+            String nifExtracion = nifIngreso.getText();
+            double donacionExtraccion = donacionTotal(calcularDonacion());
+            String conceptoExtraccion = conceptoDonacion();
+            cuentaMostrada.sacar(nifExtracion, donacionExtraccion, conceptoExtraccion);
         }
 
     }
@@ -373,44 +401,69 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void cargarDonacion(ActionEvent event) {
-        double donativo = 0;
-        String donacionString = "";
+        if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+            cantidadDonada.setText("Cantidad donada: " + String.valueOf(calcularDonacion()) + " €");
+
+        } else {
+            cantidadDonada.setText("Cantidad donada");
+        }
+//        double donativo = 0;
+//        String donacionString = "";
 
     }
 
+    // METODO CALCULA EL PORCENTAGE DEL INGRESO QUE SE VA A DONAR
     private double calcularDonacion() {
         dineroDonado = cantidadIngreso.getValue() * 0.01;
         return dineroDonado;
     }
 
     // REVISAR ESTE METODO POR EL LIMITE DE 75 DEL ENUNCIADO
-    private void donacionTotal(double donativo) {
-        cantidadIngresada = cantidadIngreso.getValue();
+    private double donacionTotal(double donativo) {
+        try { // NO HACE NADA
+            cantidadIngresada = cantidadIngreso.getValue();
+            if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+                dineroDonadoTotal += donativo;
+                cantidadIngresada -= donativo;
+            } else {
+                cantidadIngresada = cantidadIngreso.getValue();
+            }
 
-        if (isDonacionSelected) {
-            dineroDonadoTotal += donativo;
-            cantidadIngresada -= donativo;
+        } catch (NumberFormatException e) {
+            System.out.println("Has metido letras en vez de numeros. donacionTotal()");
         }
-
+        return dineroDonado;
     }
 
-    private void conceptoDonacion() {
+    //  METODO AÑADE EL CONCEPTO PERSONALIZADO A LA DONACION
+    private String conceptoDonacion() {
+        String conceptoDonado = "";
         if (donacionIglesia.isSelected()) {
-            cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a la iglesia");
-
+            conceptoDonado = "Donación hecha a la iglesia";
+            iglesiaLabel.setText("-> " + calcularDonacion() + "€");
         }
-
         if (donacionSocial.isSelected()) {
-            cuentaMostrada.ingresar(nifIngreso.getText(), dineroDonado, "Donación hecha a organizacion social");
+            conceptoDonado = "Donación hecha a organizacion social";
+            socialLabel.setText("-> " + calcularDonacion() + "€");
+
         }
+        if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
+            conceptoDonado = "Donación hecha a iglesia y  organizacion social";
+            iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
+            socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
+
+        }
+        return conceptoDonado;
     }
 
+    //  METODO CALCULA UNA REGLA DE TRES PARA QUE LO MUESTRE EL PROGRESBAR
     private double cargarProgresoDonacion() {
         double reglaDeTresDonacion = ((100 * dineroDonadoTotal) / MAXIMODONADO) / 100;
         totalDonacion.setProgress(reglaDeTresDonacion);
         return reglaDeTresDonacion;
     }
 
+    //  METODO COMPRUEBA DATOS NIF Y CONCEPOT EN OPERACION DE EXTRACCION
     private boolean comprobarDatosExtracto() {
         boolean comprobarDatosExtracto = true;
 
@@ -425,6 +478,7 @@ public class SecondaryController implements Initializable {
     @FXML
     private void hacerExtracto(ActionEvent event) {
         if (comprobarDatosExtracto()) {
+
             char tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
             switch (tipoAvisoExtracto) {
                 case 'X': // no hay dinero suficiente - FALTA el aviso
@@ -453,8 +507,8 @@ public class SecondaryController implements Initializable {
 
         Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
         while (it.hasNext()) {
-         Movimiento tmp = it.next();
-         cuentaMostrada.listarMovimientos('T').add(tmp);
+            Movimiento tmp = it.next();
+            cuentaMostrada.listarMovimientos('T').add(tmp);
         }
         cargarCuenta();
 
@@ -553,12 +607,11 @@ public class SecondaryController implements Initializable {
 
     // METODO PROVISONAL PARA PARTIR STRING -- METERLOS EN CONTROL
     public void cargarSpinnerIngreso() {
-        SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadIngreso.setValueFactory(dinero);
     }
 
     public void cargarSpinnerExtracto() {
-        SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
+
         cantidadExtracto.setValueFactory(dinero);
     }
 
@@ -568,4 +621,33 @@ public class SecondaryController implements Initializable {
 
     }
 
+    private void limpiarDonacion() {
+        iglesiaLabel.setText(null);
+        socialLabel.setText(null);
+
+    }
+
+    private void limpiarCamposIngreso() {
+        dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
+        cantidadIngreso.setValueFactory(dinero);
+        nifIngreso.setText(null);
+        conceptoIngreso.setText(null);
+        donacionIglesia.setSelected(false);
+        donacionSocial.setSelected(false);
+        cantidadDonada.setText(null);
+        
+        
+
+    }
+
+    public void desactivarDiasFuturos() {
+        filtrarFecha.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) > 0);
+            }
+        });
+    }
 }
