@@ -42,6 +42,18 @@ public class Aviso {
     private final String headerTextInfoB = "Ha llegado al minimo de titulares permitidos.";
     private final String contentTextInfoB = "Por favor, para eliminar más titulares, añada uno previamente.";
 
+    private final String tituloTitularExiste = "Aviso de duplicado de titular";
+    private final String headerTitularExiste = "Este titular ya se encuentra en la cuenta bancaria.";
+    private final String contentTitularExiste = "Por favor, introduzca los datos de otra persona diferente.";
+
+    private final String tituloTitularCorrecto = "Aviso de nuevo titular";
+    private final String headerTitularCorrecto = "Este titular se ha añadido corectamente";
+    private final String contentTitularCorrecto = "Por favor, introduzca los datos de otra persona para añadir mas titulares.";
+
+    private final String tituloTitularNoElegido = "Aviso de titular no elegido";
+    private final String headerTitularNoElegido = "No ha elegido ningún titular";
+    private final String contentTitularNoElegido = "Por favor, elija un titular de la lista.";
+
     private final String tituloImporte0 = "Aviso de importe igual a 0";
     private final String headerTextImporte0 = "Ha introducido un importe igual a 0";
     private final String contentTexImporte0 = "Por favor, introduzca un importe superior a 0";
@@ -61,6 +73,15 @@ public class Aviso {
     private final String tituloWarningDonacion = "Aviso de máximo de donación";
     private final String headerTextWarningDonacion = "Enhorabuena, ha hecho una gran labor comunitaria";
     private final String contentTextWarningDonacion = "Usted ha llegado al máximo de donaciones permitdias.";
+
+    private final String tituloNumerosRojos = "Aviso!! Esta usted numeros rojos";
+    private final String headerNumerosRojos = "Usted tiene un descubierto de ###";
+    private final String contentNumerosRojos = "Por favor, regularice su situación cuanto antes.";
+
+    
+    private final String tituloBancarrota = "Aviso!! Esta usted bancarrota";
+    private final String headerBancarrota = "Usted ha superado el descubierto máximo";
+    private final String contentBancarrota = "Por favor, te aviso que te quito el piso";
 
     private final String tituloNumberFormatException = "Aviso de formato incorrecto";
     private final String headerTextNumberFormatException = "No puede introducir texto en la selección de importe";
@@ -165,6 +186,41 @@ public class Aviso {
                 aviso.setHeaderText(headerTextWarningDonacion);
                 aviso.setContentText(contentTextWarningDonacion);
 
+                break;
+            case 'T': // WARNING -> AVISO TITULAR YA EXISTENTE
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloTitularExiste);
+                aviso.setHeaderText(headerTitularExiste);
+                aviso.setContentText(contentTitularExiste);
+
+                break;
+            case 'L': // INFORMATIOM -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+                aviso.setAlertType(Alert.AlertType.INFORMATION);
+                aviso.setTitle(tituloTitularCorrecto);
+                aviso.setHeaderText(headerTitularCorrecto);
+                aviso.setContentText(contentTitularCorrecto);
+
+                break;
+            case 'R': // WARNING -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloTitularNoElegido);
+                aviso.setHeaderText(headerTitularNoElegido);
+                aviso.setContentText(contentTitularNoElegido);
+
+                break;
+            case 'J': // WARNING -> AVISO NUMEROS ROJOS
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloNumerosRojos);
+                aviso.setHeaderText(headerNumerosRojos);
+                aviso.setContentText(contentNumerosRojos);
+
+                break;
+            case 'B': // WARNING -> AVISO ESTAS EN BANCARROTA
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloBancarrota);
+                aviso.setHeaderText(headerBancarrota);
+                aviso.setContentText(contentBancarrota);
+                
                 break;
 
             default:

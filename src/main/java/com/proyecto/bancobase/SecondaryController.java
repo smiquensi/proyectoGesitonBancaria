@@ -63,6 +63,7 @@ import auxiliar.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -71,6 +72,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.layout.HBox;
@@ -172,6 +174,8 @@ public class SecondaryController implements Initializable {
     private Button importarMovimientos;
     @FXML
     private Button exportarMovimiento;
+    @FXML
+    private ListView<Persona> listarTitulares;
 
     Archivo archivo = new Archivo();
 
@@ -179,6 +183,7 @@ public class SecondaryController implements Initializable {
     private double dineroDonado;
     private static double dineroDonadoTotal;
     private final int MAXIMODONADO = 75;
+    private final double MAXIMOTITULARES = 5.;
     private double donativo;
     private String conceptoDonado;
     private Month mes;
@@ -189,8 +194,7 @@ public class SecondaryController implements Initializable {
     private double cantidadIngresada;
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
-    @FXML
-    private ListView<Persona> listarTitulares;
+
     List<Persona> arrayTitulares = new ArrayList();
     List<Persona> arrayTitularesDelete = new ArrayList();
     ObservableList<Persona> listadoTitulares;
@@ -210,6 +214,10 @@ public class SecondaryController implements Initializable {
     private Label iglesiaLabel;
     @FXML
     private Label socialLabel;
+    @FXML
+    private ProgressBar numeroTitulares;
+    @FXML
+    private Label numeroTitularesText;
 
     /**
      * Initializes the controller class.
@@ -231,6 +239,7 @@ public class SecondaryController implements Initializable {
         cargarProgresoDonacion();
         listarMovimientos();
         desactivarDiasFuturos();
+        cantidadTitulares();
 
     }
 
@@ -271,8 +280,10 @@ public class SecondaryController implements Initializable {
     // METODO PARA SABER SI HAY MENOS DE 5 TITULARES
     public boolean anyadirTitulares() {
         boolean masTitulares;
+
         if (cuentaMostrada.getTitulares().size() < 5) {
             masTitulares = true;
+
         } else {
             nombreInput.setDisable(true); // desactiva la entrada de datos cuando hay mas de 5 titulares
             nifInput.setDisable(true);  //PROBLEMA. como estos textfield son compartidos por desautorizar titular no se puede acceder a este metodo
@@ -291,30 +302,38 @@ public class SecondaryController implements Initializable {
             if (nifInput.getText() == null || nombreInput.getText() == null
                     || nifInput.getText().isEmpty() || nombreInput.getText().isEmpty()) { // ya funcionan por separado con ==null, pero hay que poner .isEmpty porque sino cargaria el primero vacio, al no iniciarse como null sino como empty
 
-                lanzarAviso('V');
+                lanzarAviso('V'); // WARNING -> DEBE INTRODUCIR NIF Y NOMBRE
 
             } else {
                 if (cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText())) {
-                    // Devuelve true, el titular se ha añadido correctamente. 
-                    // mostarlo por aviso o por label
+                    lanzarAviso('L'); // INFORMATIOM -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+
                 } else {
-                    // El titular esta duplicado, lanzar mensaje de aviso
+                    lanzarAviso('T'); // WARNING -> AVISO TITULAR YA EXISTENTE
                 }
             }
         }
-        // RELLAMAMOS AL METODO CARGAR CUENTA PARA ACTUALICE LA INFO DE LA VENTANA
-        // ESTATICA (LA VENTANA DE ARRIBA)
         cargarCuenta();
-
         limpiarCampos();
     }
 
+    // METODO QUE CARGA LA CANTIDADA DE TITULARES EN PROGRES
+    private double cantidadTitulares() {
+        double proporcionTitulares = cuentaMostrada.getTitulares().size() / MAXIMOTITULARES;
+        numeroTitulares.setProgress(proporcionTitulares);
+        numeroTitularesText.setText("Titulares en la cuenta -> " + cuentaMostrada.getTitulares().size() + "/5 permitidos");
+        return proporcionTitulares;
+    }
+
     @FXML
-    private void desautorizarTitular(ActionEvent event) {
+    private void desautorizarTitular(ActionEvent event) { // *** REVISAR PARA INTENTAR USAR METODOS DE CUENTA BANCARIA !!!!!
         //System.out.println(cuentaMostrada.getTitulares().size());
-        if (cuentaMostrada.getTitulares().size() > 1) {
-            if (titularSeleccionado() == null) {
+        try {
+
+            if (cuentaMostrada.getTitulares().size() < 1) {
+                System.out.println("holi mano");
                 lanzarAviso('V');
+                System.out.println("macastre");
 
             } else {
                 cuentaMostrada.eliminaTitular(titularSeleccionado());
@@ -343,14 +362,56 @@ public class SecondaryController implements Initializable {
                 }
 
             }
-        } else {
-            lanzarAviso('W');
+        } catch (RuntimeException e) {
+
+            lanzarAviso('R');
         }
         cargarCuenta();
         limpiarCampos();
 
     }
 
+//    @FXML
+//    private void desautorizarTitular(ActionEvent event) {
+//        //System.out.println(cuentaMostrada.getTitulares().size());
+//        if (cuentaMostrada.getTitulares().size() > 1) {
+//            if (titularSeleccionado() == null) {
+//                lanzarAviso('V');
+//
+//            } else {
+//                cuentaMostrada.eliminaTitular(titularSeleccionado());
+//
+//                for (Persona temp : arrayTitulares) {
+//
+//                    if (!cuentaMostrada.getTitulares().contains(temp)) {
+//
+//                        arrayTitularesDelete.add(temp);
+//                    }
+//
+//                }
+//
+//                for (Persona temp : arrayTitularesDelete) {
+//
+//                    arrayTitulares.remove(temp);
+//
+//                }
+//                listarTitulares.getSelectionModel().clearSelection();
+//                listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+//                listarTitulares.setItems(listadoTitulares);
+//
+//                if (cuentaMostrada.getTitulares().size() <= 4) {
+//                    nombreInput.setDisable(false);
+//                    nifInput.setDisable(false);
+//                }
+//
+//            }
+//        } else {
+//            lanzarAviso('W');
+//        }
+//        cargarCuenta();
+//        limpiarCampos();
+//
+//    }
     private String titularSeleccionado() {
 
         int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
@@ -511,27 +572,31 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void hacerExtracto(ActionEvent event) {
+        char tipoAvisoExtracto;
         if (comprobarDatosExtracto()) {
+            tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
 
-            char tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
+            if (cantidadExtracto.getValue() <= 0) {
+                tipoAvisoExtracto = '0';
+            }
+
             switch (tipoAvisoExtracto) {
-                case 'X': // no hay dinero suficiente - FALTA el aviso
-                    lanzarAviso('W');
+                case 'X': // WARNING -> AVISO ESTAS EN BANCARROTA
+                    lanzarAviso('B');
                     break;
-                case 'R': // numeros rojos - FALTA el aviso
-                    lanzarAviso('W');
+                case 'R': // WARNING -> AVISO NUMEROS ROJOS
+                    lanzarAviso('J');
+
                     break;
-                case 'V': // extraccion ok
+                case 'V': // CONFIRMACIÓN -> SE HA REALIZADO OPERACION CORRECTAMENTE
                     lanzarAviso('C');
                     break;
-                case '0': // importe igual a 0 - CREO QUE ESTE NO FUNCIONA BIEN 
+                case '0': // WARNING -> DEBE INTRODUCIR UN IMPORTE SUPERIOR A 0 
                     lanzarAviso('D');
                     break;
 
             }
-        } else {
-//            lanzarAviso('W');
-        }
+        } 
         cargarCuenta();
 //        return tipoAvisoExtracto;
     }
@@ -732,11 +797,12 @@ public class SecondaryController implements Initializable {
         });
     }
 
-    public void calendario() {
-
-        /*Stage calendarioStage = new Stage();
-        DatePicker datePicker = new DatePicker();
+    private AtomicReference<String> calendario() {
+        final AtomicReference<String> salida = new AtomicReference<String>();
+        Stage calendarioStage = new Stage();
         Month[] todosLosMeses = new Month[12];
+        Label br = new Label();
+        Label br1 = new Label();
         int mesInt;
 
         for (int i = 0; i < 13; i++) {
@@ -747,29 +813,29 @@ public class SecondaryController implements Initializable {
         }
         ObservableList<Month> todosLosMesesObservableList = FXCollections.observableArrayList(todosLosMeses);
 
-        ComboBox comboBox = new ComboBox(todosLosMesesObservableList);
+        ComboBox<Month> comboBox = new ComboBox(todosLosMesesObservableList);
 
         VBox root = new VBox(comboBox);
+        root.setAlignment(Pos.CENTER);
 
-        Label lbl = new Label("VBox");
-        lbl.setFont(Font.font("Amble CN", FontWeight.BOLD, 24));
-        root.getChildren().add(lbl);
+        root.getChildren().add(br);
 
         Button btn1 = new Button();
-        btn1.setText("Button1");
+        btn1.setText("Importar Mes");
 
         Button btn2 = new Button();
-        btn2.setText("Button2");
-        
-        
+        btn2.setText("Importar Todo");
+
         root.getChildren().add(btn1);
+        root.getChildren().add(br1);
         root.getChildren().add(btn2);
 
         Scene scene = new Scene(root, 250, 150);
 
         calendarioStage.setScene(scene);
-        calendarioStage.show();*/
-        
+        calendarioStage.show();
+        return salida;
+
     }
 
 }

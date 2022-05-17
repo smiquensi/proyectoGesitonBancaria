@@ -6,6 +6,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
@@ -65,10 +66,20 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
+                                          <TextField fx:id="nombreInput" alignment="CENTER" prefHeight="26.0" prefWidth="0.0" promptText="Nombre" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                          <TextField fx:id="nifInput" alignment="CENTER" promptText="Nif" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
                                           <Button fx:id="botonAutorizarTitular" mnemonicParsing="false" onAction="#autorizarTitular" prefHeight="32.0" prefWidth="168.0" text="Autorizar Titular" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                           <Button fx:id="botonDesautorizarTitular" mnemonicParsing="false" onAction="#desautorizarTitular" prefHeight="32.0" prefWidth="167.0" text="Desautorizar Titular" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                                          <TextField fx:id="nifInput" alignment="CENTER" promptText="Nif" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
-                                          <TextField fx:id="nombreInput" alignment="CENTER" prefHeight="26.0" prefWidth="0.0" promptText="Nombre" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                                          <ProgressBar fx:id="numeroTitulares" prefHeight="20.0" prefWidth="278.0" progress="0.0" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets top="15.0" />
+                                             </GridPane.margin>
+                                          </ProgressBar>
+                                          <Label fx:id="numeroTitularesText" text="Titulares en la cuenta" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                             <GridPane.margin>
+                                                <Insets right="20.0" top="20.0" />
+                                             </GridPane.margin>
+                                          </Label>
                                        </children>
                                     </GridPane>
                                  </children>
