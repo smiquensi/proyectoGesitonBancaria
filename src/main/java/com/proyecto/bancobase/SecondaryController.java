@@ -61,7 +61,10 @@ import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javafx.scene.control.DateCell;
+import javafx.scene.control.TableCell;
+import javax.swing.text.DateFormatter;
 
 /**
  * FXML Controller class
@@ -627,9 +630,23 @@ public class SecondaryController implements Initializable {
             }
         }
         listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
+
         tablaMovimientos.setItems(listadoMovimientosObservableList);
 
-        columnaFecha.setCellValueFactory(new PropertyValueFactory<Movimiento, LocalDateTime>("fecha"));
+        //columnaFecha.setCellValueFactory(new PropertyValueFactory<Movimiento, LocalDateTime>("fecha"));
+        
+        columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        columnaFecha.setCellFactory(tc -> new TableCell<Movimiento, LocalDateTime>() {
+        @Override
+        public void updateItem(LocalDateTime item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item == null || empty) {
+                setText("");
+            } else{
+                setText(item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+            }
+        }
+    });
         columnaDni.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("dni"));
         columnaImporte.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("cantidad"));
         columnaMotivo.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("motivo"));
