@@ -27,10 +27,9 @@ import modelo.Movimiento;
  */
 public class Archivo {
 
-    private double cantidadHacienda;
     Aviso aviso = new Aviso('W');
 
-    public File importarArchivo() {
+  public File importarArchivo() {
         boolean seguir = true;
         File fichero = null;
         while (seguir) {
@@ -38,7 +37,7 @@ public class Archivo {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files (*.txt)", "*.txt"));
 
-            //elegimos la ruta de apertura default en 
+            //elegimos la ruta de apertura default en ava jcombobox arraylist
             String userDir = System.getProperty("user.home");
             fileChooser.getSelectedExtensionFilter();
             fileChooser.setInitialDirectory(new File(userDir + "/documents/NetBeansProjects/proyectoGesitonBancaria/datos"));

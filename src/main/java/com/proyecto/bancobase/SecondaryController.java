@@ -61,9 +61,30 @@ import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.skin.DatePickerSkin;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.text.DateFormatter;
 
 /**
@@ -160,6 +181,7 @@ public class SecondaryController implements Initializable {
     private final int MAXIMODONADO = 75;
     private double donativo;
     private String conceptoDonado;
+    private Month mes;
 
     Aviso aviso = new Aviso('W');
     List<Persona> arrayMovimientosExportar = new ArrayList();
@@ -431,7 +453,7 @@ public class SecondaryController implements Initializable {
             lanzarAviso('A'); // aviso para maximo de donaciones
             donacionIglesia.setDisable(true);
             donacionSocial.setDisable(true);
-            
+
         }
         cuentaMostrada.sumaDonacion(donativo);
         this.donativo = donativo;
@@ -516,17 +538,29 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientos(ActionEvent event) {
+        int lineas = 0;
+        calendario();
 
-        Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
+        /*  Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
         while (it.hasNext()) {
             Movimiento tmp = it.next();
-            cuentaMostrada.listarMovimientos('T').add(tmp);
+
+            if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
+                if (tmp.getCantidad() != 0.0) {
+                    cuentaMostrada.listarMovimientos('T').add(tmp);
+                    lineas++;
+                }
+
+            }
+
         }
-        // Aviso cuantasLineas = new Aviso("Importar movimientos", "Se han importado un total de: ", /*archivo.importarArchivo().length() +*/ " Movimientos"); // PERSONALIZAR AVISO
+        // cambiarrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+        aviso = new Aviso(lineas); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad de lineas.
+
+        aviso.lanzarHacienda();
 
         // cuantasLineas.showAndWait();
-        cargarCuenta();
-
+        cargarCuenta();*/
     }
 
     @FXML
@@ -697,4 +731,45 @@ public class SecondaryController implements Initializable {
             }
         });
     }
+
+    public void calendario() {
+
+        /*Stage calendarioStage = new Stage();
+        DatePicker datePicker = new DatePicker();
+        Month[] todosLosMeses = new Month[12];
+        int mesInt;
+
+        for (int i = 0; i < 13; i++) {
+            if (i != 12) {
+                todosLosMeses[i] = (Month.of(i + 1));
+            }
+
+        }
+        ObservableList<Month> todosLosMesesObservableList = FXCollections.observableArrayList(todosLosMeses);
+
+        ComboBox comboBox = new ComboBox(todosLosMesesObservableList);
+
+        VBox root = new VBox(comboBox);
+
+        Label lbl = new Label("VBox");
+        lbl.setFont(Font.font("Amble CN", FontWeight.BOLD, 24));
+        root.getChildren().add(lbl);
+
+        Button btn1 = new Button();
+        btn1.setText("Button1");
+
+        Button btn2 = new Button();
+        btn2.setText("Button2");
+        
+        
+        root.getChildren().add(btn1);
+        root.getChildren().add(btn2);
+
+        Scene scene = new Scene(root, 250, 150);
+
+        calendarioStage.setScene(scene);
+        calendarioStage.show();*/
+        
+    }
+
 }
