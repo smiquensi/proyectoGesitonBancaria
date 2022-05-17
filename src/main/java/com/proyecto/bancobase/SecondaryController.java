@@ -364,14 +364,14 @@ public class SecondaryController implements Initializable {
                     break;
                 case 0: // INGRESO OK
                     lanzarAviso('C');
-                    totalDonacionText.setText("Total donado: " + dineroDonadoTotal + "€");
+                    totalDonacionText.setText("Total donado: " + cuentaMostrada.getDonaciones() + "€");
                     cargarProgresoDonacion();
 
                     break;
                 case 1: // AVISAR HACIENDA
-                    lanzarAviso('H');
-                    aviso.setCantidadHacienda(99999999999.0);
-                    totalDonacionText.setText("Total donado: " + dineroDonadoTotal + "€");
+                    aviso = new Aviso(cantidadIngresada); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad ingresada.
+                    aviso.lanzarHacienda(); // lanzamos el aviso
+                    totalDonacionText.setText("Total donado: " + cuentaMostrada.getDonaciones() + "€");
                     cargarProgresoDonacion();
 
                     break;
@@ -389,7 +389,7 @@ public class SecondaryController implements Initializable {
     private boolean limiteDonacion() {
         boolean seguir = false;
 
-        if (dineroDonadoTotal <= 75) {
+        if (cuentaMostrada.getDonaciones() <= 75) {
 
             seguir = true;
 
@@ -406,9 +406,9 @@ public class SecondaryController implements Initializable {
             String nifExtracion = nifIngreso.getText();
             donacionExtraccion = donacionTotal(calcularDonacion());
             if (donacionExtraccion >= 75) {
+                donacionExtraccion = 75 - cuentaMostrada.getDonaciones(); // leemos el total de donaciones del objeto cuenta bancaria
 
-                donacionExtraccion = 75 - dineroDonadoTotal;
-
+//                donacionExtraccion = 75 - dineroDonadoTotal;
             }
             String conceptoExtraccion = conceptoDonacion();
             cuentaMostrada.sacar(nifExtracion, donacionExtraccion, conceptoExtraccion);
@@ -466,10 +466,15 @@ public class SecondaryController implements Initializable {
         try { // NO HACE NADA
             cantidadIngresada = cantidadIngreso.getValue();
             if (donacionSocial.isSelected() || donacionIglesia.isSelected() && limiteDonacion()) {
-                dineroDonadoTotal += donativo;
-                //cantidadIngresada -= donativo;
+                cuentaMostrada.sumaDonacion(donativo);
+                //                dineroDonadoTotal += donativo;
+
             } else {
+                lanzarAviso('I');
+                donacionIglesia.setDisable(true);
+                donacionSocial.setDisable(true);
                 dineroDonadoTotal = 75;
+
             }
 
         } catch (NumberFormatException e) {
@@ -501,7 +506,7 @@ public class SecondaryController implements Initializable {
 
     //  METODO CALCULA UNA REGLA DE TRES PARA QUE LO MUESTRE EL PROGRESBAR
     private double cargarProgresoDonacion() {
-        double reglaDeTresDonacion = ((100 * dineroDonadoTotal) / MAXIMODONADO) / 100;
+        double reglaDeTresDonacion = ((100 * cuentaMostrada.getDonaciones()) / MAXIMODONADO) / 100;
         totalDonacion.setProgress(reglaDeTresDonacion);
         return reglaDeTresDonacion;
     }
@@ -553,9 +558,9 @@ public class SecondaryController implements Initializable {
             Movimiento tmp = it.next();
             cuentaMostrada.listarMovimientos('T').add(tmp);
         }
-       // Aviso cuantasLineas = new Aviso("Importar movimientos", "Se han importado un total de: ", /*archivo.importarArchivo().length() +*/ " Movimientos"); // PERSONALIZAR AVISO
-       
-       // cuantasLineas.showAndWait();
+        // Aviso cuantasLineas = new Aviso("Importar movimientos", "Se han importado un total de: ", /*archivo.importarArchivo().length() +*/ " Movimientos"); // PERSONALIZAR AVISO
+
+        // cuantasLineas.showAndWait();
         cargarCuenta();
 
     }

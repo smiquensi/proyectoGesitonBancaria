@@ -4,6 +4,8 @@
  */
 package auxiliar;
 
+import com.proyecto.bancobase.SecondaryController;
+import java.awt.BorderLayout;
 import javafx.scene.control.Alert;
 
 /**
@@ -12,16 +14,21 @@ import javafx.scene.control.Alert;
  */
 public class Aviso {
 
-    Alert aviso = new Alert(Alert.AlertType.NONE);
     private String title;
     private String headerText;
     private String contentText;
     private char tipoAviso;
     private double cantidadHacienda;
 
+    Alert aviso = new Alert(Alert.AlertType.NONE);
+
     public double setCantidadHacienda(double cantidadHacienda) {
 
         this.cantidadHacienda = cantidadHacienda;
+        return cantidadHacienda;
+    }
+
+    public double getCantidadHacienda() {
         return cantidadHacienda;
     }
 
@@ -48,7 +55,7 @@ public class Aviso {
     private final String contentTextConfirmacion = "Esta operación se ha añadido a su lista de movimientos";
 
     private final String tituloHacienda = "Información importante";
-    private final String headerTextHacienda = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
+    private String headerTextHacienda = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
     private final String contentTextHacienda = "Por motivos legales debemos informar de las operaciones superiores a 3000 €";
 
     private final String tituloWarningDonacion = "Aviso de motivo de donación";
@@ -62,10 +69,25 @@ public class Aviso {
     // FALTAN AVISO DE TITULAR AÑADIDO, DE TITULAR DUPLICADO, NO HAY DINERO SUFICIENTE
     // NUMEROS ROJOS
     public Aviso(String title, String headerText, String contentText) {
-        
         this.title = title;
         this.headerText = headerText;
         this.contentText = contentText;
+    }
+
+    // METODO CONSTRUCTOR PARA AVISO CON IMPORTE DE HACIENDA *** REVISAR PARA MEJORAR***
+    public Aviso(double cantidadHacienda) {
+        this.cantidadHacienda = cantidadHacienda;
+        this.headerText = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
+
+
+    }
+    // METODO QUE LANZA EL MENSAJE DE HACIENDA  *** REVISAR PARA MEJORAR ***
+    public void lanzarHacienda() {
+        aviso = new Alert(Alert.AlertType.WARNING);
+        aviso.setTitle(tituloHacienda);
+        aviso.setHeaderText(headerText);
+        aviso.setContentText(contentTextHacienda);
+        aviso.showAndWait();
     }
 
     public Aviso(char tipoAviso) {
@@ -86,7 +108,7 @@ public class Aviso {
             case 'W': // WARNING -> DEBE ELEGIR UNA CUENTA PARA CONTINUAR
                 aviso.setAlertType(Alert.AlertType.WARNING);
                 aviso.setTitle(tituloWarning);
-                aviso.setHeaderText(headerTextWarning);
+                aviso.setHeaderText(headerText);
                 aviso.setContentText(contentTextWarning);
                 break;
             case 'V': // WARNING -> DEBE INTRODUCIR NIF Y NOMBRE
