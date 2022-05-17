@@ -27,7 +27,7 @@ public class CuentaBancaria {
         titulares.add(titular);
         this.saldo = 0;
     }
-    
+
     // Probar este metodo de Raquel para importar movimientos de un archivo y registrarlos. 
 //    public boolean registrarMovimiento(Movimiento mov) {
 //        if (mov.getCantidad() != 0) {
@@ -35,7 +35,6 @@ public class CuentaBancaria {
 //        }
 //        return false;
 //    }
-
     public double getDonaciones() {
         return donaciones;
     }
@@ -162,10 +161,9 @@ public class CuentaBancaria {
         return listado;
     }*/
     // ESTE METODO LO HE CREADO POR QUE PIDE EN EL ENUNCIADO UNA TABLEVIEW DE OBJETOS MOVIMIENTO
-    
     public Deque<Movimiento> listarMovimientos(char tipoMovBuscado) {
         Deque<Movimiento> movimientosFiltrados = new ArrayDeque<>();
-        
+
         if (tipoMovBuscado == 'T') {
             return movimientos;
         } else {

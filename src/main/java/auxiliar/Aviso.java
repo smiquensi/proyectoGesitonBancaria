@@ -58,9 +58,9 @@ public class Aviso {
     private String headerTextHacienda = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
     private final String contentTextHacienda = "Por motivos legales debemos informar de las operaciones superiores a 3000 €";
 
-    private final String tituloWarningDonacion = "Aviso de motivo de donación";
-    private final String headerTextWarningDonacion = "No se ha introducido una entidad social para esta donación.";
-    private final String contentTextWarningDonacion = "Por favor, elija iglesia u organización social .";
+    private final String tituloWarningDonacion = "Aviso de máximo de donación";
+    private final String headerTextWarningDonacion = "Enhorabuena, ha hecho una gran labor comunitaria";
+    private final String contentTextWarningDonacion = "Usted ha llegado al máximo de donaciones permitdias.";
 
     private final String tituloNumberFormatException = "Aviso de formato incorrecto";
     private final String headerTextNumberFormatException = "No puede introducir texto en la selección de importe";
@@ -79,8 +79,8 @@ public class Aviso {
         this.cantidadHacienda = cantidadHacienda;
         this.headerText = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
 
-
     }
+
     // METODO QUE LANZA EL MENSAJE DE HACIENDA  *** REVISAR PARA MEJORAR ***
     public void lanzarHacienda() {
         aviso = new Alert(Alert.AlertType.WARNING);
@@ -157,6 +157,13 @@ public class Aviso {
                 aviso.setTitle(tituloNumberFormatException);
                 aviso.setHeaderText(headerTextNumberFormatException);
                 aviso.setContentText(contentTextNumberFormatException);
+
+                break;
+            case 'A': // WARNING -> AVISO DE EXCEPCION NumberFormatException
+                aviso.setAlertType(Alert.AlertType.INFORMATION);
+                aviso.setTitle(tituloWarningDonacion);
+                aviso.setHeaderText(headerTextWarningDonacion);
+                aviso.setContentText(contentTextWarningDonacion);
 
                 break;
 

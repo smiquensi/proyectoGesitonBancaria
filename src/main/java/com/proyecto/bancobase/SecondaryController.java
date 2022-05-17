@@ -158,6 +158,8 @@ public class SecondaryController implements Initializable {
     private double dineroDonado;
     private static double dineroDonadoTotal;
     private final int MAXIMODONADO = 75;
+    private double donativo;
+    private String conceptoDonado;
 
     Aviso aviso = new Aviso('W');
     List<Persona> arrayMovimientosExportar = new ArrayList();
@@ -174,7 +176,7 @@ public class SecondaryController implements Initializable {
     private static Persona titularElegido;
     private Label titularSeleccionadoLabel;
     private CheckBox filtrarMovimientosCheck;
-    SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
+    SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1); // METER TRY CATCH PARA RECOGER TEXTO?
 
     @FXML
     private Button filtrarMovimientosButton;
@@ -204,6 +206,7 @@ public class SecondaryController implements Initializable {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + cuentaMostrada.getSaldoFormateado());
         cargarTitulares();
+        cargarProgresoDonacion();
         listarMovimientos();
         desactivarDiasFuturos();
 
@@ -299,9 +302,6 @@ public class SecondaryController implements Initializable {
                     if (!cuentaMostrada.getTitulares().contains(temp)) {
 
                         arrayTitularesDelete.add(temp);
-//                        listarTitulares.getSelectionModel().clearSelection();
-//                        listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
-//                        listarTitulares.setItems(listadoTitulares);
                     }
 
                 }
@@ -338,6 +338,17 @@ public class SecondaryController implements Initializable {
         return titularSeleccionadoDni;
     }
 
+    private boolean comprobarDatosIngreso() {
+        boolean comprobarDatosIngreso = true;
+
+        if (nifIngreso.getText().isEmpty() || conceptoIngreso.getText().isEmpty()) {
+            comprobarDatosIngreso = false;
+            lanzarAviso('V');
+
+        }
+        return comprobarDatosIngreso;
+    }
+
     @FXML
     private void hacerIngreso(ActionEvent event) {
 
@@ -352,7 +363,8 @@ public class SecondaryController implements Initializable {
                 extraerDonacion();
 
             }
-            cantidadIngresada = cantidadIngreso.getValue();
+
+            cantidadIngresada = cantidadIngreso.getValue() - donativo;
 
             tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
 
@@ -386,73 +398,24 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO QUE COMPRUEBA SI SE HA LLEGADO AL LIMITE DE DONACIONES
     private boolean limiteDonacion() {
         boolean seguir = false;
-
         if (cuentaMostrada.getDonaciones() <= MAXIMODONADO) {
-
             seguir = true;
-
         }
-
         return seguir;
 
     }
 
+    // METODO QUE HACE EL EXTRACTO DE LA DONACION EN CUENTA BANCARIA
     private void extraerDonacion() {
         double donacionExtraccion = 0;
-        if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+        String nifExtracion = nifIngreso.getText();
+        String conceptoExtraccion = conceptoDonado;
 
-            String nifExtracion = nifIngreso.getText();
-            donacionExtraccion = donacionTotal(calcularDonacion());
-            if (donacionExtraccion >= MAXIMODONADO) {
-                donacionExtraccion = MAXIMODONADO - cuentaMostrada.getDonaciones(); // leemos el total de donaciones del objeto cuenta bancaria
-
-//                donacionExtraccion = 75 - dineroDonadoTotal;
-            }
-            String conceptoExtraccion = conceptoDonacion();
-            cuentaMostrada.sacar(nifExtracion, donacionExtraccion, conceptoExtraccion);
-        }
-
-    }
-
-    private boolean comprobarDatosIngreso() {
-        boolean comprobarDatosIngreso = true;
-
-        if (nifIngreso.getText().isEmpty() || conceptoIngreso.getText().isEmpty()) {
-            comprobarDatosIngreso = false;
-            lanzarAviso('V');
-
-        }
-        return comprobarDatosIngreso;
-    }
-
-    @FXML
-    private void cargarDonacion(ActionEvent event) {
-        iglesiaLabel.setText("");
-        socialLabel.setText("");
-
-        if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
-            cantidadDonada.setText("Cantidad donada: " + String.valueOf(calcularDonacion()) + " €");
-
-            if (donacionIglesia.isSelected()) {
-                iglesiaLabel.setText("-> " + calcularDonacion() + "€");
-            }
-            if (donacionSocial.isSelected()) {
-                socialLabel.setText("-> " + calcularDonacion() + "€");
-
-            }
-            if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
-                iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
-                socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
-
-            }
-        } else {
-            cantidadDonada.setText("Cantidad donada");
-        }
-
-//        double donativo = 0;
-//        String donacionString = "";
+        donacionExtraccion = donacionTotal(calcularDonacion());
+        cuentaMostrada.sacar(nifExtracion, donacionExtraccion, conceptoExtraccion);
     }
 
     // METODO CALCULA EL PORCENTAGE DEL INGRESO QUE SE VA A DONAR
@@ -461,45 +424,46 @@ public class SecondaryController implements Initializable {
         return dineroDonado;
     }
 
-    // REVISAR ESTE METODO POR EL LIMITE DE 75 DEL ENUNCIADO
+    // METODO QUE COMPRUEBA SI CON ESTA DONACION SE SOBREPASA EL LIMITE
     private double donacionTotal(double donativo) {
-        try { // NO HACE NADA
-            cantidadIngresada = cantidadIngreso.getValue();
-            if (donacionSocial.isSelected() || donacionIglesia.isSelected() && limiteDonacion()) {
-                cuentaMostrada.sumaDonacion(donativo);
-                //                dineroDonadoTotal += donativo;
-
-            } else {
-                lanzarAviso('I');
-                donacionIglesia.setDisable(false);
-                donacionSocial.setDisable(false);
-//                dineroDonadoTotal = 75;
-
-            }
-
-        } catch (NumberFormatException e) {
-            System.out.println("Has metido letras en vez de numeros. donacionTotal()");
+        if (cuentaMostrada.getDonaciones() + donativo > MAXIMODONADO) {
+            donativo = MAXIMODONADO - cuentaMostrada.getDonaciones();
+            lanzarAviso('A'); // aviso para maximo de donaciones
+            donacionIglesia.setDisable(true);
+            donacionSocial.setDisable(true);
+            
         }
-        return dineroDonado;
+        cuentaMostrada.sumaDonacion(donativo);
+        this.donativo = donativo;
+        return donativo;
     }
 
     //  METODO AÑADE EL CONCEPTO PERSONALIZADO A LA DONACION
-    private String conceptoDonacion() {
-        String conceptoDonado = "";
-        if (donacionIglesia.isSelected()) {
-            conceptoDonado = "Donación hecha a la iglesia";
-            iglesiaLabel.setText("-> " + calcularDonacion() + "€");
-        }
-        if (donacionSocial.isSelected()) {
-            conceptoDonado = "Donación hecha a organizacion social";
-            socialLabel.setText("-> " + calcularDonacion() + "€");
+    @FXML
+    private String cargarDonacion(ActionEvent event) {
+        iglesiaLabel.setText("");
+        socialLabel.setText("");
 
-        }
-        if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
-            conceptoDonado = "Donación hecha a iglesia y  organizacion social";
-            iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
-            socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
+        if (donacionSocial.isSelected() || donacionIglesia.isSelected()) {
+            cantidadDonada.setText("Cantidad donada: " + String.valueOf(calcularDonacion()) + " €");
 
+            if (donacionIglesia.isSelected()) {
+                conceptoDonado = "Donación hecha a la iglesia";
+                iglesiaLabel.setText("-> " + calcularDonacion() + "€");
+            }
+            if (donacionSocial.isSelected()) {
+                conceptoDonado = "Donación hecha a organizacion social";
+                socialLabel.setText("-> " + calcularDonacion() + "€");
+
+            }
+            if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
+                conceptoDonado = "Donación hecha a iglesia y  organizacion social";
+                iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
+                socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
+
+            }
+        } else {
+            cantidadDonada.setText("Cantidad donada");
         }
         return conceptoDonado;
     }
