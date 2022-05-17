@@ -389,7 +389,7 @@ public class SecondaryController implements Initializable {
     private boolean limiteDonacion() {
         boolean seguir = false;
 
-        if (cuentaMostrada.getDonaciones() <= 75) {
+        if (cuentaMostrada.getDonaciones() <= MAXIMODONADO) {
 
             seguir = true;
 
@@ -405,8 +405,8 @@ public class SecondaryController implements Initializable {
 
             String nifExtracion = nifIngreso.getText();
             donacionExtraccion = donacionTotal(calcularDonacion());
-            if (donacionExtraccion >= 75) {
-                donacionExtraccion = 75 - cuentaMostrada.getDonaciones(); // leemos el total de donaciones del objeto cuenta bancaria
+            if (donacionExtraccion >= MAXIMODONADO) {
+                donacionExtraccion = MAXIMODONADO - cuentaMostrada.getDonaciones(); // leemos el total de donaciones del objeto cuenta bancaria
 
 //                donacionExtraccion = 75 - dineroDonadoTotal;
             }
@@ -471,9 +471,9 @@ public class SecondaryController implements Initializable {
 
             } else {
                 lanzarAviso('I');
-                donacionIglesia.setDisable(true);
-                donacionSocial.setDisable(true);
-                dineroDonadoTotal = 75;
+                donacionIglesia.setDisable(false);
+                donacionSocial.setDisable(false);
+//                dineroDonadoTotal = 75;
 
             }
 
