@@ -17,6 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import modelo.Movimiento;
 
@@ -26,7 +27,7 @@ import modelo.Movimiento;
  */
 public class Archivo {
 
-   private double cantidadHacienda;
+    private double cantidadHacienda;
     Aviso aviso = new Aviso('W');
 
     public File importarArchivo() {
@@ -58,25 +59,35 @@ public class Archivo {
         return fichero;
     }
 
-    public void exportarArchivo(List<Movimiento> movimiento, String nombrePersona) {
+    public void exportarArchivo(List<Movimiento> movimiento, String nombrePersona, String tipoMovimiento, String fecha) {
 
         //directorio
-        String directoryName = "datos/" + nombrePersona;
-        String nombreArchivo= "Movimientos.txt";
-        File file = new File("datos/" + nombrePersona + "/" + nombrePersona + " Movimientos.txt");
-        File directorio = new File("datos/" + nombrePersona);
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Seleccione un directorio");
+
+        File directorio = directoryChooser.showDialog(null);
+
+        String directorioString = directorio.getAbsolutePath() + "/" + nombrePersona;
+
+        File directorioFinal = new File(directorioString);
+
+        if (!directorioFinal.exists()) {
+            directorioFinal.mkdir();
+
+        }
+
+        File file = new File(directorioString + "/" + nombrePersona + " " + tipoMovimiento + " " + fecha + " Movimientos.txt");
 
         //fichero
-        Path archivo = Paths.get("./datos/" + nombrePersona + "/" + nombrePersona + " Movimientos.txt");
-        if (!directorio.exists()) {
-            directorio.mkdir();
+        Path archivo = Paths.get(directorioString + "/" + nombrePersona + " " + tipoMovimiento + " " + fecha + " Movimientos.txt");
+
+        if (!directorioFinal.exists()) {
+            directorioFinal.mkdir();
         }
-        
         if (file.exists()) {
             file.delete();
-        
+
         }
-      
 
         try (BufferedWriter out = Files.newBufferedWriter(archivo,
                 Charset.defaultCharset(),
@@ -88,18 +99,10 @@ public class Archivo {
                 out.newLine();
             }
 
-
         } catch (IOException e) {
             System.out.println("Error al escribir en el fichero");//falta aviso
         }
 
     }
-
-    public void setCantidadHacienda(double cantidadHacienda) {
-        
-        this.cantidadHacienda = cantidadHacienda;
-    }
-    
-    
 
 }

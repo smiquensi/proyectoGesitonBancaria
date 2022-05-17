@@ -553,6 +553,9 @@ public class SecondaryController implements Initializable {
             Movimiento tmp = it.next();
             cuentaMostrada.listarMovimientos('T').add(tmp);
         }
+       // Aviso cuantasLineas = new Aviso("Importar movimientos", "Se han importado un total de: ", /*archivo.importarArchivo().length() +*/ " Movimientos"); // PERSONALIZAR AVISO
+       
+       // cuantasLineas.showAndWait();
         cargarCuenta();
 
     }
@@ -560,6 +563,10 @@ public class SecondaryController implements Initializable {
     @FXML
     private void exportarMovimiento(ActionEvent event) {
         Set<Persona> tmp = cuentaMostrada.getTitulares();
+        char tipoMovimiento;
+        String tipoMovimientoString;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String fechaString;
         String nombrePersona = "";
         for (Persona tmpFor : tmp) {
 
@@ -567,22 +574,39 @@ public class SecondaryController implements Initializable {
 
         }
         nombrePersona = arrayMovimientosExportar.get(0).getNombre();
-        archivo.exportarArchivo(recolectarMovimiento(), nombrePersona);
+        if (filtrarExtractos.isSelected()) {
+            tipoMovimiento = 'E';
+            tipoMovimientoString = "Extractos";
+        } else if (filtrarIngresos.isSelected()) {
+            tipoMovimiento = 'I';
+            tipoMovimientoString = "Ingresos";
 
-    }
+        } else {
+            tipoMovimiento = 'T';
+            tipoMovimientoString = "General";
 
-    public List<Movimiento> recolectarMovimiento() {
-        char tipoMov = 'T';
-
-        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
-            if (!arrayListMovimientos.contains(emp)) {
-                arrayListMovimientos.add(emp);
-            }
         }
 
-        return arrayListMovimientos;
+        if (filtrarFecha.getValue() == null) {
+
+            fechaString = LocalDate.now().format(formatter);
+        } else {
+            fechaString = filtrarFecha.getValue().format(formatter);
+        }
+        archivo.exportarArchivo(listarMovimientos(), nombrePersona, tipoMovimientoString, fechaString);
+
     }
 
+//    public List<Movimiento> recolectarMovimiento(char tipoMovimiento) {
+//
+//        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMovimiento)) {
+//            if (!arrayListMovimientos.contains(emp)) {
+//                arrayListMovimientos.add(emp);
+//            }
+//        }
+//
+//        return arrayListMovimientos;
+//    }
     @FXML
     private void cargarFiltrado(ActionEvent event) {
         listarMovimientos();
@@ -598,7 +622,7 @@ public class SecondaryController implements Initializable {
 
     }
 
-    private void listarMovimientos() { // Aqui filtraremos por char
+    private List<Movimiento> listarMovimientos() {
         char tipoMov = 'T';
         if (filtrarIngresos.isSelected()) {
             tipoMov = 'I';
@@ -634,24 +658,24 @@ public class SecondaryController implements Initializable {
         tablaMovimientos.setItems(listadoMovimientosObservableList);
 
         //columnaFecha.setCellValueFactory(new PropertyValueFactory<Movimiento, LocalDateTime>("fecha"));
-        
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaFecha.setCellFactory(tc -> new TableCell<Movimiento, LocalDateTime>() {
-        @Override
-        public void updateItem(LocalDateTime item, boolean empty) {
-            super.updateItem(item, empty);
-            if (item == null || empty) {
-                setText("");
-            } else{
-                setText(item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+            @Override
+            public void updateItem(LocalDateTime item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText("");
+                } else {
+                    setText(item.format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+                }
             }
-        }
-    });
+        });
         columnaDni.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("dni"));
         columnaImporte.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("cantidad"));
         columnaMotivo.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("motivo"));
         columnaTipo.setCellValueFactory(new PropertyValueFactory<Movimiento, String>("tipo"));
 
+        return arrayListMovimientos;
     }
 
     private void lanzarAviso(char caracter) {
