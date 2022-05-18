@@ -75,6 +75,8 @@ public class TextControl {
     }*/
     public static List<Movimiento> splitAlmohadilla(File archivo) {
         boolean esPrimera = true; // evitamos que nos cree la primera que son los encabezados
+        arrayLineas.clear();
+        arrayMovimientosImportados.clear();
 
         try (Stream<String> contenidoArchivo = Files.lines(archivo.toPath(), Charset.defaultCharset())) {
             Iterator<String> it = contenidoArchivo.iterator();

@@ -612,21 +612,16 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientos(ActionEvent event) throws ParseException {
-        int lineas = 0;
         Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
+        //mes = null;
+        int lineas = 0;
+        int i = 0;
         calendario();
-        calendar.clear();
-        calendar.set(Calendar.MONTH, mes.getValue() );
-        calendar.set(Calendar.YEAR, LocalDate.now().getYear());
-        Date date = calendar.getTime();
-        LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-
 
         if (salida == 'T') {
-
             while (it.hasNext()) {
-                Movimiento tmp = it.next();
 
+                Movimiento tmp = it.next();
                 if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
                     if (tmp.getCantidad() != 0.0) {
                         cuentaMostrada.listarMovimientos('T').add(tmp);
@@ -638,13 +633,17 @@ public class SecondaryController implements Initializable {
             }
         } else if (salida == 'M') {
 
+            calendar.clear();
+            calendar.set(Calendar.MONTH, mes.getValue());
+            calendar.set(Calendar.YEAR, LocalDate.now().getYear());
+            Date date = calendar.getTime();
+            LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
             while (it.hasNext()) {
                 Movimiento tmp = it.next();
 
-                if (!cuentaMostrada.listarMovimientos(localDate).contains(tmp)) {
-                    System.out.println(localDate);
-                    System.out.println(tmp.getFecha());
-                    System.out.println("finnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+                if (!cuentaMostrada.listarMovimientos(localDate).equals(tmp)) {
+
                     if (tmp.getFecha().isBefore(localDate)) {
                         if (tmp.getCantidad() != 0.0) {
                             cuentaMostrada.listarMovimientos('T').add(tmp);
@@ -657,7 +656,6 @@ public class SecondaryController implements Initializable {
             }
 
         }
-
         // cambiarrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
         aviso = new Aviso(lineas); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad de lineas.
 
@@ -704,16 +702,6 @@ public class SecondaryController implements Initializable {
 
     }
 
-//    public List<Movimiento> recolectarMovimiento(char tipoMovimiento) {
-//
-//        for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMovimiento)) {
-//            if (!arrayListMovimientos.contains(emp)) {
-//                arrayListMovimientos.add(emp);
-//            }
-//        }
-//
-//        return arrayListMovimientos;
-//    }
     @FXML
     private void cargarFiltrado(ActionEvent event) {
         listarMovimientos();
@@ -853,6 +841,7 @@ public class SecondaryController implements Initializable {
         ObservableList<Month> todosLosMesesObservableList = FXCollections.observableArrayList(todosLosMeses);
 
         ComboBox<Month> comboBox = new ComboBox(todosLosMesesObservableList);
+        comboBox.getSelectionModel().selectFirst();
 
         VBox root = new VBox(comboBox);
 
