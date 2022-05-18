@@ -253,7 +253,6 @@ public class SecondaryController implements Initializable {
 
     }
 
-
     public void cargarTitulares() {
 //        if (cuentaMostrada.getTitulares().size() >= 0) {
 //            for (Persona titular : cuentaMostrada.getTitulares()) {
@@ -369,35 +368,42 @@ public class SecondaryController implements Initializable {
                 lanzarAviso('M');
 
             } else {
-                cuentaMostrada.eliminaTitular(titularSeleccionado());
+                    
+                    if (aviso.getRespuesta()) {
+                    cuentaMostrada.eliminaTitular(titularSeleccionado());
 
-                for (Persona temp : arrayTitulares) {
+                    for (Persona temp : arrayTitulares) {
 
-                    if (!cuentaMostrada.getTitulares().contains(temp)) {
+                        if (!cuentaMostrada.getTitulares().contains(temp)) {
 
-                        arrayTitularesDelete.add(temp);
+                            arrayTitularesDelete.add(temp);
+                        }
+
+                    }
+
+                    for (Persona temp : arrayTitularesDelete) {
+
+                        arrayTitulares.remove(temp);
+
+                    }
+                    listarTitulares.getSelectionModel().clearSelection();
+                    listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+                    listarTitulares.setItems(listadoTitulares);
+
+                    if (cuentaMostrada.getTitulares().size() <= 4) {
+                        nombreInput.setDisable(false);
+                        nifInput.setDisable(false);
                     }
 
                 }
-
-                for (Persona temp : arrayTitularesDelete) {
-
-                    arrayTitulares.remove(temp);
-
-             }
-                listarTitulares.getSelectionModel().clearSelection();
-                listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
-                listarTitulares.setItems(listadoTitulares);
-
-                if (cuentaMostrada.getTitulares().size() <= 4) {
-                    nombreInput.setDisable(false);
-                    nifInput.setDisable(false);
-                }
-
             }
         } catch (RuntimeException e) {
 
             lanzarAviso('R');
+
+        } catch (AssertionError ex) {
+            lanzarAviso('R');
+
         }
         cargarCuenta();
         limpiarCampos();
@@ -453,7 +459,6 @@ public class SecondaryController implements Initializable {
 
         return titularSeleccionadoDni;
     }
-
 
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
@@ -681,8 +686,8 @@ public class SecondaryController implements Initializable {
             }
 
         }
-        
-        aviso = new Aviso(lineas); 
+
+        aviso = new Aviso(lineas);
         aviso.lanzarAvisoImportacionOK();
 
         // cuantasLineas.showAndWait();
@@ -757,7 +762,7 @@ public class SecondaryController implements Initializable {
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
         if (filtrarFecha.getValue() != null) {
-             for (Movimiento movimiento : cuentaMostrada.listarMovimientos( LocalDateTime.of(filtrarFecha.getValue(), LocalTime.now() ) )) {
+            for (Movimiento movimiento : cuentaMostrada.listarMovimientos(LocalDateTime.of(filtrarFecha.getValue(), LocalTime.now()))) {
                 if (!arrayListMovimientos.contains(movimiento) && movimiento.getTipo() == tipoMov) {
 
                     arrayListMovimientos.add(movimiento);

@@ -6,7 +6,10 @@ package auxiliar;
 
 import com.proyecto.bancobase.SecondaryController;
 import java.awt.BorderLayout;
+import java.util.Optional;
+import javafx.beans.property.ReadOnlyStringPropertyBase;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  *
@@ -53,6 +56,8 @@ public class Aviso {
     private final String contentTextInfo = "Por favor, para añadir más titulares, eliminar uno previamente.";
     private final String headerTextInfoB = "Ha llegado al minimo de titulares permitidos.";
     private final String contentTextInfoB = "Por favor, para eliminar más titulares, añada uno previamente.";
+    private final String headerTextInfoC = "¿Está seguro de eliminar al titular";
+    private final String contentTextInfoC = "Por favor, pulse \'Aceptar\' para confirmar";
 
     private final String tituloTitularExiste = "Aviso de duplicado de titular";
     private final String headerTitularExiste = "Este titular ya se encuentra en la cuenta bancaria.";
@@ -93,7 +98,7 @@ public class Aviso {
     private final String tituloBancarrota = "Aviso!! Esta usted bancarrota";
     private final String headerBancarrota = "Usted ha superado el descubierto máximo";
     private final String contentBancarrota = "Por favor, te aviso que te quito el piso";
-    
+
     private final String tituloImportMov = "Información sobre la importación";
     private final String headerImportMov = "Ha llegado al maximo de titulares permitidos.";
     private final String contentImportMov = "Para añadir más movimientos pulse el botón importar";
@@ -115,14 +120,24 @@ public class Aviso {
     }
 
     public void lanzarAvisoImportacionOK() {
-        
+
         this.headerText = "Ha añadido " + String.format("%.0f", cantidad) + " movimientos nuevos.";
         aviso = new Alert(Alert.AlertType.INFORMATION);
         aviso.setTitle(tituloImportMov);
         aviso.setHeaderText(headerText);
         aviso.setContentText(contentImportMov);
         aviso.showAndWait();
-    }     
+    }
+
+    public boolean getRespuesta() {
+        cambioAviso('Q');
+        boolean respuesta = false;
+        Optional<ButtonType> resultado = aviso.showAndWait();
+        if (resultado.get() == ButtonType.OK) {
+            respuesta = true;
+        }
+        return respuesta;
+    }
 
     public Aviso(char tipoAviso) {
         this.tipoAviso = tipoAviso;
@@ -207,6 +222,13 @@ public class Aviso {
                 aviso.setContentText(contentTitularExiste);
 
                 break;
+            case 'M': // WARNING -> AVISO TITULAR YA EXISTENTE
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloInfo);
+                aviso.setHeaderText(headerTextInfoB);
+                aviso.setContentText(contentTextInfoB);
+
+                break;
             case 'L': // INFORMATIOM -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
                 aviso.setAlertType(Alert.AlertType.INFORMATION);
                 aviso.setTitle(tituloTitularCorrecto);
@@ -214,7 +236,7 @@ public class Aviso {
                 aviso.setContentText(contentTitularCorrecto);
 
                 break;
-            case 'R': // WARNING -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+            case 'R': // WARNING -> AVISO NO HA ELEGIDO TITULAR 
                 aviso.setAlertType(Alert.AlertType.WARNING);
                 aviso.setTitle(tituloTitularNoElegido);
                 aviso.setHeaderText(headerTitularNoElegido);
@@ -233,6 +255,13 @@ public class Aviso {
                 aviso.setTitle(tituloBancarrota);
                 aviso.setHeaderText(headerBancarrota);
                 aviso.setContentText(contentBancarrota);
+
+                break;
+            case 'Q': // CONFIRMACION -> ELIMINAR TITULAR
+                aviso.setAlertType(Alert.AlertType.CONFIRMATION);
+                aviso.setTitle(tituloInfo);
+                aviso.setHeaderText(headerTextInfoC);
+                aviso.setContentText(contentTextInfoC);
 
                 break;
 
