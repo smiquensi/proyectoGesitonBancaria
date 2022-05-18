@@ -207,13 +207,14 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <TableView fx:id="tablaMovimientos" prefHeight="132.0" prefWidth="581.0" tableMenuButtonVisible="true">
+                                          <TableView fx:id="tablaMovimientos" prefHeight="132.0" prefWidth="581.0">
                                             <columns>
-                                              <TableColumn fx:id="columnaFecha" prefWidth="92.7999267578125" text="Fecha" />
-                                                <TableColumn fx:id="columnaDni" prefWidth="104.0" text="DNI" />
-                                                <TableColumn fx:id="columnaImporte" prefWidth="105.5999755859375" text="Importe" />
-                                                <TableColumn fx:id="columnaMotivo" prefWidth="119.199951171875" text="Motivo" />
-                                                <TableColumn fx:id="columnaTipo" prefWidth="125.60009765625" text="Tipo" />
+                                                <TableColumn fx:id="columnaNumeroMov" minWidth="0.0" prefWidth="39.2000732421875" text="#" />
+                                              <TableColumn fx:id="columnaFecha" prefWidth="128.7999267578125" text="Fecha" />
+                                                <TableColumn fx:id="columnaDni" prefWidth="101.5999755859375" text="DNI" />
+                                                <TableColumn fx:id="columnaImporte" prefWidth="77.60009765625" text="Importe" />
+                                                <TableColumn fx:id="columnaMotivo" prefWidth="147.2000732421875" text="Motivo" />
+                                                <TableColumn fx:id="columnaTipo" prefWidth="62.4000244140625" text="Tipo" />
                                             </columns>
                                           </TableView>
                                           <GridPane GridPane.rowIndex="1">

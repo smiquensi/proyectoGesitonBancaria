@@ -72,6 +72,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -82,6 +85,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
@@ -228,6 +232,8 @@ public class SecondaryController implements Initializable {
     private ProgressBar numeroTitulares;
     @FXML
     private Label numeroTitularesText;
+    @FXML
+    private TableColumn<String, Integer> columnaNumeroMov;
 
     /**
      * Initializes the controller class.
@@ -462,7 +468,7 @@ public class SecondaryController implements Initializable {
 
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
-        
+
         if (nifIngreso.getText().isEmpty() || conceptoIngreso.getText().isEmpty()) {
             comprobarDatosIngreso = false;
             lanzarAviso('V');
@@ -671,7 +677,7 @@ public class SecondaryController implements Initializable {
         } else if (salida == 'M') {
 
             calendar.clear();
-            calendar.set(Calendar.MONTH, mes.getValue());
+            calendar.set(Calendar.MONTH, mes.getValue() - 1);
             calendar.set(Calendar.YEAR, LocalDate.now().getYear());
             Date date = calendar.getTime();
             LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
@@ -681,7 +687,7 @@ public class SecondaryController implements Initializable {
 
                 if (!cuentaMostrada.listarMovimientos(localDate).equals(tmp)) {
 
-                    if (tmp.getFecha().isBefore(localDate)) {
+                    if (tmp.getFecha().getMonth().equals(localDate.getMonth())) {
                         if (tmp.getCantidad() != 0.0) {
                             cuentaMostrada.listarMovimientos('T').add(tmp);
                             lineas++;
@@ -788,7 +794,23 @@ public class SecondaryController implements Initializable {
 
         tablaMovimientos.setItems(listadoMovimientosObservableList);
 
-        //columnaFecha.setCellValueFactory(new PropertyValueFactory<Movimiento, LocalDateTime>("fecha"));
+        columnaNumeroMov.setCellFactory(col -> {
+            TableCell<String, Integer> indexCell = new TableCell<>();
+            ReadOnlyObjectProperty<TableRow<String>> rowProperty = indexCell.tableRowProperty();
+            ObjectBinding<String> rowBinding = Bindings.createObjectBinding(() -> {
+                TableRow<String> row = rowProperty.get();
+                if (row != null) {
+                    int rowIndex = row.getIndex() + 1;
+                    if (rowIndex < row.getTableView().getItems().size() + 1) {
+                        return Integer.toString(rowIndex);
+                    }
+                }
+                return null;
+            }, rowProperty);
+            indexCell.textProperty().bind(rowBinding);
+            return indexCell;
+        });
+
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaFecha.setCellFactory(tc -> new TableCell<Movimiento, LocalDateTime>() {
             @Override
