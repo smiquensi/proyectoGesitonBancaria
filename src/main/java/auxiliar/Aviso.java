@@ -22,6 +22,7 @@ public class Aviso {
     private String contentText;
     private char tipoAviso;
     private double cantidad;
+    private ButtonType irMovimientos;
 
     Alert aviso = new Alert(Alert.AlertType.NONE);
 
@@ -79,6 +80,10 @@ public class Aviso {
     private final String headerTextWarningTexto = "No se ha introducido texto.";
     private final String contentTextWarningTexto = "Por favor, itroduzca texto para continuar.";
 
+    private final String tituloWarningNif = "Aviso de NIF incorrecto";
+    private final String headerWarningNif = "El formato de su NIF no es correcto.";
+    private final String contentWarningNif = "Por favor, itroduzca correctamente su NIF.";
+
     private final String tituloConfirmacion = "Aviso de confirmación";
     private final String headerTextConfirmacion = "La operacion se ha realizado correctamente.";
     private final String contentTextConfirmacion = "Esta operación se ha añadido a su lista de movimientos";
@@ -119,6 +124,15 @@ public class Aviso {
         aviso.showAndWait();
     }
 
+    public void lanzarNumRojos() {
+        this.headerText = "Usted tiene un descubierto de " + cantidad + " €";
+        aviso = new Alert(Alert.AlertType.WARNING);
+        aviso.setTitle(tituloNumerosRojos);
+        aviso.setHeaderText(headerText);
+        aviso.setContentText(contentNumerosRojos);
+        aviso.showAndWait();
+    }
+
     public void lanzarAvisoImportacionOK() {
 
         this.headerText = "Ha añadido " + String.format("%.0f", cantidad) + " movimientos nuevos.";
@@ -127,6 +141,17 @@ public class Aviso {
         aviso.setHeaderText(headerText);
         aviso.setContentText(contentImportMov);
         aviso.showAndWait();
+    }
+
+    public boolean goToMovimientos() {
+        cambioAviso('C');
+        boolean respuesta = false;
+        Optional<ButtonType> resultado = aviso.showAndWait();
+        
+        if (resultado.get() == irMovimientos) {
+            respuesta = true;
+        }
+        return respuesta;
     }
 
     public boolean getRespuesta() {
@@ -175,9 +200,11 @@ public class Aviso {
                 break;
             case 'C': // CONFIRMACIÓN -> SE HA REALIZADO OPERACION CORRECTAMENTE
                 aviso.setAlertType(Alert.AlertType.CONFIRMATION);
+                irMovimientos = new ButtonType("Ir a movimientos");
                 aviso.setTitle(tituloConfirmacion);
                 aviso.setHeaderText(headerTextConfirmacion);
                 aviso.setContentText(contentTextConfirmacion);
+                aviso.getButtonTypes().setAll(ButtonType.OK, irMovimientos);
 
                 break;
             case 'D': // WARNING -> DEBE INTRODUCIR UN IMPORTE SUPERIOR A 0
@@ -243,13 +270,13 @@ public class Aviso {
                 aviso.setContentText(contentTitularNoElegido);
 
                 break;
-            case 'J': // WARNING -> AVISO NUMEROS ROJOS
-                aviso.setAlertType(Alert.AlertType.WARNING);
-                aviso.setTitle(tituloNumerosRojos);
-                aviso.setHeaderText(headerNumerosRojos);
-                aviso.setContentText(contentNumerosRojos);
-
-                break;
+//            case 'J': // WARNING -> AVISO NUMEROS ROJOS
+//                aviso.setAlertType(Alert.AlertType.WARNING);
+//                aviso.setTitle(tituloNumerosRojos);
+//                aviso.setHeaderText(headerNumerosRojos);
+//                aviso.setContentText(contentNumerosRojos);
+//
+//                break;
             case 'B': // WARNING -> AVISO ESTAS EN BANCARROTA
                 aviso.setAlertType(Alert.AlertType.WARNING);
                 aviso.setTitle(tituloBancarrota);
@@ -262,6 +289,13 @@ public class Aviso {
                 aviso.setTitle(tituloInfo);
                 aviso.setHeaderText(headerTextInfoC);
                 aviso.setContentText(contentTextInfoC);
+
+                break;
+            case 'F': // WARNING -> NIF INCORRECTO
+                aviso.setAlertType(Alert.AlertType.WARNING);
+                aviso.setTitle(tituloWarningNif);
+                aviso.setHeaderText(headerWarningNif);
+                aviso.setContentText(contentWarningNif);
 
                 break;
 

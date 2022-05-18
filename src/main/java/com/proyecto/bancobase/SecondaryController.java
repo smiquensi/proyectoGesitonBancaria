@@ -84,6 +84,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.skin.DatePickerSkin;
@@ -234,6 +235,8 @@ public class SecondaryController implements Initializable {
     private Label numeroTitularesText;
     @FXML
     private TableColumn<String, Integer> columnaNumeroMov;
+    @FXML
+    private TabPane panelTab;
 
     /**
      * Initializes the controller class.
@@ -260,13 +263,7 @@ public class SecondaryController implements Initializable {
     }
 
     public void cargarTitulares() {
-//        if (cuentaMostrada.getTitulares().size() >= 0) {
-//            for (Persona titular : cuentaMostrada.getTitulares()) {
-//                arrayTitulares.add(titular);
-//            }
-//            listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
-//            listarTitulares.setItems(listadoTitulares);
-//        }
+
         if (cuentaMostrada.getTitulares().size() >= 0) {
 
             for (Persona titularPersona : cuentaMostrada.getTitulares()) {
@@ -285,24 +282,7 @@ public class SecondaryController implements Initializable {
 
             controlTitulares = cuentaMostrada.getTitulares().size();
         }
-//        if (controlTitulares != cuentaMostrada.getTitulares().size()) {
-//
-//            for (Persona temp : obtenerCuenta().getTitulares()) {
-//
-//                temp.setNombre(temp.getNombre().toUpperCase());
-//
-//                if (!arrayTitulares.contains(temp)) {
-//
-//                    arrayTitulares.add(temp);
-//
-//                    listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
-//
-//                    listarTitulares.setItems(listadoTitulares);
-//                }
-//            }
-//
-//            controlTitulares = cuentaMostrada.getTitulares().size();
-//        }
+
     }
 
 // METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
@@ -345,16 +325,23 @@ public class SecondaryController implements Initializable {
                 lanzarAviso('V'); // WARNING -> DEBE INTRODUCIR NIF Y NOMBRE
 
             } else {
-                if (cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText())) {
-                    lanzarAviso('L'); // INFORMATIOM -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+                if (!TextControl.formatoNif(nifInput.getText())) {
+                    lanzarAviso('F');
 
                 } else {
-                    lanzarAviso('T'); // WARNING -> AVISO TITULAR YA EXISTENTE
+                    if (cuentaMostrada.nuevoTitular(nifInput.getText(), nombreInput.getText())) {
+                        lanzarAviso('L'); // INFORMATIOM -> AVISO TITULAR ANYIADIDO CORRECTAMENTE
+
+                    } else {
+                        lanzarAviso('T'); // WARNING -> AVISO TITULAR YA EXISTENTE
+                    }
+                    limpiarCampos();
                 }
+
             }
+
         }
         cargarCuenta();
-        limpiarCampos();
     }
 
     // METODO QUE CARGA LA CANTIDADA DE TITULARES EN PROGRES
@@ -416,47 +403,6 @@ public class SecondaryController implements Initializable {
 
     }
 
-//    @FXML
-//    private void desautorizarTitular(ActionEvent event) {
-//        //System.out.println(cuentaMostrada.getTitulares().size());
-//        if (cuentaMostrada.getTitulares().size() > 1) {
-//            if (titularSeleccionado() == null) {
-//                lanzarAviso('V');
-//
-//            } else {
-//                cuentaMostrada.eliminaTitular(titularSeleccionado());
-//
-//                for (Persona temp : arrayTitulares) {
-//
-//                    if (!cuentaMostrada.getTitulares().contains(temp)) {
-//
-//                        arrayTitularesDelete.add(temp);
-//                    }
-//
-//                }
-//
-//                for (Persona temp : arrayTitularesDelete) {
-//
-//                    arrayTitulares.remove(temp);
-//
-//                }
-//                listarTitulares.getSelectionModel().clearSelection();
-//                listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
-//                listarTitulares.setItems(listadoTitulares);
-//
-//                if (cuentaMostrada.getTitulares().size() <= 4) {
-//                    nombreInput.setDisable(false);
-//                    nifInput.setDisable(false);
-//                }
-//
-//            }
-//        } else {
-//            lanzarAviso('W');
-//        }
-//        cargarCuenta();
-//        limpiarCampos();
-//
-//    }
     private String titularSeleccionado() {
 
         int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
@@ -473,7 +419,13 @@ public class SecondaryController implements Initializable {
             comprobarDatosIngreso = false;
             lanzarAviso('V');
 
-        } // METER COMPROBACION DE DNI
+        } else {
+            if (!TextControl.formatoNif(nifIngreso.getText())) {
+                lanzarAviso('F');
+                comprobarDatosIngreso = false;
+
+            }
+        }
         return comprobarDatosIngreso;
     }
 
@@ -503,7 +455,9 @@ public class SecondaryController implements Initializable {
 
                     break;
                 case 0: // INGRESO OK
-                    lanzarAviso('C');
+                    if (aviso.goToMovimientos()) {
+                        panelTab.getSelectionModel().select(movimientosTab); // LLEVA AL TAB MOVIMIENTOS AL PRESIONAR EL BOTON "IR A MOVIMIENTOS"                        
+                    }
                     totalDonacionText.setText("Total donado: " + cuentaMostrada.getDonaciones() + "€");
                     cargarProgresoDonacion();
 
@@ -610,6 +564,12 @@ public class SecondaryController implements Initializable {
             comprobarDatosExtracto = false;
             lanzarAviso('V');
 
+        } else {
+            if (!TextControl.formatoNif(nifExtracto.getText())) {
+                lanzarAviso('F');
+                comprobarDatosExtracto = false;
+
+            }
         }
         return comprobarDatosExtracto;
     }
@@ -630,7 +590,9 @@ public class SecondaryController implements Initializable {
                     lanzarAviso('B');
                     break;
                 case 'R': // WARNING -> AVISO NUMEROS ROJOS
-                    lanzarAviso('J');
+//                    lanzarAviso('J');
+                    aviso = new Aviso(cuentaMostrada.getSaldo()); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad ingresada.
+                    aviso.lanzarNumRojos(); // lanzamos el aviso
 
                     break;
                 case 'V': // CONFIRMACIÓN -> SE HA REALIZADO OPERACION CORRECTAMENTE
@@ -644,13 +606,9 @@ public class SecondaryController implements Initializable {
             limpiarCamposExtracto();
 
         }
-//        }else{
-//            lanzarAviso('H');
-//            System.out.println("aviso de la persona no es titular");
-//        }
+
         cargarCuenta();
 
-//        return tipoAvisoExtracto;
     }
 
     @FXML

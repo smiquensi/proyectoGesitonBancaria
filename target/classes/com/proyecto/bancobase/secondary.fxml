@@ -24,7 +24,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<VBox alignment="CENTER" prefWidth="600.0" spacing="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.SecondaryController">
+<VBox alignment="CENTER" prefWidth="600.0" spacing="600.0" stylesheets="@../../../../java/styles/DarkStyles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.SecondaryController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -49,7 +49,7 @@
                      </padding>
                   </ListView>
                   <Button fx:id="volver" mnemonicParsing="false" onAction="#volverInicio" text="Inicio" />
-                  <TabPane prefHeight="575.0" prefWidth="560.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="3">
+                  <TabPane fx:id="panelTab" prefHeight="575.0" prefWidth="560.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="3">
                     <tabs>
                       <Tab fx:id="titularesTab" text="Titulares">
                         <content>
