@@ -35,7 +35,7 @@ public class TextControl {
         this.txt = txt;
     }
 
-    public boolean formatoNif(String nif) {
+    public static boolean formatoNif(String nif) {
         boolean esCorrecto = false;
         if (nif.matches("[0-9]{8}+\\-?\\s?+[a-z,A-Z]{1}")) {
             esCorrecto = true;

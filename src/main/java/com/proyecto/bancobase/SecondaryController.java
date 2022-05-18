@@ -368,8 +368,8 @@ public class SecondaryController implements Initializable {
                 lanzarAviso('M');
 
             } else {
-                    
-                    if (aviso.getRespuesta()) {
+
+                if (aviso.getRespuesta()) {
                     cuentaMostrada.eliminaTitular(titularSeleccionado());
 
                     for (Persona temp : arrayTitulares) {
@@ -462,12 +462,12 @@ public class SecondaryController implements Initializable {
 
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
-
+        
         if (nifIngreso.getText().isEmpty() || conceptoIngreso.getText().isEmpty()) {
             comprobarDatosIngreso = false;
             lanzarAviso('V');
 
-        }
+        } // METER COMPROBACION DE DNI
         return comprobarDatosIngreso;
     }
 
@@ -510,11 +510,10 @@ public class SecondaryController implements Initializable {
 
                     break;
             }
+            limpiarCamposIngreso();
 
         }
-//        extraerDonacion();
         listarMovimientos();
-        limpiarCamposIngreso();
         cargarCuenta();
         limpiarDonacion();
 
@@ -612,6 +611,7 @@ public class SecondaryController implements Initializable {
     @FXML
     private void hacerExtracto(ActionEvent event) {
         char tipoAvisoExtracto;
+//        if (cuentaMostrada.esTitular(nifExtracto.getText())!= null) { // INTENTO DE HACER COMPROBACION DE 
         if (comprobarDatosExtracto()) {
             tipoAvisoExtracto = cuentaMostrada.sacar(nifExtracto.getText(), cantidadExtracto.getValue(), conceptoExtracto.getText());
 
@@ -635,8 +635,15 @@ public class SecondaryController implements Initializable {
                     break;
 
             }
+            limpiarCamposExtracto();
+
         }
+//        }else{
+//            lanzarAviso('H');
+//            System.out.println("aviso de la persona no es titular");
+//        }
         cargarCuenta();
+
 //        return tipoAvisoExtracto;
     }
 
@@ -840,6 +847,13 @@ public class SecondaryController implements Initializable {
         iglesiaLabel.setText("");
         socialLabel.setText("");
 
+    }
+
+    private void limpiarCamposExtracto() {
+        dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
+        cantidadExtracto.setValueFactory(dinero);
+        nifExtracto.setText("");
+        conceptoExtracto.setText("");
     }
 
     public void desactivarDiasFuturos() {

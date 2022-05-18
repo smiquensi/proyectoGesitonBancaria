@@ -166,7 +166,7 @@ public class Aviso {
                 aviso.setHeaderText(headerTextWarningTexto);
                 aviso.setContentText(contentTextWarningTexto);
                 break;
-            case 'I':
+            case 'I': // INFO -> Aviso de numero de titulares
                 aviso.setAlertType(Alert.AlertType.INFORMATION);
                 aviso.setTitle(tituloInfo);
                 aviso.setHeaderText(headerTextInfo);
