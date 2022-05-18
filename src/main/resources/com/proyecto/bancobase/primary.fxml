@@ -9,12 +9,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="600.0" spacing="20.0" stylesheets="@../../../../java/styles/DarkStyles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.PrimaryController">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.proyecto.bancobase.PrimaryController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
    <children>
-      <Pane prefHeight="600.0" prefWidth="600.0">
+      <Pane prefHeight="600.0" prefWidth="600.0" styleClass="background">
          <children>
             <GridPane alignment="TOP_CENTER" prefHeight="560.0" prefWidth="560.0">
               <columnConstraints>
@@ -26,12 +26,12 @@
                 <RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="169.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ListView fx:id="listadoCuentasBancarias" prefHeight="272.0" prefWidth="560.0" GridPane.rowIndex="1">
+                  <ListView fx:id="listadoCuentasBancarias" prefHeight="272.0" prefWidth="560.0" styleClass="table-view" GridPane.rowIndex="1">
                      <padding>
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </ListView>
-                  <Button fx:id="selecionarCuenta" mnemonicParsing="false" onAction="#cargarCuentaBancaria" text="Seleccionar Cuenta" textAlignment="JUSTIFY" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                  <Button fx:id="selecionarCuenta" mnemonicParsing="false" onAction="#cargarCuentaBancaria" prefHeight="37.0" prefWidth="328.0" text="Seleccionar Cuenta" textAlignment="JUSTIFY" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
