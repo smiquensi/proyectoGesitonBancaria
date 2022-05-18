@@ -18,18 +18,30 @@ public class Aviso {
     private String headerText;
     private String contentText;
     private char tipoAviso;
-    private double cantidadHacienda;
+    private double cantidad;
 
     Alert aviso = new Alert(Alert.AlertType.NONE);
 
-    public double setCantidadHacienda(double cantidadHacienda) {
+    public Aviso(String title, String headerText, String contentText) {
+        this.title = title;
+        this.headerText = headerText;
+        this.contentText = contentText;
+    }
 
-        this.cantidadHacienda = cantidadHacienda;
+    // METODO CONSTRUCTOR PARA AVISO CON IMPORTE DE HACIENDA *** REVISAR PARA MEJORAR***
+    public Aviso(double cantidad) {
+        this.cantidad = cantidad;
+
+    }
+
+    public double setCantidad(double cantidadHacienda) {
+
+        this.cantidad = cantidadHacienda;
         return cantidadHacienda;
     }
 
-    public double getCantidadHacienda() {
-        return cantidadHacienda;
+    public double getCantidad() {
+        return cantidad;
     }
 
     private final String tituloWarning = "Aviso de selección de cuenta";
@@ -67,7 +79,7 @@ public class Aviso {
     private final String contentTextConfirmacion = "Esta operación se ha añadido a su lista de movimientos";
 
     private final String tituloHacienda = "Información importante";
-    private String headerTextHacienda = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
+    private String headerTextHacienda = "Esta operación por importe de " + cantidad + "€ será reportada a hacienda";
     private final String contentTextHacienda = "Por motivos legales debemos informar de las operaciones superiores a 3000 €";
 
     private final String tituloWarningDonacion = "Aviso de máximo de donación";
@@ -78,10 +90,13 @@ public class Aviso {
     private final String headerNumerosRojos = "Usted tiene un descubierto de ###";
     private final String contentNumerosRojos = "Por favor, regularice su situación cuanto antes.";
 
-    
     private final String tituloBancarrota = "Aviso!! Esta usted bancarrota";
     private final String headerBancarrota = "Usted ha superado el descubierto máximo";
     private final String contentBancarrota = "Por favor, te aviso que te quito el piso";
+    
+    private final String tituloImportMov = "Información sobre la importación";
+    private final String headerImportMov = "Ha llegado al maximo de titulares permitidos.";
+    private final String contentImportMov = "Para añadir más movimientos pulse el botón importar";
 
     private final String tituloNumberFormatException = "Aviso de formato incorrecto";
     private final String headerTextNumberFormatException = "No puede introducir texto en la selección de importe";
@@ -89,27 +104,25 @@ public class Aviso {
 
     // FALTAN AVISO DE TITULAR AÑADIDO, DE TITULAR DUPLICADO, NO HAY DINERO SUFICIENTE
     // NUMEROS ROJOS
-    public Aviso(String title, String headerText, String contentText) {
-        this.title = title;
-        this.headerText = headerText;
-        this.contentText = contentText;
-    }
-
-    // METODO CONSTRUCTOR PARA AVISO CON IMPORTE DE HACIENDA *** REVISAR PARA MEJORAR***
-    public Aviso(double cantidadHacienda) {
-        this.cantidadHacienda = cantidadHacienda;
-        this.headerText = "Esta operación por importe de " + cantidadHacienda + "€ será reportada a hacienda";
-
-    }
-
     // METODO QUE LANZA EL MENSAJE DE HACIENDA  *** REVISAR PARA MEJORAR ***
     public void lanzarHacienda() {
+        this.headerText = "Esta operación por importe de " + cantidad + "€ será reportada a hacienda";
         aviso = new Alert(Alert.AlertType.WARNING);
         aviso.setTitle(tituloHacienda);
         aviso.setHeaderText(headerText);
         aviso.setContentText(contentTextHacienda);
         aviso.showAndWait();
     }
+
+    public void lanzarAvisoImportacionOK() {
+        
+        this.headerText = "Ha añadido " + String.format("%.0f", cantidad) + " movimientos nuevos.";
+        aviso = new Alert(Alert.AlertType.INFORMATION);
+        aviso.setTitle(tituloImportMov);
+        aviso.setHeaderText(headerText);
+        aviso.setContentText(contentImportMov);
+        aviso.showAndWait();
+    }     
 
     public Aviso(char tipoAviso) {
         this.tipoAviso = tipoAviso;
@@ -220,7 +233,7 @@ public class Aviso {
                 aviso.setTitle(tituloBancarrota);
                 aviso.setHeaderText(headerBancarrota);
                 aviso.setContentText(contentBancarrota);
-                
+
                 break;
 
             default:

@@ -63,6 +63,7 @@ import auxiliar.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -252,17 +253,24 @@ public class SecondaryController implements Initializable {
 
     }
 
+
     public void cargarTitulares() {
+//        if (cuentaMostrada.getTitulares().size() >= 0) {
+//            for (Persona titular : cuentaMostrada.getTitulares()) {
+//                arrayTitulares.add(titular);
+//            }
+//            listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+//            listarTitulares.setItems(listadoTitulares);
+//        }
+        if (cuentaMostrada.getTitulares().size() >= 0) {
 
-        if (controlTitulares != cuentaMostrada.getTitulares().size()) {
+            for (Persona titularPersona : cuentaMostrada.getTitulares()) {
 
-            for (Persona temp : obtenerCuenta().getTitulares()) {
+                titularPersona.setNombre(titularPersona.getNombre().toUpperCase());
 
-                temp.setNombre(temp.getNombre().toUpperCase());
+                if (!arrayTitulares.contains(titularPersona)) {
 
-                if (!arrayTitulares.contains(temp)) {
-
-                    arrayTitulares.add(temp);
+                    arrayTitulares.add(titularPersona);
 
                     listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
 
@@ -272,6 +280,24 @@ public class SecondaryController implements Initializable {
 
             controlTitulares = cuentaMostrada.getTitulares().size();
         }
+//        if (controlTitulares != cuentaMostrada.getTitulares().size()) {
+//
+//            for (Persona temp : obtenerCuenta().getTitulares()) {
+//
+//                temp.setNombre(temp.getNombre().toUpperCase());
+//
+//                if (!arrayTitulares.contains(temp)) {
+//
+//                    arrayTitulares.add(temp);
+//
+//                    listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
+//
+//                    listarTitulares.setItems(listadoTitulares);
+//                }
+//            }
+//
+//            controlTitulares = cuentaMostrada.getTitulares().size();
+//        }
     }
 
 // METODO PARA OBTENER LA CUENTA SELECCIONADA DEL PRIMARY CONTROLLER
@@ -339,10 +365,8 @@ public class SecondaryController implements Initializable {
         //System.out.println(cuentaMostrada.getTitulares().size());
         try {
 
-            if (cuentaMostrada.getTitulares().size() < 1) {
-                System.out.println("holi mano");
-                lanzarAviso('V');
-                System.out.println("macastre");
+            if (cuentaMostrada.getTitulares().size() <= 1) {
+                lanzarAviso('M');
 
             } else {
                 cuentaMostrada.eliminaTitular(titularSeleccionado());
@@ -360,7 +384,7 @@ public class SecondaryController implements Initializable {
 
                     arrayTitulares.remove(temp);
 
-                }
+             }
                 listarTitulares.getSelectionModel().clearSelection();
                 listadoTitulares = FXCollections.observableArrayList(arrayTitulares);
                 listarTitulares.setItems(listadoTitulares);
@@ -429,6 +453,7 @@ public class SecondaryController implements Initializable {
 
         return titularSeleccionadoDni;
     }
+
 
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
@@ -656,10 +681,9 @@ public class SecondaryController implements Initializable {
             }
 
         }
-        // cambiarrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        aviso = new Aviso(lineas); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad de lineas.
-
-        aviso.lanzarHacienda();
+        
+        aviso = new Aviso(lineas); 
+        aviso.lanzarAvisoImportacionOK();
 
         // cuantasLineas.showAndWait();
         cargarCuenta();
@@ -733,10 +757,10 @@ public class SecondaryController implements Initializable {
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
         if (filtrarFecha.getValue() != null) {
-            for (Movimiento emp : cuentaMostrada.listarMovimientos(filtrarFecha.getValue().atStartOfDay())) {
-                if (!arrayListMovimientos.contains(emp) && emp.getTipo() == tipoMov) {
+             for (Movimiento movimiento : cuentaMostrada.listarMovimientos( LocalDateTime.of(filtrarFecha.getValue(), LocalTime.now() ) )) {
+                if (!arrayListMovimientos.contains(movimiento) && movimiento.getTipo() == tipoMov) {
 
-                    arrayListMovimientos.add(emp);
+                    arrayListMovimientos.add(movimiento);
                 }
             }
 
