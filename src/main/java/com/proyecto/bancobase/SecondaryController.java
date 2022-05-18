@@ -616,13 +616,11 @@ public class SecondaryController implements Initializable {
         Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
         calendario();
         calendar.clear();
-        calendar.set(Calendar.MONTH, mes.getValue() - 1);
+        calendar.set(Calendar.MONTH, mes.getValue() );
         calendar.set(Calendar.YEAR, LocalDate.now().getYear());
         Date date = calendar.getTime();
         LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 
-        System.out.println(date);
-        System.out.println(localDate);
 
         if (salida == 'T') {
 
@@ -644,6 +642,8 @@ public class SecondaryController implements Initializable {
                 Movimiento tmp = it.next();
 
                 if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
+                    System.out.println(localDate);
+                    System.out.println(tmp.getFecha());
                     if (tmp.getFecha().isBefore(localDate)) {
                         if (tmp.getCantidad() != 0.0) {
                             cuentaMostrada.listarMovimientos('T').add(tmp);
