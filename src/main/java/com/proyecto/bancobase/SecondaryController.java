@@ -641,9 +641,10 @@ public class SecondaryController implements Initializable {
             while (it.hasNext()) {
                 Movimiento tmp = it.next();
 
-                if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
+                if (!cuentaMostrada.listarMovimientos(localDate).contains(tmp)) {
                     System.out.println(localDate);
                     System.out.println(tmp.getFecha());
+                    System.out.println("finnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
                     if (tmp.getFecha().isBefore(localDate)) {
                         if (tmp.getCantidad() != 0.0) {
                             cuentaMostrada.listarMovimientos('T').add(tmp);

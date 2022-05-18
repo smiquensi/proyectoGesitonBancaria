@@ -40,7 +40,7 @@ public class Archivo {
             //elegimos la ruta de apertura default en ava jcombobox arraylist
             String userDir = System.getProperty("user.home");
             fileChooser.getSelectedExtensionFilter();
-            fileChooser.setInitialDirectory(new File(userDir + "/documents/NetBeansProjects/proyectoGesitonBancaria/datos"));
+            fileChooser.setInitialDirectory(new File(userDir + "/documents"));
 
             fichero = fileChooser.showOpenDialog(null);
 
