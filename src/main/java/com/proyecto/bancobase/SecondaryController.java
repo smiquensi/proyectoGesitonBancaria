@@ -60,9 +60,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -187,6 +194,8 @@ public class SecondaryController implements Initializable {
     private double donativo;
     private String conceptoDonado;
     private Month mes;
+    private static char salida;
+    Calendar calendar = Calendar.getInstance();
 
     Aviso aviso = new Aviso('W');
     List<Persona> arrayMovimientosExportar = new ArrayList();
@@ -596,36 +605,65 @@ public class SecondaryController implements Initializable {
                     break;
 
             }
-        } 
+        }
         cargarCuenta();
 //        return tipoAvisoExtracto;
     }
 
     @FXML
-    private void importarMovimientos(ActionEvent event) {
+    private void importarMovimientos(ActionEvent event) throws ParseException {
         int lineas = 0;
+        Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
         calendario();
+        calendar.clear();
+        calendar.set(Calendar.MONTH, mes.getValue() - 1);
+        calendar.set(Calendar.YEAR, LocalDate.now().getYear());
+        Date date = calendar.getTime();
+        LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 
-        /*  Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
-        while (it.hasNext()) {
-            Movimiento tmp = it.next();
+        System.out.println(date);
+        System.out.println(localDate);
 
-            if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
-                if (tmp.getCantidad() != 0.0) {
-                    cuentaMostrada.listarMovimientos('T').add(tmp);
-                    lineas++;
+        if (salida == 'T') {
+
+            while (it.hasNext()) {
+                Movimiento tmp = it.next();
+
+                if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
+                    if (tmp.getCantidad() != 0.0) {
+                        cuentaMostrada.listarMovimientos('T').add(tmp);
+                        lineas++;
+                    }
+
+                }
+
+            }
+        } else if (salida == 'M') {
+
+            while (it.hasNext()) {
+                Movimiento tmp = it.next();
+
+                if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
+                    if (tmp.getFecha().isBefore(localDate)) {
+                        if (tmp.getCantidad() != 0.0) {
+                            cuentaMostrada.listarMovimientos('T').add(tmp);
+                            lineas++;
+                        }
+                    }
+
                 }
 
             }
 
         }
+
         // cambiarrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
         aviso = new Aviso(lineas); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad de lineas.
 
         aviso.lanzarHacienda();
 
         // cuantasLineas.showAndWait();
-        cargarCuenta();*/
+        cargarCuenta();
     }
 
     @FXML
@@ -797,15 +835,15 @@ public class SecondaryController implements Initializable {
         });
     }
 
-    private AtomicReference<String> calendario() {
-        final AtomicReference<String> salida = new AtomicReference<String>();
+    private void calendario() {
         Stage calendarioStage = new Stage();
         Month[] todosLosMeses = new Month[12];
         Label br = new Label();
         Label br1 = new Label();
         int mesInt;
 
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0;
+                i < 13; i++) {
             if (i != 12) {
                 todosLosMeses[i] = (Month.of(i + 1));
             }
@@ -816,14 +854,18 @@ public class SecondaryController implements Initializable {
         ComboBox<Month> comboBox = new ComboBox(todosLosMesesObservableList);
 
         VBox root = new VBox(comboBox);
+
         root.setAlignment(Pos.CENTER);
 
-        root.getChildren().add(br);
+        root.getChildren()
+                .add(br);
 
         Button btn1 = new Button();
+
         btn1.setText("Importar Mes");
 
         Button btn2 = new Button();
+
         btn2.setText("Importar Todo");
 
         root.getChildren().add(btn1);
@@ -832,9 +874,21 @@ public class SecondaryController implements Initializable {
 
         Scene scene = new Scene(root, 250, 150);
 
+        btn1.setOnAction(e -> {
+            salida = 'M';
+            mes = comboBox.getValue();
+            calendarioStage.close();
+        });
+
+        btn2.setOnAction(e -> {
+            salida = 'T';
+
+            calendarioStage.close();
+        });
+
         calendarioStage.setScene(scene);
-        calendarioStage.show();
-        return salida;
+
+        calendarioStage.showAndWait();
 
     }
 
