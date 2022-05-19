@@ -533,17 +533,17 @@ public class SecondaryController implements Initializable {
 
             if (donacionIglesia.isSelected()) {
                 conceptoDonado = "Donación hecha a la iglesia";
-                iglesiaLabel.setText("-> " + calcularDonacion() + "€");
+                iglesiaLabel.setText("-> " + String.format("%.2f", calcularDonacion()) + "€");
             }
             if (donacionSocial.isSelected()) {
                 conceptoDonado = "Donación hecha a organizacion social";
-                socialLabel.setText("-> " + calcularDonacion() + "€");
+                socialLabel.setText("-> " + String.format("%.2f", calcularDonacion()) + "€");
 
             }
             if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
                 conceptoDonado = "Donación hecha a iglesia y  organizacion social";
-                iglesiaLabel.setText("-> " + calcularDonacion() / 2 + "€");
-                socialLabel.setText("-> " + calcularDonacion() / 2 + "€");
+                iglesiaLabel.setText("-> " + String.format("%.2f", calcularDonacion() / 2) + "€");
+                socialLabel.setText("-> " + String.format("%.2f", calcularDonacion()/ 2) + "€");
 
             }
         } else {

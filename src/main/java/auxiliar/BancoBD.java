@@ -8,6 +8,6 @@ package auxiliar;
  *
  * @author santimiquel
  */
-public class BaseDatos {
+public class BancoBD {
     
 }
