@@ -6,8 +6,74 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Created on : 19 may 2022, 0:42:54
     Author     : santimiquel
 */
-.background {
+/* USADO EN LOS FONDOS*/
+.background { 
+    -fx-background-color: #002235;
+}
+
+/*USADO EN LIST VIEW*/
+.list-view {
+    -fx-background-color: #778487;
+        -fx-text-fill: white;
+
+} 
+/*USADO PARA LA LIST VIEW*/
+.list-view .list-cell:even { 
+    -fx-background-color: rgba(0,0 ,0,0.3); -fx-text-fill: white; } 
+.list-view .list-cell:odd {
+    -fx-background-color: rgba(128,128 ,128,0.3); -fx-text-fill: white; }
+.list-view .list-cell:selected {
+    -fx-background-color: #8e2a1d;
+    -fx-text-fill: white;
+}
+
+
+
+
+/*USADO EN BOTONES*/
+.button {
+    -fx-padding: 5 22 5 22;
+/*    -fx-border-color: #e2e2e2;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;*/
+    -fx-background-color: #8e2a1d;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 14pt;
+    -fx-text-fill: #002235;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.button:pressed, .button:default:hover:pressed {
+    -fx-background-color: white;
+    -fx-text-fill: #1d1d1d;
+}
+
+.button:focused {
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.button:disabled, .button:default:disabled {
+    -fx-opacity: 0.4;
     -fx-background-color: #1d1d1d;
+    -fx-text-fill: white;
+}
+
+.button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30%);
 }
 
 .tab-pane {
@@ -114,46 +180,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-font-family: "Segoe UI Semibold";
 }
 
-.button {
-    -fx-padding: 5 22 5 22;
-    -fx-border-color: #e2e2e2;
-    -fx-border-width: 2;
-    -fx-background-radius: 0;
-    -fx-background-color: #1d1d1d;
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
-    -fx-text-fill: #d8d8d8;
-    -fx-background-insets: 0 0 0 0, 0, 1, 2;
-}
-
-.button:hover {
-    -fx-background-color: #3a3a3a;
-}
-
-.button:pressed, .button:default:hover:pressed {
-    -fx-background-color: white;
-    -fx-text-fill: #1d1d1d;
-}
-
-.button:focused {
-    -fx-border-color: white, white;
-    -fx-border-width: 1, 1;
-    -fx-border-style: solid, segments(1, 1);
-    -fx-border-radius: 0, 0;
-    -fx-border-insets: 1 1 1 1, 0;
-}
-
-.button:disabled, .button:default:disabled {
-    -fx-opacity: 0.4;
-    -fx-background-color: #1d1d1d;
-    -fx-text-fill: white;
-}
-
-.button:default {
-    -fx-background-color: -fx-focus-color;
-    -fx-text-fill: #ffffff;
-}
-
-.button:default:hover {
-    -fx-background-color: derive(-fx-focus-color,30%);
-}

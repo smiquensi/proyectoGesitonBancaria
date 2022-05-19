@@ -125,7 +125,7 @@ public class Aviso {
     }
 
     public void lanzarNumRojos() {
-        this.headerText = "Usted tiene un descubierto de " + cantidad + " €";
+        this.headerText = "Usted tiene un descubierto de " + String.format("%.2f", cantidad) + " €";
         aviso = new Alert(Alert.AlertType.WARNING);
         aviso.setTitle(tituloNumerosRojos);
         aviso.setHeaderText(headerText);

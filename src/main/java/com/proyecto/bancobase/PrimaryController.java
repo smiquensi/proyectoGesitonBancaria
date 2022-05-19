@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,14 +68,14 @@ public class PrimaryController implements Initializable {
     // despues 
 
     public void cargarListView() {
-
+        
         Iterator<CuentaBancaria> it = banco.listaCuentasBancarias().iterator();
         while (it.hasNext()) {
 
             arrayCuentas.add(it.next());
 
         }
-
+        
         listadoClientes = FXCollections.observableArrayList(arrayCuentas);
         listadoCuentasBancarias.setItems(listadoClientes);
 
