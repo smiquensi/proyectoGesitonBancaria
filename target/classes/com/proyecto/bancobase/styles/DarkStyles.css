@@ -64,6 +64,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: #002235;
     /*-fx-text-fill: white;*/
     -fx-text-base-color: white;
+    
 
 }
 .tab {
@@ -71,9 +72,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     /*-fx-text-fill: white;*/
     /*-fx-text-base-color: green;*/
 
+
 }
 .tab-pane>*.tab-header-area>*.tab-header-background {
     -fx-background-color:  #002235;
+    
+    
+    
 }
 
 .check-box {
@@ -148,6 +153,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-text-fill: #8e2a1d;
     -fx-alignment: center-left;
     -fx-opacity: 1;
+     -fx-alignment: CENTER;
+
 }
 
 .table-view:focused .table-row-cell:filled:focused:selected {

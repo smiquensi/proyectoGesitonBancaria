@@ -180,9 +180,10 @@ public class Aviso {
     }
 
     public void cambioAviso(char AlertType) {
-        dialog = aviso.getDialogPane();
-        dialog.getStylesheets().add(getClass().getResource("com.proyecto.bancobase.styles/DarkStyles").toString());
-        dialog.getStyleClass().add("dialog-pane"); // REVISAR CSS PARA CUADROS DE DIALOGO https://www.youtube.com/watch?v=8JUFRHQV7yI
+        
+//        dialog = aviso.getDialogPane();
+//        dialog.getStylesheets().add(getClass().getResource("com.proyecto.bancobase.styles/DarkStyles").toString());
+//        dialog.getStyleClass().add("dialog-pane"); // REVISAR CSS PARA CUADROS DE DIALOGO https://www.youtube.com/watch?v=8JUFRHQV7yI
         switch (AlertType) {
             case 'W': // WARNING -> DEBE ELEGIR UNA CUENTA PARA CONTINUAR
                 aviso.setAlertType(Alert.AlertType.WARNING);
