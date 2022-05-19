@@ -732,19 +732,27 @@ public class SecondaryController implements Initializable {
         arrayListMovimientos.removeAll(arrayListMovimientos);
         tablaMovimientos.getItems().clear();
         tablaMovimientos.refresh();
+
         if (filtrarFecha.getValue() != null) {
             for (Movimiento movimiento : cuentaMostrada.listarMovimientos(LocalDateTime.of(filtrarFecha.getValue(), LocalTime.now()))) {
-                if (!arrayListMovimientos.contains(movimiento) && movimiento.getTipo() == tipoMov) {
+                if (!arrayListMovimientos.contains(movimiento)) {
+                    if (filtrarIngresos.isSelected() || filtrarExtractos.isSelected() ) {
+                        if (movimiento.getTipo() == tipoMov) {
 
-                    arrayListMovimientos.add(movimiento);
+                            arrayListMovimientos.add(movimiento);
+
+                        }
+                    } else {
+                        arrayListMovimientos.add(movimiento);
+                    }
                 }
             }
 
         } else {
 
-            for (Movimiento emp : cuentaMostrada.listarMovimientos(tipoMov)) {
-                if (!arrayListMovimientos.contains(emp)) {
-                    arrayListMovimientos.add(emp);
+            for (Movimiento tmp : cuentaMostrada.listarMovimientos(tipoMov)) {
+                if (!arrayListMovimientos.contains(tmp)) {
+                    arrayListMovimientos.add(tmp);
                 }
             }
         }

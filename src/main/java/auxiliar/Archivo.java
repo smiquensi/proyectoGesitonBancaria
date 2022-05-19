@@ -93,8 +93,8 @@ public class Archivo {
                 StandardOpenOption.CREATE)) {
             out.write("fecha#dni#importe#motivo");
             out.newLine();
-            for (Movimiento emp : movimiento) {
-                out.write(emp.getFecha() + "#" + emp.getDni() + "#" + emp.getCantidad() + "#" + emp.getMotivo() + "#" + emp.getTipo()); //escribimos la ñ
+            for (Movimiento tmp : movimiento) {
+                out.write(tmp.getFecha() + "#" + tmp.getDni() + "#" + tmp.getCantidad() + "#" + tmp.getMotivo() + "#" + tmp.getTipo()); //escribimos la ñ
                 out.newLine();
             }
 
