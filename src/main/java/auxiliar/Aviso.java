@@ -10,6 +10,7 @@ import java.util.Optional;
 import javafx.beans.property.ReadOnlyStringPropertyBase;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Aviso {
     private ButtonType irMovimientos;
 
     Alert aviso = new Alert(Alert.AlertType.NONE);
+    private DialogPane dialog;
 
     public Aviso(String title, String headerText, String contentText) {
         this.title = title;
@@ -178,6 +180,9 @@ public class Aviso {
     }
 
     public void cambioAviso(char AlertType) {
+        dialog = aviso.getDialogPane();
+        dialog.getStylesheets().add(getClass().getResource("com.proyecto.bancobase.styles/DarkStyles").toString());
+        dialog.getStyleClass().add("dialog-pane"); // REVISAR CSS PARA CUADROS DE DIALOGO https://www.youtube.com/watch?v=8JUFRHQV7yI
         switch (AlertType) {
             case 'W': // WARNING -> DEBE ELEGIR UNA CUENTA PARA CONTINUAR
                 aviso.setAlertType(Alert.AlertType.WARNING);

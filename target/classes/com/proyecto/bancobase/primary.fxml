@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -45,6 +46,17 @@
                      <image>
                         <Image url="@img/LogoES.png" />
                      </image>
+                  </ImageView>
+                  <ImageView fitHeight="198.0" fitWidth="182.0" opacity="0.2" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@img/LogoES.png" />
+                     </image>
+                     <effect>
+                        <Blend mode="MULTIPLY" />
+                     </effect>
+                     <GridPane.margin>
+                        <Insets top="20.0" />
+                     </GridPane.margin>
                   </ImageView>
                </children>
             </GridPane>

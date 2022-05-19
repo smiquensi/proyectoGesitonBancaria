@@ -7,21 +7,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Author     : santimiquel
 */
 /* USADO EN LOS FONDOS*/
-.background { 
+.background {
     -fx-background-color: #002235;
 }
 
 /*USADO EN LIST VIEW*/
 .list-view {
     -fx-background-color: #778487;
-        -fx-text-fill: white;
+    -fx-text-fill: white;
 
-} 
+}
 /*USADO PARA LA LIST VIEW*/
-.list-view .list-cell:even { 
-    -fx-background-color: rgba(0,0 ,0,0.3); -fx-text-fill: white; } 
+.list-view .list-cell:even {
+    -fx-background-color: rgba(0,0 ,0,0.3);
+    -fx-text-fill: white;
+}
 .list-view .list-cell:odd {
-    -fx-background-color: rgba(128,128 ,128,0.3); -fx-text-fill: white; }
+    -fx-background-color: rgba(128,128 ,128,0.3);
+    -fx-text-fill: white;
+}
 .list-view .list-cell:selected {
     -fx-background-color: #8e2a1d;
     -fx-text-fill: white;
@@ -33,33 +37,130 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /*USADO EN BOTONES*/
 .button {
     -fx-padding: 5 22 5 22;
-/*    -fx-border-color: #e2e2e2;
-    -fx-border-width: 0;
-    -fx-background-radius: 0;*/
+    /*    -fx-border-color: #e2e2e2;
+        -fx-border-width: 0;
+        -fx-background-radius: 0;*/
     -fx-background-color: #8e2a1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-weight: bold;
-    -fx-font-size: 14pt;
-    -fx-text-fill: #002235;
+    -fx-font-size: 13pt;
+    -fx-text-fill: white;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
 .button:hover {
-    -fx-background-color: #3a3a3a;
+    -fx-background-color: #905850;
+    -fx-text-fill: #002235;
+
 }
 
 .button:pressed, .button:default:hover:pressed {
-    -fx-background-color: white;
-    -fx-text-fill: #1d1d1d;
+    -fx-background-color: db8074;
+    -fx-text-fill: #002235;
 }
 
-.button:focused {
+
+.tab-pane {
+    -fx-background-color: #002235;
+    /*-fx-text-fill: white;*/
+    -fx-text-base-color: white;
+
+}
+.tab {
+    -fx-background-color: #8e2a1d;
+    /*-fx-text-fill: white;*/
+    /*-fx-text-base-color: green;*/
+
+}
+.tab-pane>*.tab-header-area>*.tab-header-background {
+    -fx-background-color:  #002235;
+}
+
+.check-box {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+
+}
+.check-box .mark {
+    -fx-shape:
+"M2,0L5,4L8,0L10,0L10,2L6,5L10,8L10,10L8,10L5,6L2,10L0,10L0,8L4,5L0,2L0,0Z";
+}
+.radio-button{
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+
+}
+
+.progress-indicator {
+    -fx-progress-color: #8e2a1d;
+    -fx-font-family: "Segoe UI Semibold";
+    
+/*    -fx-text-fill: white;
+    -fx-progress-indicator-percentage-Text: white;
+    -fx-color: white;*/
+
+}
+.progress-indicator .percentage {
+    -fx-fill: white ;
+}
+.progress-bar {
+    -fx-accent: #8e2a1d; 
+}
+.label {
+    -fx-font-size: 11pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+/*PINTA LA LINEA DE ROJO*/
+.line {
+-fx-stroke: #8e2a1d;
+
+
+
+}
+
+.table-view {
+    -fx-base: #778487;
+    /*-fx-control-inner-background: white;*/
+    -fx-background-color: #778487;
+    /*-fx-table-cell-border-color: white;*/
+    /*-fx-table-header-border-color: white;*/
+    /*-fx-padding: 5;*/
+
+}
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-size: 35;
+    -fx-border-width: 1 1 1 1;
+    /*-fx-background-color: transparent;*/
+    -fx-border-color:white;
+
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: #8e2a1d;
+    -fx-alignment: center-left;
+    -fx-opacity: 1;
+}
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color;
+}
+
+/*.button:focused {
     -fx-border-color: white, white;
     -fx-border-width: 1, 1;
     -fx-border-style: solid, segments(1, 1);
     -fx-border-radius: 0, 0;
     -fx-border-insets: 1 1 1 1, 0;
-}
+}*/
 
 .button:disabled, .button:default:disabled {
     -fx-opacity: 0.4;
@@ -76,27 +177,58 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-color: derive(-fx-focus-color,30%);
 }
 
-.tab-pane {
-    -fx-background-color: #1d1d1d;
-        -fx-text-fill: white;
 
-}
-.tab {
-    -fx-background-color: #1d1d1d;
-    -fx-text-fill: white;
-
-}
-.tab-pane>*.tab-header-area>*.tab-header-background {
-    -fx-background-color:  #1d1d1d;
-}
-.label {
-    -fx-font-size: 11pt;
+.text-field {
+    -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
-    -fx-text-fill: white;
-    -fx-opacity: 0.6;
 }
 
-.label-bright {
+.dialog-pane{
+  -fx-border-color:black;
+  -fx-border-width:2.0px;
+ }
+
+/**Costumization of The Bar where the buttons are located**/
+.dialog-pane > .button-bar > .container {
+  -fx-background-color:black;
+}
+
+.dialog-pane > .content.label {
+   -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+   -fx-background-color: yellow;
+   -fx-text-fill:black;
+   -fx-font-size:15.0px;
+}
+
+/**Costumization of DialogPane Header**/
+.dialog-pane:header .header-panel {
+  -fx-background-color: black;
+}
+
+.dialog-pane:header .header-panel .label{
+  -fx-background-color: yellow;
+  -fx-background-radius:10px;
+  -fx-text-fill:black;
+  -fx-font-size:15.0px;
+}
+
+
+/**Costumization of Buttons**/
+.dialog-pane .button{
+   -fx-background-color:black;
+   -fx-text-fill:white;
+   -fx-wrap-text: true;
+   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+   -fx-cursor:hand;
+ }
+
+.dialog-pane .button:hover{     
+  -fx-background-color:white;
+  -fx-text-fill:black;
+  -fx-font-weight:bold; 
+ }
+
+/*.label-bright {
     -fx-font-size: 11pt;
     -fx-font-family: "Segoe UI Semibold";
     -fx-text-fill: white;
@@ -109,45 +241,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
+*/
 
-.table-view {
-    -fx-base: #1d1d1d;
-    -fx-control-inner-background: #1d1d1d;
-    -fx-background-color: #1d1d1d;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
-}
 
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
 
-.table-view .column-header, .table-view .filler {
-    -fx-size: 35;
-    -fx-border-width: 0 0 1 0;
-    -fx-background-color: transparent;
-    -fx-border-color:
-        transparent
-        transparent
-        derive(-fx-base, 80%)
-        transparent;
-    -fx-border-insets: 0 10 1 0;
-}
-
-.table-view .column-header .label {
-    -fx-font-size: 20pt;
-    -fx-font-family: "Segoe UI Light";
-    -fx-text-fill: white;
-    -fx-alignment: center-left;
-    -fx-opacity: 1;
-}
-
-.table-view:focused .table-row-cell:filled:focused:selected {
-    -fx-background-color: -fx-focus-color;
-}
-
-.split-pane:horizontal > .split-pane-divider {
+/*.split-pane:horizontal > .split-pane-divider {
     -fx-border-color: transparent #1d1d1d transparent #1d1d1d;
     -fx-background-color: transparent, derive(#1d1d1d,20%);
 }
@@ -178,5 +276,5 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .text-field {
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
-}
+}*/
 

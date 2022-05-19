@@ -19,7 +19,9 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("primary"), 600, 600);
 //        scene.getStylesheets().add(getClass().getResource("DarkStyles.css").toExternalForm());
+        
         stage.setScene(scene);
+        stage.setTitle("BANCO \'ES\' - CREDITOS CON BAJO INTERES - ESTO SE MERECE UN 10.");
         stage.show();
     }
 

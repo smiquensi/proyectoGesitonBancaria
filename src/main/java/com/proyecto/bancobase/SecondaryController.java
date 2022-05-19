@@ -209,6 +209,7 @@ public class SecondaryController implements Initializable {
     private double cantidadIngresada;
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
+    private String saldo;
 
     List<Persona> arrayTitulares = new ArrayList();
     List<Persona> arrayTitularesDelete = new ArrayList();
@@ -253,12 +254,14 @@ public class SecondaryController implements Initializable {
     // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
-        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + cuentaMostrada.getSaldoFormateado());
+        saldo = cuentaMostrada.getSaldoFormateado();
+        datosCuenta.setText("Nº Cuenta: " + cuentaMostrada.getNumCuenta() + " Saldo: " + saldo);
         cargarTitulares();
         cargarProgresoDonacion();
         listarMovimientos();
         desactivarDiasFuturos();
         cantidadTitulares();
+        numerosRojos();
 
     }
 
@@ -590,7 +593,6 @@ public class SecondaryController implements Initializable {
                     lanzarAviso('B');
                     break;
                 case 'R': // WARNING -> AVISO NUMEROS ROJOS
-//                    lanzarAviso('J');
                     aviso = new Aviso(cuentaMostrada.getSaldo()); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad ingresada.
                     aviso.lanzarNumRojos(); // lanzamos el aviso
 
@@ -603,12 +605,22 @@ public class SecondaryController implements Initializable {
                     break;
 
             }
+
             limpiarCamposExtracto();
 
         }
 
         cargarCuenta();
 
+    }
+
+    private void numerosRojos() {
+        if (cuentaMostrada.getSaldo() < 0) {
+            datosCuenta.setStyle("-fx-text-fill: #8e2a1d;");
+        } else {
+            datosCuenta.setStyle("");
+
+        }
     }
 
     @FXML
@@ -736,7 +748,7 @@ public class SecondaryController implements Initializable {
         if (filtrarFecha.getValue() != null) {
             for (Movimiento movimiento : cuentaMostrada.listarMovimientos(LocalDateTime.of(filtrarFecha.getValue(), LocalTime.now()))) {
                 if (!arrayListMovimientos.contains(movimiento)) {
-                    if (filtrarIngresos.isSelected() || filtrarExtractos.isSelected() ) {
+                    if (filtrarIngresos.isSelected() || filtrarExtractos.isSelected()) {
                         if (movimiento.getTipo() == tipoMov) {
 
                             arrayListMovimientos.add(movimiento);
