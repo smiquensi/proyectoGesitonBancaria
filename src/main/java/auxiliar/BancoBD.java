@@ -4,6 +4,7 @@
  */
 package auxiliar;
 
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +14,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.Initializable;
 import modelo.CuentaBancaria;
 import modelo.Movimiento;
 
@@ -20,18 +27,28 @@ import modelo.Movimiento;
  *
  * @author santimiquel
  */
-public class BancoBD {
+public class BancoBD implements Initializable {
 
     private String bd = "bancoES";
     private String mensaje;
     private String login = "root";
-    private String password = "DAM1";
+    private String password = "san608921482"; //DAM1
     private String url = "jdbc:mysql://localhost:3306/" + bd;
+    private String nCuenta;
     private Boolean conexionCreada, insertarCuenta;
     private Connection conn;
     private String sentencia;
-
-  
+    private Set<CuentaBancaria> listadoCuentas;
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        try {
+            conectarBd();
+        } catch (Exception ex) {
+            System.out.println("FALLO DE CONEXION");
+        }
+        listadoCuentas= new HashSet<>();
+    }
 
     public boolean conectarBd() throws Exception {
 
@@ -41,6 +58,7 @@ public class BancoBD {
 
         } catch (SQLException e) {
             conexionCreada = false;
+            System.out.println("no vaaaaaaaa");
             mensaje = e.getMessage();
         }
         return conexionCreada;
@@ -63,32 +81,35 @@ public class BancoBD {
     }
 
     public int almacenarCuenta(CuentaBancaria cuenta) throws SQLException {
-
-        sentencia = "INSERT INTO CuentasBancarias (nCuenta, nombre, nif, donaciones, saldo) VALUES (?,?,?,?,?);";
+        nCuenta = cuenta.getNumCuenta();
+        sentencia = "INSERT INTO CuentasBancarias (nCuenta, donaciones, saldo) VALUES (?,?,?);";
         PreparedStatement ps = conn.prepareStatement(sentencia);
-        ps.setString(1, cuenta.getNumCuenta());
-        ps.setString(2, cuenta.getTitulares().iterator().next().getNombre());
-        ps.setString(3, cuenta.getTitulares().iterator().next().getNif());
-        ps.setDouble(4, cuenta.getDonaciones());
-        ps.setDouble(5, cuenta.getSaldo());
+        ps.setString(1, nCuenta);
+//        ps.setString(2, cuenta.getTitulares().iterator().next().getNombre());
+//        ps.setString(3, cuenta.getTitulares().iterator().next().getNif());
+        ps.setDouble(2, cuenta.getDonaciones());
+        ps.setDouble(3, cuenta.getSaldo());
         int filasInsertadas = ps.executeUpdate();
+        listadoCuentas.add(cuenta);
         ps.clearParameters();
 
         return filasInsertadas;
 
     }
-
+    
+    // ESTOS METODOS DEBERIAN DE COMPROBAR SI NO SE REPITEN EN LA BD
     public int almacenarMovimiento(Movimiento movimiento) throws SQLException {
 
-        sentencia = "INSERT INTO Movimientos (fecha, nifMov, cantidad, motivo, tipo) VALUES (?,?,?,?,?);";
+        sentencia = "INSERT INTO Movimientos (fecha, nifMov, cantidad, motivo, tipo, nCuentaMov) VALUES (?,?,?,?,?,?);";
 
         PreparedStatement ps = conn.prepareStatement(sentencia);
 
-        ps.setTimestamp(1,getCurrentTimeStamp());
+        ps.setTimestamp(1, getCurrentTimeStamp());
         ps.setString(2, movimiento.getDni());
         ps.setDouble(3, movimiento.getCantidad());
         ps.setString(4, movimiento.getMotivo());
-        ps.setString(5, movimiento.getTipo()+"");
+        ps.setString(5, movimiento.getTipo() + "");
+        ps.setString(6, nCuenta);
 
         int filasInsertadas = ps.executeUpdate();
         ps.clearParameters();
@@ -96,11 +117,15 @@ public class BancoBD {
         return filasInsertadas;
 
     }
-    
-    
+    public  Set<CuentaBancaria> listarCuentas(){
+               
+        return listadoCuentas;
+        
+    }
+
     private static java.sql.Timestamp getCurrentTimeStamp() {
-    java.util.Date today = new java.util.Date();
-    return new java.sql.Timestamp(today.getTime());
-}
+        java.util.Date today = new java.util.Date();
+        return new java.sql.Timestamp(today.getTime());
+    }
 
 }

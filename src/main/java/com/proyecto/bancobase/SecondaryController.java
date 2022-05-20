@@ -61,6 +61,7 @@ import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -243,7 +244,7 @@ public class SecondaryController implements Initializable {
     private TabPane panelTab;
     BancoBD bd = new BancoBD();
     @FXML
-    private Button filtrarMovimientosButton11;
+    private Button importarBD;
 
     /**
      * Initializes the controller class.
@@ -254,15 +255,6 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
-
-        try {
-            bd.conectarBd();
-            bd.almacenarCuenta(cuentaMostrada);
-
-        } catch (Exception ex) {
-            Logger.getLogger(SecondaryController.class.getName()).log(Level.SEVERE, null, ex);
-        
-        }
 
     }
 
@@ -939,16 +931,27 @@ public class SecondaryController implements Initializable {
         calendarioStage.showAndWait();
 
     }
+    
+    
+    @FXML
+    private void exportarMovimientosBBDD(ActionEvent event) throws SQLException, Exception {
+
+        System.out.println(bd.conectarBd());
+        try {
+            bd.almacenarCuenta(cuentaMostrada);
+            for (Movimiento tmp : listarMovimientos()) {
+                bd.almacenarMovimiento(tmp);
+            }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("Estos datos ya estan en la BD"); // METER UN AVISO
+        }
+
+    }
 
     @FXML
-    private void importarMovimientosBBDD(ActionEvent event) throws SQLException {
-       
-        
-        for (Movimiento tmp : listarMovimientos() ) {
-             bd.almacenarMovimiento(tmp);
-        }
-       
-        
+    private void importarMovimientosBBDD(ActionEvent event) {
+        bd.listarCuentas();
     }
 
 }
+
