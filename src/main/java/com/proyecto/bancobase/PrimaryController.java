@@ -5,6 +5,7 @@
 package com.proyecto.bancobase;
 
 import auxiliar.Aviso;
+import auxiliar.BancoBD;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -56,6 +59,7 @@ public class PrimaryController implements Initializable {
     private Button selecionarCuenta;
 
     Aviso avisoCuentaNula = new Aviso('W');
+    BancoBD bd = new BancoBD ();
 
     /**
      * Initializes the controller class.
@@ -63,6 +67,13 @@ public class PrimaryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cargarListView();
+        
+        try {
+            System.out.println(bd.conectarBd());
+        } catch (Exception ex) {
+            Logger.getLogger(PrimaryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 // Creamos la iteracion de el hashset "cuentasBancarias.values()" y metemos cada propiedad "it.next().informacionCuenta()" en la listview.
     // despues 

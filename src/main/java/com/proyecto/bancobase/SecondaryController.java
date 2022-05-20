@@ -60,6 +60,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -72,6 +73,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -238,6 +241,9 @@ public class SecondaryController implements Initializable {
     private TableColumn<String, Integer> columnaNumeroMov;
     @FXML
     private TabPane panelTab;
+    BancoBD bd = new BancoBD();
+    @FXML
+    private Button filtrarMovimientosButton11;
 
     /**
      * Initializes the controller class.
@@ -248,6 +254,15 @@ public class SecondaryController implements Initializable {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
+
+        try {
+            bd.conectarBd();
+            bd.almacenarCuenta(cuentaMostrada);
+
+        } catch (Exception ex) {
+            Logger.getLogger(SecondaryController.class.getName()).log(Level.SEVERE, null, ex);
+        
+        }
 
     }
 
@@ -543,7 +558,7 @@ public class SecondaryController implements Initializable {
             if (donacionSocial.isSelected() && donacionIglesia.isSelected()) {
                 conceptoDonado = "Donación hecha a iglesia y  organizacion social";
                 iglesiaLabel.setText("-> " + String.format("%.2f", calcularDonacion() / 2) + "€");
-                socialLabel.setText("-> " + String.format("%.2f", calcularDonacion()/ 2) + "€");
+                socialLabel.setText("-> " + String.format("%.2f", calcularDonacion() / 2) + "€");
 
             }
         } else {
@@ -923,6 +938,17 @@ public class SecondaryController implements Initializable {
 
         calendarioStage.showAndWait();
 
+    }
+
+    @FXML
+    private void importarMovimientosBBDD(ActionEvent event) throws SQLException {
+       
+        
+        for (Movimiento tmp : listarMovimientos() ) {
+             bd.almacenarMovimiento(tmp);
+        }
+       
+        
     }
 
 }

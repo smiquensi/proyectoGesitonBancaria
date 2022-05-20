@@ -249,6 +249,7 @@
                                                    </toggleGroup></RadioButton>
                                                 <RadioButton fx:id="filtrarExtractos" mnemonicParsing="false" styleClass="checkBox" text="Extractos" toggleGroup="$grupoFiltradoMovimientos" GridPane.rowIndex="2" />
                                                 <Button fx:id="filtrarMovimientosButton1" mnemonicParsing="false" onAction="#cargarTodosMovimientos" text="Mostrar Todo" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                                                <Button fx:id="filtrarMovimientosButton11" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importarMovimientosBBDD" prefHeight="34.0" prefWidth="230.0" text="Importar a la BBDD" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                              </children>
                                           </GridPane>
                                        </children>
