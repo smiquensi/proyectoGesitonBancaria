@@ -623,7 +623,7 @@ public class SecondaryController implements Initializable {
 
     private void numerosRojos() {
         if (cuentaMostrada.getSaldo() < 0) {
-            datosCuenta.setStyle("-fx-text-fill: #8e2a1d;");
+            datosCuenta.setStyle("-fx-text-fill: #d4866e; -fx-background-color: #5c3935;");
         } else {
             datosCuenta.setStyle("");
 
