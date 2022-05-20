@@ -634,6 +634,7 @@ public class SecondaryController implements Initializable {
     private void importarMovimientos(ActionEvent event) throws ParseException {
         Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
         //mes = null;
+        
         int lineas = 0;
         int i = 0;
         calendario();
@@ -642,8 +643,9 @@ public class SecondaryController implements Initializable {
             while (it.hasNext()) {
 
                 Movimiento tmp = it.next();
+                System.out.println(tmp);
                 if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
-                    if (tmp.getCantidad() != 0.0) {
+                    if (tmp.getCantidad()  != 0.0) {
                         cuentaMostrada.listarMovimientos('T').add(tmp);
                         lineas++;
                     }
@@ -931,8 +933,7 @@ public class SecondaryController implements Initializable {
         calendarioStage.showAndWait();
 
     }
-    
-    
+
     @FXML
     private void exportarMovimientosBBDD(ActionEvent event) throws SQLException, Exception {
 
@@ -950,8 +951,16 @@ public class SecondaryController implements Initializable {
 
     @FXML
     private void importarMovimientosBBDD(ActionEvent event) {
-        bd.listarCuentas();
+        for (Movimiento tmp : bd.listarMovimientos()) {
+
+            arrayListMovimientos.add(tmp);
+
+        }
+
+        listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
+
+        tablaMovimientos.setItems(listadoMovimientosObservableList);
+
     }
 
 }
-

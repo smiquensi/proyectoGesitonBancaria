@@ -32,14 +32,14 @@ public class BancoBD implements Initializable {
     private String bd = "bancoES";
     private String mensaje;
     private String login = "root";
-    private String password = "san608921482"; //DAM1
+    private String password = "DAM1"; // san608921482
     private String url = "jdbc:mysql://localhost:3306/" + bd;
     private String nCuenta;
     private Boolean conexionCreada, insertarCuenta;
     private Connection conn;
     private String sentencia;
-    private Set<CuentaBancaria> listadoCuentas;
-    
+    private Set<Movimiento> listadoMovimientos;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -47,7 +47,7 @@ public class BancoBD implements Initializable {
         } catch (Exception ex) {
             System.out.println("FALLO DE CONEXION");
         }
-        listadoCuentas= new HashSet<>();
+        listadoMovimientos = new HashSet<>();
     }
 
     public boolean conectarBd() throws Exception {
@@ -90,13 +90,12 @@ public class BancoBD implements Initializable {
         ps.setDouble(2, cuenta.getDonaciones());
         ps.setDouble(3, cuenta.getSaldo());
         int filasInsertadas = ps.executeUpdate();
-        listadoCuentas.add(cuenta);
         ps.clearParameters();
 
         return filasInsertadas;
 
     }
-    
+
     // ESTOS METODOS DEBERIAN DE COMPROBAR SI NO SE REPITEN EN LA BD
     public int almacenarMovimiento(Movimiento movimiento) throws SQLException {
 
@@ -112,15 +111,18 @@ public class BancoBD implements Initializable {
         ps.setString(6, nCuenta);
 
         int filasInsertadas = ps.executeUpdate();
+        listadoMovimientos.add(movimiento);
+
         ps.clearParameters();
 
         return filasInsertadas;
 
     }
-    public  Set<CuentaBancaria> listarCuentas(){
-               
-        return listadoCuentas;
-        
+
+    public Set<Movimiento> listarMovimientos() {
+
+        return listadoMovimientos;
+
     }
 
     private static java.sql.Timestamp getCurrentTimeStamp() {

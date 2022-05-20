@@ -20,8 +20,8 @@ tipo CHAR(1),
 saldo DOUBLE,
 CONSTRAINT FK_CuentaBancaria FOREIGN KEY (nCuentaMov, nifMov) REFERENCES CuentasBancarias(nCuenta,nif));
 
-INSERT INTO CuentasBancarias (nCuenta, nombre, nif, donaciones)
-    VALUES ("Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24");
+-- INSERT INTO CuentasBancarias (nCuenta, nombre, nif, donaciones)
+   -- VALUES ("Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24");
     
-INSERT INTO Movimientos (fecha, nCuentaMov, nifMov, cantidad, motivo, tipo, saldo)
-    VALUES ("Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24");
+-- INSERT INTO Movimientos (fecha, nCuentaMov, nifMov, cantidad, motivo, tipo, saldo)
+   -- VALUES ("Peter", "Rabbit", "peter@rabbit.com", "555-6666", "2002-06-24");

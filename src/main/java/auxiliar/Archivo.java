@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -28,6 +29,9 @@ import modelo.Movimiento;
 public class Archivo {
 
     Aviso aviso = new Aviso('W');
+    
+        private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+
 
   public File importarArchivo() {
         boolean seguir = true;
@@ -94,7 +98,7 @@ public class Archivo {
             out.write("fecha#dni#importe#motivo");
             out.newLine();
             for (Movimiento tmp : movimiento) {
-                out.write(tmp.getFecha() + "#" + tmp.getDni() + "#" + tmp.getCantidad() + "#" + tmp.getMotivo() + "#" + tmp.getTipo()); //escribimos la ñ
+                out.write(tmp.getFecha().format(formatter) + "#" + tmp.getDni() + "#" + tmp.getCantidad() + "€#" + tmp.getMotivo() + "#" + tmp.getTipo()); //escribimos la ñ
                 out.newLine();
             }
 

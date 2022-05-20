@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +31,9 @@ public class TextControl {
     private static List<String> arrayLineas = new ArrayList();
     private static List<Movimiento> arrayMovimientosImportados = new ArrayList();
     boolean isFirst = true;
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+   private static String cantidad;
 
     public TextControl(String txt) {
         this.txt = txt;
@@ -102,19 +106,28 @@ public class TextControl {
             while (st.hasMoreTokens()) {
 
                 String fecha = st.nextToken();
-
-                LocalDateTime fechaFormat = LocalDateTime.parse(fecha);
-
+                if (fecha.length() != 8) {
+                    fecha = "0" + fecha;
+                }
+                LocalDateTime fechaFormat = LocalDateTime.parse(fecha + " " + LocalTime.now().format(dtf), formatter);
                 String dni = st.nextToken();
 
-                double importe = Double.parseDouble(st.nextToken());
+                 cantidad = st.nextToken();
+
+                 cantidad = cantidad.substring(0, cantidad.length() - 3);
+                 
+                
+                if (cantidad.contains("--")) {
+                    cantidad = "0.0";
+
+                }
+                double importe = Double.parseDouble(cantidad);
 
                 String motivo = st.nextToken();
 
                 char tipoOperacion = st.nextToken().charAt(0);
 
                 Movimiento mov = new Movimiento(fechaFormat, dni, importe, motivo, tipoOperacion);
-
                 arrayMovimientosImportados.add(mov);
             }
         }
