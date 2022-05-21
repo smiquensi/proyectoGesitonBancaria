@@ -25,6 +25,28 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.28</version>
         </dependency>
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.hansolo</groupId>
+            <artifactId>medusa</artifactId>
+            <version>17.1.4</version>
+            <type>pom.sha512</type>
+        </dependency>
+        <dependency>
+            <groupId>eu.hansolo</groupId>
+            <artifactId>Medusa</artifactId>
+            <version>16.0.0</version>
+            <type>pom.sha512</type>
+        </dependency>
+        <dependency>
+            <groupId>se.europeanspallationsource</groupId>
+            <artifactId>javafx.control.medusa</artifactId>
+            <version>8.3.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

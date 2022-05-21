@@ -38,7 +38,7 @@ public class BancoBD implements Initializable {
     private Boolean conexionCreada, insertarCuenta;
     private Connection conn;
     private String sentencia;
-    private Set<Movimiento> listadoMovimientos;
+    private Set<Movimiento> listadoMovimientos = new HashSet<>();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,7 +47,7 @@ public class BancoBD implements Initializable {
         } catch (Exception ex) {
             System.out.println("FALLO DE CONEXION");
         }
-        listadoMovimientos = new HashSet<>();
+       ;
     }
 
     public boolean conectarBd() throws Exception {
@@ -82,13 +82,13 @@ public class BancoBD implements Initializable {
 
     public int almacenarCuenta(CuentaBancaria cuenta) throws SQLException {
         nCuenta = cuenta.getNumCuenta();
-        sentencia = "INSERT INTO CuentasBancarias (nCuenta, donaciones, saldo) VALUES (?,?,?);";
+        sentencia = "INSERT INTO CuentasBancarias (nCuenta, nombre, nif, donaciones, saldo) VALUES (?,?,?,?,?);";
         PreparedStatement ps = conn.prepareStatement(sentencia);
         ps.setString(1, nCuenta);
-//        ps.setString(2, cuenta.getTitulares().iterator().next().getNombre());
-//        ps.setString(3, cuenta.getTitulares().iterator().next().getNif());
-        ps.setDouble(2, cuenta.getDonaciones());
-        ps.setDouble(3, cuenta.getSaldo());
+        ps.setString(2, cuenta.getTitulares().iterator().next().getNombre());
+        ps.setString(3, cuenta.getTitulares().iterator().next().getNif());
+        ps.setDouble(4, cuenta.getDonaciones());
+        ps.setDouble(5, cuenta.getSaldo());
         int filasInsertadas = ps.executeUpdate();
         ps.clearParameters();
 
@@ -99,16 +99,16 @@ public class BancoBD implements Initializable {
     // ESTOS METODOS DEBERIAN DE COMPROBAR SI NO SE REPITEN EN LA BD
     public int almacenarMovimiento(Movimiento movimiento) throws SQLException {
 
-        sentencia = "INSERT INTO Movimientos (fecha, nifMov, cantidad, motivo, tipo, nCuentaMov) VALUES (?,?,?,?,?,?);";
+        sentencia = "INSERT INTO Movimientos (fecha, nCuentaMov, nifMov, cantidad, motivo, tipo) VALUES (?,?,?,?,?,?);";
 
         PreparedStatement ps = conn.prepareStatement(sentencia);
 
         ps.setTimestamp(1, getCurrentTimeStamp());
-        ps.setString(2, movimiento.getDni());
-        ps.setDouble(3, movimiento.getCantidad());
-        ps.setString(4, movimiento.getMotivo());
-        ps.setString(5, movimiento.getTipo() + "");
-        ps.setString(6, nCuenta);
+        ps.setString(2, nCuenta);
+        ps.setString(3, movimiento.getDni());
+        ps.setDouble(4, movimiento.getCantidad());
+        ps.setString(5, movimiento.getMotivo());
+        ps.setString(6, movimiento.getTipo() + "");
 
         int filasInsertadas = ps.executeUpdate();
         listadoMovimientos.add(movimiento);
@@ -118,6 +118,8 @@ public class BancoBD implements Initializable {
         return filasInsertadas;
 
     }
+    
+    
 
     public Set<Movimiento> listarMovimientos() {
 
@@ -125,6 +127,9 @@ public class BancoBD implements Initializable {
 
     }
 
+    
+    
+    
     private static java.sql.Timestamp getCurrentTimeStamp() {
         java.util.Date today = new java.util.Date();
         return new java.sql.Timestamp(today.getTime());

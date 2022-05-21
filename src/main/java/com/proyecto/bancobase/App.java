@@ -21,7 +21,7 @@ public class App extends Application {
 //        scene.getStylesheets().add(getClass().getResource("DarkStyles.css").toExternalForm());
         
         stage.setScene(scene);
-        stage.setTitle("BANCO \'ES\' - CREDITOS CON BAJO INTERES - ESTO SE MERECE UN 10.");
+        stage.setTitle("                                                                                  ES ");
         stage.show();
     }
 

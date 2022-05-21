@@ -227,8 +227,6 @@ public class SecondaryController implements Initializable {
     @FXML
     private Button filtrarMovimientosButton;
     @FXML
-    private ToggleGroup grupoFiltradoMovimientos;
-    @FXML
     private Button filtrarMovimientosButton1;
     @FXML
     private Label iglesiaLabel;
@@ -245,6 +243,8 @@ public class SecondaryController implements Initializable {
     BancoBD bd = new BancoBD();
     @FXML
     private Button importarBD;
+    @FXML
+    private ToggleGroup botonesFiltrado;
 
     /**
      * Initializes the controller class.
@@ -944,7 +944,7 @@ public class SecondaryController implements Initializable {
                 bd.almacenarMovimiento(tmp);
             }
         } catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Estos datos ya estan en la BD"); // METER UN AVISO
+            System.out.println(e); // METER UN AVISO
         }
 
     }
