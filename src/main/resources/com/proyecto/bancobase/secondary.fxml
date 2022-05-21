@@ -46,6 +46,41 @@
                   <RowConstraints maxHeight="292.2000122070312" minHeight="10.0" prefHeight="292.2000122070312" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
+                  <Clock backgroundPaint="#ff000000" borderPaint="#e3000000" lcdCrystalEnabled="true" lcdDesign="ORANGE" lcdFont="DIGITAL" prefHeight="78.0" prefWidth="560.0">
+                     <alarmColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </alarmColor>
+                     <dateColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </dateColor>
+                     <hourColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </hourColor>
+                     <hourTickMarkColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </hourTickMarkColor>
+                     <knobColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </knobColor>
+                     <minuteColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </minuteColor>
+                     <minuteTickMarkColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </minuteTickMarkColor>
+                     <secondColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </secondColor>
+                     <textColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </textColor>
+                     <tickLabelColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </tickLabelColor>
+                     <titleColor>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </titleColor>
+                  </Clock>
                   <TextField fx:id="datosCuenta" editable="false" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets top="10.0" />
@@ -134,31 +169,31 @@
                                              <children>
                                                 <GridPane GridPane.rowIndex="1">
                                                   <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.94528198242188" minWidth="10.0" prefWidth="64.5228042602539" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.94527435302734" minWidth="10.0" prefWidth="59.977195739746094" />
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="83.01823425292969" minWidth="10.0" prefWidth="66.66871643066406" />
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.33128356933594" minWidth="10.0" prefWidth="103.33128356933594" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="136.0000732421875" minWidth="10.0" prefWidth="69.600048828125" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="90.3999267578125" minWidth="0.0" prefWidth="81.59995117187499" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.6" minWidth="10.0" prefWidth="70.2000732421875" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.33128356933594" minWidth="10.0" prefWidth="58.99992675781249" />
                                                   </columnConstraints>
                                                   <rowConstraints>
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <CheckBox fx:id="donacionIglesia" mnemonicParsing="false" onAction="#cargarDonacion" styleClass="checkBox" text="Iglesia">
+                                                      <CheckBox fx:id="donacionIglesia" mnemonicParsing="false" onAction="#cargarDonacion" prefHeight="16.0" prefWidth="74.0" styleClass="checkBox" text="Iglesia">
                                                          <GridPane.margin>
                                                             <Insets />
                                                          </GridPane.margin>
                                                       </CheckBox>
-                                                      <Label fx:id="iglesiaLabel" GridPane.columnIndex="1">
+                                                      <Label fx:id="iglesiaLabel" prefHeight="20.0" prefWidth="76.0" GridPane.columnIndex="1">
                                                          <GridPane.margin>
                                                             <Insets />
                                                          </GridPane.margin>
                                                       </Label>
-                                                      <CheckBox fx:id="donacionSocial" mnemonicParsing="false" onAction="#cargarDonacion" styleClass="checkBox" text="Social" GridPane.columnIndex="2">
+                                                      <CheckBox fx:id="donacionSocial" mnemonicParsing="false" onAction="#cargarDonacion" prefHeight="16.0" prefWidth="74.0" styleClass="checkBox" text="Social" GridPane.columnIndex="2">
                                                          <GridPane.margin>
-                                                            <Insets />
+                                                            <Insets left="3.0" />
                                                          </GridPane.margin>
                                                       </CheckBox>
-                                                      <Label fx:id="socialLabel" GridPane.columnIndex="3">
+                                                      <Label fx:id="socialLabel" prefHeight="20.0" prefWidth="58.0" GridPane.columnIndex="3">
                                                          <GridPane.margin>
                                                             <Insets />
                                                          </GridPane.margin>
@@ -304,41 +339,6 @@
                         <Insets bottom="20.0" />
                      </GridPane.margin>
                   </ImageView>
-                  <Clock backgroundPaint="#ff000000" borderPaint="#e3000000" lcdCrystalEnabled="true" lcdDesign="ORANGE" lcdFont="DIGITAL" prefHeight="78.0" prefWidth="560.0">
-                     <alarmColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </alarmColor>
-                     <dateColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </dateColor>
-                     <hourColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </hourColor>
-                     <hourTickMarkColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </hourTickMarkColor>
-                     <knobColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </knobColor>
-                     <minuteColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </minuteColor>
-                     <minuteTickMarkColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </minuteTickMarkColor>
-                     <secondColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </secondColor>
-                     <textColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </textColor>
-                     <tickLabelColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </tickLabelColor>
-                     <titleColor>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </titleColor>
-                  </Clock>
                </children>
             </GridPane>
          </children>
