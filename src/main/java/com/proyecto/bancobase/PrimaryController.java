@@ -6,40 +6,30 @@ package com.proyecto.bancobase;
 
 import auxiliar.Aviso;
 import auxiliar.BancoBD;
-import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
-import javafx.css.StyleableProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import modelo.Banco;
 import modelo.CuentaBancaria;
-import javafx.scene.input.MouseEvent;
 
 /**
  * FXML Controller class
  *
  * @author Enrique
+ * @author SantiMiquel
+
  */
 public class PrimaryController implements Initializable {
 
@@ -75,9 +65,8 @@ public class PrimaryController implements Initializable {
         }
         
     }
-// Creamos la iteracion de el hashset "cuentasBancarias.values()" y metemos cada propiedad "it.next().informacionCuenta()" en la listview.
-    // despues 
 
+    // CARGAR CUENTAS EN EL LISTADO
     public void cargarListView() {
         
         Iterator<CuentaBancaria> it = banco.listaCuentasBancarias().iterator();
@@ -92,6 +81,7 @@ public class PrimaryController implements Initializable {
 
     }
 
+    // METODO QUE DEVUELVE UN INTEGER CON LA CUENTA SELECCIONADA
     public Integer cuentaSeleccionada() {
 
         Integer numeroEleccion = listadoCuentasBancarias.getSelectionModel().getSelectedIndex();
@@ -102,6 +92,7 @@ public class PrimaryController implements Initializable {
 
     }
 
+    // METODO BOTON FXML PARA CARGAR LA CUENTA SELECIONADA EN EL SECONDARY
     @FXML
     private void cargarCuentaBancaria(ActionEvent event) throws IOException {
 
@@ -115,6 +106,7 @@ public class PrimaryController implements Initializable {
     }
 
 
+    // METODO QUE DEVUELVE LA CUENTA BANCARIA ELEGIDA
     public static CuentaBancaria getCuentaElegida() {
         return cuentaElegida;
 

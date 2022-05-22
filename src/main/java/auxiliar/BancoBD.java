@@ -1,13 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package auxiliar;
 
+import static com.mysql.cj.Messages.getString;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,13 +24,14 @@ import modelo.Movimiento;
 /**
  *
  * @author santimiquel
+ * @author Enrique Ferrer
  */
 public class BancoBD implements Initializable {
 
     private String bd = "bancoES";
     private String mensaje;
     private String login = "root";
-    private String password = "DAM1"; // san608921482
+    private String password = "DAM1";
     private String url = "jdbc:mysql://localhost:3306/" + bd;
     private String nCuenta;
     private Boolean conexionCreada, insertarCuenta;
@@ -47,9 +46,10 @@ public class BancoBD implements Initializable {
         } catch (Exception ex) {
             System.out.println("FALLO DE CONEXION");
         }
-       ;
-    }
 
+    }
+    
+// METODO PARA CONCECTAR A LA BASE DE DATOS
     public boolean conectarBd() throws Exception {
 
         try {
@@ -58,11 +58,12 @@ public class BancoBD implements Initializable {
 
         } catch (SQLException e) {
             conexionCreada = false;
-            System.out.println("no vaaaaaaaa");
+
             mensaje = e.getMessage();
         }
         return conexionCreada;
     }
+// METODO PARA DESCONCECTAR A LA BASE DE DATOS
 
     public boolean desconectarBd() {
 
@@ -79,7 +80,8 @@ public class BancoBD implements Initializable {
         return isClosed;
 
     }
-
+    
+// METODO PARA ALMACENAR CUENTAS BANCARIAS EN LA BASE DE DATOS
     public int almacenarCuenta(CuentaBancaria cuenta) throws SQLException {
         nCuenta = cuenta.getNumCuenta();
         sentencia = "INSERT INTO CuentasBancarias (nCuenta, nombre, nif, donaciones, saldo) VALUES (?,?,?,?,?);";
@@ -96,7 +98,7 @@ public class BancoBD implements Initializable {
 
     }
 
-    // ESTOS METODOS DEBERIAN DE COMPROBAR SI NO SE REPITEN EN LA BD
+// METODO QUE ALMACENA MOVIMIENTOS EN LA BASE DE DATOS
     public int almacenarMovimiento(Movimiento movimiento) throws SQLException {
 
         sentencia = "INSERT INTO Movimientos (fecha, nCuentaMov, nifMov, cantidad, motivo, tipo) VALUES (?,?,?,?,?,?);";
@@ -119,17 +121,23 @@ public class BancoBD implements Initializable {
 
     }
     
-    
+// METODO PARA RECOGER LA INFORMACION DE LA BASE DE DATOS Y CREAR NUEVOS MOVIMENTOS
+    public Set<Movimiento> listarMovimientos() throws SQLException {
+        sentencia = "select * from movimientos";
+        PreparedStatement ps = conn.prepareStatement(sentencia, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rs = ps.executeQuery();
 
-    public Set<Movimiento> listarMovimientos() {
+        while (rs.next()) {
+            //CREAMOS EL OBJETO COMUNIDAD CON LOS DATOS DEL RESULSET
+            Movimiento movimiento = new Movimiento (rs.getString("nifMov"), rs.getDouble("cantidad"), rs.getString("motivo"), getString("tipo").charAt(0));
 
+            //ALMACENAMOS CADA OBJETO COMUNIDAD EN EL CONJUNTO
+            listadoMovimientos.add(movimiento);
+        }
         return listadoMovimientos;
 
     }
 
-    
-    
-    
     private static java.sql.Timestamp getCurrentTimeStamp() {
         java.util.Date today = new java.util.Date();
         return new java.sql.Timestamp(today.getTime());

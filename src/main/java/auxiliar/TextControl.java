@@ -4,13 +4,11 @@
  */
 package auxiliar;
 
-import com.proyecto.bancobase.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import static java.time.LocalDateTime.now;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,11 +17,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 import modelo.Movimiento;
-import modelo.Persona;
 
 /**
  *
  * @author santimiquel
+ * @author Enrique
  */
 public class TextControl {
 
@@ -33,12 +31,13 @@ public class TextControl {
     boolean isFirst = true;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm");
     private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-   private static String cantidad;
+    private static String cantidad;
 
     public TextControl(String txt) {
         this.txt = txt;
     }
 
+    // METODO QUE COMPRUEBA SI UN NIF TIENE EL FORMATO CORRECTO
     public static boolean formatoNif(String nif) {
         boolean esCorrecto = false;
         if (nif.matches("[0-9]{8}+\\-?\\s?+[a-z,A-Z]{1}")) {
@@ -48,41 +47,28 @@ public class TextControl {
         return esCorrecto;
     }
 
-    public boolean formatoIban(String iban) {
-        boolean esCorrecto = false;
-        if (iban.matches("[a-zA-Z]{2}[0-9]{20}")) { // Comprobar si funciona, he pillado la expesion de internet
-            esCorrecto = true;
-        }
-        return false;
-    }
-
-    public boolean formatoNombre(String nombre) {
-        boolean esCorrecto = false;
-        if (nombre.matches("[a-zA-Z]{3,}")) { // Comprobar si funciona, es para min. un nombre de 3 letras. 
-            esCorrecto = true;
-        }
-        return false;
-    }
-    // METODO PARA PARTIR POR CELDAS EL STRING PASADO POR CUENTABANCARAIA.LISTARMOVIMIESTOS
-
-    /* public void splitString() {
-        String[] lineas = PrimaryController.getCuentaElegida().listarMovimientos('T').split("\\r?\\n");
-
-        for (int i = 0; i < lineas.length; i++) {
-
-            String[] splited = lineas[i].split("\\s+");
-            for (int j = 0; j < splited.length; j++) {
-
-            }
-
-        }
-    }*/
+//    public boolean formatoIban(String iban) {
+//        boolean esCorrecto = false;
+//        if (iban.matches("[a-zA-Z]{2}[0-9]{20}")) { // Comprobar si funciona, he pillado la expesion de internet
+//            esCorrecto = true;
+//        }
+//        return false;
+//    }
+//    public boolean formatoNombre(String nombre) {
+//        boolean esCorrecto = false;
+//        if (nombre.matches("[a-zA-Z]{3,}")) { // Comprobar si funciona, es para min. un nombre de 3 letras. 
+//            esCorrecto = true;
+//        }
+//        return false;
+//    }
+    
+    // METODO QUE PARTE STRING POR #
     public static List<Movimiento> splitAlmohadilla(File archivo) {
         boolean esPrimera = true; // evitamos que nos cree la primera que son los encabezados
         arrayLineas.clear();
         arrayMovimientosImportados.clear();
 
-        try (Stream<String> contenidoArchivo = Files.lines(archivo.toPath(), Charset.defaultCharset())) {
+        try ( Stream<String> contenidoArchivo = Files.lines(archivo.toPath(), Charset.defaultCharset())) {
             Iterator<String> it = contenidoArchivo.iterator();
             while (it.hasNext()) {
 
@@ -112,11 +98,10 @@ public class TextControl {
                 LocalDateTime fechaFormat = LocalDateTime.parse(fecha + " " + LocalTime.now().format(dtf), formatter);
                 String dni = st.nextToken();
 
-                 cantidad = st.nextToken();
+                cantidad = st.nextToken();
 
-                 cantidad = cantidad.substring(0, cantidad.length() - 3);
-                 
-                
+                cantidad = cantidad.substring(0, cantidad.length() - 3);
+
                 if (cantidad.contains("--")) {
                     cantidad = "0.0";
 

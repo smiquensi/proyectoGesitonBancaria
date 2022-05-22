@@ -9,38 +9,17 @@ import auxiliar.Aviso;
 import auxiliar.TextControl;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
-
-import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
@@ -56,34 +35,24 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import modelo.*;
 import auxiliar.*;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
@@ -91,25 +60,14 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
-import javafx.scene.control.skin.DatePickerSkin;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.text.DateFormatter;
 
 /**
  * FXML Controller class
  *
  * @author Enrique
+ * @author SantiMiquel
  */
 public class SecondaryController implements Initializable {
 
@@ -117,16 +75,22 @@ public class SecondaryController implements Initializable {
     private TextField datosCuenta;
     @FXML
     private Button volver;
+
+    // ATRIBUTOS TITULARES 
     @FXML
     private Button botonAutorizarTitular;
     @FXML
     private Button botonDesautorizarTitular;
-
     @FXML
     private TextField nifInput;
     @FXML
     private TextField nombreInput;
+    @FXML
+    private ProgressBar numeroTitulares;
+    @FXML
+    private Label numeroTitularesText;
 
+    // ATRIBUTOS INGRESAR 
     @FXML
     private Button ingresar;
     @FXML
@@ -147,6 +111,12 @@ public class SecondaryController implements Initializable {
     @FXML
     private Label totalDonacionText;
     @FXML
+    private Label iglesiaLabel;
+    @FXML
+    private Label socialLabel;
+
+    // ATRIBUTOS TAB DEL TABPANE 
+    @FXML
     private Tab titularesTab;
     @FXML
     private Tab ingresarTab;
@@ -154,6 +124,8 @@ public class SecondaryController implements Initializable {
     private Tab extraerTab;
     @FXML
     private Tab movimientosTab;
+
+    // ATRIBUTOS EXTRACTO 
     @FXML
     private Spinner<Integer> cantidadExtracto;
     @FXML
@@ -163,12 +135,13 @@ public class SecondaryController implements Initializable {
     @FXML
     private Button extraer;
 
-    //Movimientos//--------------------------------------------------------------------------------
+    // ATRIBUTOS MOVIMIENTOS 
     @FXML
     private TableView<Movimiento> tablaMovimientos;
     List<Movimiento> arrayListMovimientos = new ArrayList();
     ObservableList<Movimiento> listadoMovimientosObservableList;
 
+    // ATRIBUTOS TABLA MOVIMIENTOS 
     @FXML
     private TableColumn<Movimiento, LocalDateTime> columnaFecha;
     @FXML
@@ -179,8 +152,11 @@ public class SecondaryController implements Initializable {
     private TableColumn<Movimiento, String> columnaMotivo;
     @FXML
     private TableColumn<Movimiento, String> columnaTipo;
+    private TableColumn<String, Integer> columnaNumeroMov;
+    @FXML
+    private TabPane panelTab;
 
-    //--------------------------------------------------------------------------------  
+    // ATRIBUTOS FILTRADO MOVIMIENTOS 
     @FXML
     private RadioButton filtrarIngresos;
     @FXML
@@ -188,79 +164,75 @@ public class SecondaryController implements Initializable {
     @FXML
     private DatePicker filtrarFecha;
     @FXML
+    private Button filtrarMovimientosButton;
+    @FXML
+    private Button filtrarMovimientosButton1;
+    @FXML
+    private ToggleGroup botonesFiltrado;
+
+    // ATRIBUTOS IMPORTAR Y EXPORTAR DATOS A ARCHIVO 
+    @FXML
     private Button importarMovimientos;
     @FXML
     private Button exportarMovimiento;
     @FXML
     private ListView<Persona> listarTitulares;
 
-    Archivo archivo = new Archivo();
+    // ATRIBUTOS IMPORTAR Y EXPORTAR DATOS A BD 
+    @FXML
+    private Button importarBD;
+    @FXML
+    private Button exportarBD;
 
     private static CuentaBancaria cuentaMostrada;
     private double dineroDonado;
     private static double dineroDonadoTotal;
+    private static char salida;
+    private static Persona titularElegido;
+
     private final int MAXIMODONADO = 75;
     private final double MAXIMOTITULARES = 5.;
+
     private double donativo;
     private String conceptoDonado;
     private Month mes;
-    private static char salida;
-    Calendar calendar = Calendar.getInstance();
-
-    Aviso aviso = new Aviso('W');
-    List<Persona> arrayMovimientosExportar = new ArrayList();
-
+    private int controlTitulares = -1;
+    private Label titularSeleccionadoLabel;
+    private CheckBox filtrarMovimientosCheck;
     private double cantidadIngresada;
     private boolean isDonacionSelected;
     private boolean isCheckOutSelected;
     private String saldo;
 
+    Calendar calendar = Calendar.getInstance();
+    BancoBD bd = new BancoBD();
+    Archivo archivo = new Archivo();
+    Aviso aviso = new Aviso('W');
+    List<Persona> arrayMovimientosExportar = new ArrayList();
     List<Persona> arrayTitulares = new ArrayList();
     List<Persona> arrayTitularesDelete = new ArrayList();
     ObservableList<Persona> listadoTitulares;
-    int controlTitulares = -1;
-    private static Persona titularElegido;
-    private Label titularSeleccionadoLabel;
-    private CheckBox filtrarMovimientosCheck;
-    SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1); // METER TRY CATCH PARA RECOGER TEXTO?
-
-    @FXML
-    private Button filtrarMovimientosButton;
-    @FXML
-    private Button filtrarMovimientosButton1;
-    @FXML
-    private Label iglesiaLabel;
-    @FXML
-    private Label socialLabel;
-    @FXML
-    private ProgressBar numeroTitulares;
-    @FXML
-    private Label numeroTitularesText;
-    @FXML
-    private TableColumn<String, Integer> columnaNumeroMov;
-    @FXML
-    private TabPane panelTab;
-    BancoBD bd = new BancoBD();
-    @FXML
-    private Button importarBD;
-    @FXML
-    private ToggleGroup botonesFiltrado;
-    @FXML
-    private Button exportarBD;
+    SpinnerValueFactory.IntegerSpinnerValueFactory dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
 
     /**
      * Initializes the controller class.
      */
+    // METODO INITIALIZE PARA CARGAR INFORMACION DE LA CUENTA
     @Override
-
     public void initialize(URL url, ResourceBundle rb) {
         cargarCuenta();
         cargarSpinnerIngreso();
         cargarSpinnerExtracto();
+        try {
+            bd.conectarBd();
+        } catch (Exception ex) {
+            Logger.getLogger(SecondaryController.class.getName()).log(Level.SEVERE, null, ex);
+            lanzarAviso('K');
+        }
 
     }
 
-    // METODO PARA CARGAR OBTENERCUENTA() EN EL OBSERVABLELIST
+    // METODO PARA ACTUALIZAR LAS MODIFICACIONES EN CUENTA BANCARIA 
     public void cargarCuenta() {
         ObservableList<CuentaBancaria> resultadoCuenta = FXCollections.observableArrayList(obtenerCuenta());
         saldo = cuentaMostrada.getSaldoFormateado();
@@ -274,6 +246,7 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO PARA CARGAR TITULARES 
     public void cargarTitulares() {
 
         if (cuentaMostrada.getTitulares().size() >= 0) {
@@ -303,6 +276,7 @@ public class SecondaryController implements Initializable {
         return cuentaMostrada;
     }
 
+    // METODO PARA VOLVER A LA PANTALLA INICIAL
     @FXML
     private void volverInicio(ActionEvent event) throws IOException {
         App.setRoot("primary");
@@ -327,7 +301,7 @@ public class SecondaryController implements Initializable {
         return masTitulares;
     }
 
-    // METODO PARA BUSCAR SI EL NIF YA ESTA DE TITULAR
+    // METODO PARA BUSCAR SI EL NIF YA ESTA DE TITULAR Y AÑADIRLO EN CASO QUE EL NIF NO SE REPITA
     @FXML
     private void autorizarTitular(ActionEvent event) {
         if (anyadirTitulares()) {
@@ -364,6 +338,7 @@ public class SecondaryController implements Initializable {
         return proporcionTitulares;
     }
 
+    // METODO PARA DESAUTORIZAR TITULARES
     @FXML
     private void desautorizarTitular(ActionEvent event) { // *** REVISAR PARA INTENTAR USAR METODOS DE CUENTA BANCARIA !!!!!
         //System.out.println(cuentaMostrada.getTitulares().size());
@@ -415,6 +390,7 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO QUE DEVUELVE UN STRING CON EL TITULAR SELECCIONADO
     private String titularSeleccionado() {
 
         int posSeleccionado = listarTitulares.getSelectionModel().getSelectedIndex();
@@ -424,6 +400,7 @@ public class SecondaryController implements Initializable {
         return titularSeleccionadoDni;
     }
 
+    // METODO PARA COMPROBAR SI LOS DATOS INTRODUCIDOS SON CORRECTOS
     private boolean comprobarDatosIngreso() {
         boolean comprobarDatosIngreso = true;
 
@@ -441,26 +418,18 @@ public class SecondaryController implements Initializable {
         return comprobarDatosIngreso;
     }
 
+    // METODO FXML PARA HACER EL INGRESO
     @FXML
     private void hacerIngreso(ActionEvent event) {
-
-        // CONTROL DE EXCEPCIONES PARA INPUTDINERO POR SI METEN TEXTO
-        int tipoAvisoIngreso = -2; // REVISAR SI SE PUEDE INSTANCIAR SIN INICIALIZAR
+        int tipoAvisoIngreso = -2;
 
         if (comprobarDatosIngreso()) {
-
-            // donacionTotal(calcularDonacion());
             if ((donacionSocial.isSelected() || donacionIglesia.isSelected()) && limiteDonacion()) {
-
                 extraerDonacion();
-
             }
-
             cantidadIngresada = cantidadIngreso.getValue() - donativo;
 
             tipoAvisoIngreso = cuentaMostrada.ingresar(nifIngreso.getText(), cantidadIngresada, conceptoIngreso.getText());
-
-//            cargarCuenta();   
             switch (tipoAvisoIngreso) {
                 case -1: // CANTIDAD NEGATIVA 
                     lanzarAviso('D');
@@ -468,14 +437,14 @@ public class SecondaryController implements Initializable {
                     break;
                 case 0: // INGRESO OK
                     if (aviso.goToMovimientos()) {
-                        panelTab.getSelectionModel().select(movimientosTab); // LLEVA AL TAB MOVIMIENTOS AL PRESIONAR EL BOTON "IR A MOVIMIENTOS"                        
+                        panelTab.getSelectionModel().select(movimientosTab);
                     }
                     totalDonacionText.setText("Total donado: " + cuentaMostrada.getDonaciones() + "€");
                     cargarProgresoDonacion();
 
                     break;
                 case 1: // AVISAR HACIENDA
-                    aviso = new Aviso(cantidadIngresada); // Creamos una nueva instanciacion de aviso y le pasamos la cantidad ingresada.
+                    aviso = new Aviso(cantidadIngresada);
                     aviso.lanzarHacienda(); // lanzamos el aviso
                     totalDonacionText.setText("Total donado: " + cuentaMostrada.getDonaciones() + "€");
                     cargarProgresoDonacion();
@@ -586,6 +555,7 @@ public class SecondaryController implements Initializable {
         return comprobarDatosExtracto;
     }
 
+    // METODO FXML PARA HACER UN EXTRACTO
     @FXML
     private void hacerExtracto(ActionEvent event) {
         char tipoAvisoExtracto;
@@ -623,6 +593,7 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO QUE COMPRUEBA SI LA CUENTA ESTA EN NUMEROS ROJOS
     private void numerosRojos() {
         if (cuentaMostrada.getSaldo() < 0) {
             datosCuenta.setStyle("-fx-text-fill: #d4866e; -fx-background-color: #5c3935;");
@@ -632,62 +603,68 @@ public class SecondaryController implements Initializable {
         }
     }
 
+    //METODO PARA IMPORTAR MOVIMIENTOS DESDE UN ARCHIVO
     @FXML
     private void importarMovimientos(ActionEvent event) throws ParseException {
-        Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
-        //mes = null;
-        
-        int lineas = 0;
-        int i = 0;
-        calendario();
+        try {
 
-        if (salida == 'T') {
-            while (it.hasNext()) {
+            Iterator<Movimiento> it = TextControl.splitAlmohadilla(archivo.importarArchivo()).iterator();
+            //mes = null;
 
-                Movimiento tmp = it.next();
-                System.out.println(tmp);
-                if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
-                    if (tmp.getCantidad()  != 0.0) {
-                        cuentaMostrada.listarMovimientos('T').add(tmp);
-                        lineas++;
-                    }
+            int lineas = 0;
+            int i = 0;
+            calendario();
 
-                }
+            if (salida == 'T') {
+                while (it.hasNext()) {
 
-            }
-        } else if (salida == 'M') {
-
-            calendar.clear();
-            calendar.set(Calendar.MONTH, mes.getValue() - 1);
-            calendar.set(Calendar.YEAR, LocalDate.now().getYear());
-            Date date = calendar.getTime();
-            LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-
-            while (it.hasNext()) {
-                Movimiento tmp = it.next();
-
-                if (!cuentaMostrada.listarMovimientos(localDate).equals(tmp)) {
-
-                    if (tmp.getFecha().getMonth().equals(localDate.getMonth())) {
+                    Movimiento tmp = it.next();
+                    System.out.println(tmp);
+                    if (!cuentaMostrada.listarMovimientos('T').contains(tmp)) {
                         if (tmp.getCantidad() != 0.0) {
                             cuentaMostrada.listarMovimientos('T').add(tmp);
                             lineas++;
                         }
+
+                    }
+
+                }
+            } else if (salida == 'M') {
+
+                calendar.clear();
+                calendar.set(Calendar.MONTH, mes.getValue() - 1);
+                calendar.set(Calendar.YEAR, LocalDate.now().getYear());
+                Date date = calendar.getTime();
+                LocalDateTime localDate = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
+                while (it.hasNext()) {
+                    Movimiento tmp = it.next();
+
+                    if (!cuentaMostrada.listarMovimientos(localDate).equals(tmp)) {
+
+                        if (tmp.getFecha().getMonth().equals(localDate.getMonth())) {
+                            if (tmp.getCantidad() != 0.0) {
+                                cuentaMostrada.listarMovimientos('T').add(tmp);
+                                lineas++;
+                            }
+                        }
+
                     }
 
                 }
 
             }
+            aviso = new Aviso(lineas);
+            aviso.lanzarAvisoImportacionOK();
 
+        } catch (Exception e) {
+            lanzarAviso('X');
         }
 
-        aviso = new Aviso(lineas);
-        aviso.lanzarAvisoImportacionOK();
-
-        // cuantasLineas.showAndWait();
         cargarCuenta();
     }
 
+    // METODO PARA EXPORTAR MOVIMIENTOS A UN ARCHIVO
     @FXML
     private void exportarMovimiento(ActionEvent event) {
         Set<Persona> tmp = cuentaMostrada.getTitulares();
@@ -721,15 +698,23 @@ public class SecondaryController implements Initializable {
         } else {
             fechaString = filtrarFecha.getValue().format(formatter);
         }
-        archivo.exportarArchivo(listarMovimientos(), nombrePersona, tipoMovimientoString, fechaString);
+        try {
+            archivo.exportarArchivo(listarMovimientos(), nombrePersona, tipoMovimientoString, fechaString);
+
+        } catch (Exception e) {
+
+            lanzarAviso('X');
+        }
 
     }
 
+    // METODO PARA CARGAR LOS FILTROS DE LA DONACIONES
     @FXML
     private void cargarFiltrado(ActionEvent event) {
         listarMovimientos();
     }
 
+    // METODO PARA CARGAR TODOS LOS MOVIMIENTOS
     @FXML
     private void cargarTodosMovimientos(ActionEvent event) {
         filtrarIngresos.setSelected(false);
@@ -740,6 +725,7 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO PARA LISTAR MOVIMIENTOS POR TIPO 
     private List<Movimiento> listarMovimientos() {
         char tipoMov = 'T';
         if (filtrarIngresos.isSelected()) {
@@ -783,23 +769,6 @@ public class SecondaryController implements Initializable {
 
         tablaMovimientos.setItems(listadoMovimientosObservableList);
 
-        columnaNumeroMov.setCellFactory(col -> {
-            TableCell<String, Integer> indexCell = new TableCell<>();
-            ReadOnlyObjectProperty<TableRow<String>> rowProperty = indexCell.tableRowProperty();
-            ObjectBinding<String> rowBinding = Bindings.createObjectBinding(() -> {
-                TableRow<String> row = rowProperty.get();
-                if (row != null) {
-                    int rowIndex = row.getIndex() + 1;
-                    if (rowIndex < row.getTableView().getItems().size() + 1) {
-                        return Integer.toString(rowIndex);
-                    }
-                }
-                return null;
-            }, rowProperty);
-            indexCell.textProperty().bind(rowBinding);
-            return indexCell;
-        });
-
         columnaFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         columnaFecha.setCellFactory(tc -> new TableCell<Movimiento, LocalDateTime>() {
             @Override
@@ -820,33 +789,38 @@ public class SecondaryController implements Initializable {
         return arrayListMovimientos;
     }
 
+    // METODO PARA LANZAR AVISOS
     private void lanzarAviso(char caracter) {
         aviso.cambioAviso(caracter);
         aviso.showAndWait();
     }
 
-    // METODO PROVISONAL PARA PARTIR STRING -- METERLOS EN CONTROL
+    // METODO PARA CARGAR LOS VALORES DEL SPINNER DE INGRESO
     public void cargarSpinnerIngreso() {
         cantidadIngreso.setValueFactory(dinero);
     }
 
+    // METODO PARA CARGAR LOS VALORES DEL SPINNER DE EXTRACTO
     public void cargarSpinnerExtracto() {
 
         cantidadExtracto.setValueFactory(dinero);
     }
 
+    // METODO PARA LIMPIAR LOS CAMPOS DE LA PESTAÑA TITULARES
     private void limpiarCampos() {
         nifInput.setText(null);
         nombreInput.setText(null);
 
     }
 
+    // METODO PARA LIMPIAR LAS DONACIONES
     private void limpiarDonacion() {
         iglesiaLabel.setText(null);
         socialLabel.setText(null);
 
     }
 
+    // METODO PARA LIMPIAR LOS CAMPOS DE LA PESTAÑA INGRESOS
     private void limpiarCamposIngreso() {
         dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadIngreso.setValueFactory(dinero);
@@ -860,6 +834,7 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO PARA LIMPIAR LOS CAMPOS DE LA PESTAÑA EXTRACTOS
     private void limpiarCamposExtracto() {
         dinero = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 50000, 0, 1);
         cantidadExtracto.setValueFactory(dinero);
@@ -867,6 +842,7 @@ public class SecondaryController implements Initializable {
         conceptoExtracto.setText("");
     }
 
+    // METODO PARA DESACTIVAR DIA ACTUAL Y DIAS FUTUROS EN EL CALENDARIO DE MOVIMIENTOS
     public void desactivarDiasFuturos() {
         filtrarFecha.setDayCellFactory(picker -> new DateCell() {
             public void updateItem(LocalDate date, boolean empty) {
@@ -878,6 +854,7 @@ public class SecondaryController implements Initializable {
         });
     }
 
+    // METODO SACA UN POPUP PARA SELECCIONAR EL MES EXPORTADO
     private void calendario() {
         Stage calendarioStage = new Stage();
         Month[] todosLosMeses = new Month[12];
@@ -936,23 +913,31 @@ public class SecondaryController implements Initializable {
 
     }
 
+    // METODO FXML PARA EXPORTAR MOVIMIENTOS EN LA BD
     @FXML
     private void exportarMovimientosBBDD(ActionEvent event) throws SQLException, Exception {
-
-        System.out.println(bd.conectarBd());
         try {
             bd.almacenarCuenta(cuentaMostrada);
             for (Movimiento tmp : listarMovimientos()) {
-                bd.almacenarMovimiento(tmp);
-            }
-        } catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println(e); // METER UN AVISO
-        }
 
+                bd.almacenarMovimiento(tmp);
+
+            }
+            lanzarAviso('Y');
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println(e);
+            lanzarAviso('Z');
+        } catch (RuntimeException ex) {
+            System.out.println(ex);
+            lanzarAviso('K');
+        }
     }
 
+    // METODO FXML PARA IMPORTAR MOVIMIENTOS EN LA BD
     @FXML
-    private void importarMovimientosBBDD(ActionEvent event) {
+    private void importarMovimientosBBDD(ActionEvent event) throws SQLException {
+
         for (Movimiento tmp : bd.listarMovimientos()) {
 
             arrayListMovimientos.add(tmp);
@@ -962,6 +947,8 @@ public class SecondaryController implements Initializable {
         listadoMovimientosObservableList = FXCollections.observableArrayList(arrayListMovimientos);
 
         tablaMovimientos.setItems(listadoMovimientosObservableList);
+
+        lanzarAviso('P');
 
     }
 

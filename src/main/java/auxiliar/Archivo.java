@@ -4,8 +4,6 @@
  */
 package auxiliar;
 
-import com.proyecto.bancobase.PrimaryController;
-import com.proyecto.bancobase.SecondaryController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import javafx.event.ActionEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import modelo.Movimiento;
@@ -25,15 +21,16 @@ import modelo.Movimiento;
 /**
  *
  * @author Enrique
+ * @author SantiMiquel
  */
 public class Archivo {
 
     Aviso aviso = new Aviso('W');
-    
-        private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
 
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
 
-  public File importarArchivo() {
+    // METODO PARA IMPORTAR ARCHIVOS
+    public File importarArchivo() {
         boolean seguir = true;
         File fichero = null;
         while (seguir) {
@@ -62,6 +59,7 @@ public class Archivo {
         return fichero;
     }
 
+    // METODO PARA EXPORTAR ARCHIVOS
     public void exportarArchivo(List<Movimiento> movimiento, String nombrePersona, String tipoMovimiento, String fecha) {
 
         //directorio

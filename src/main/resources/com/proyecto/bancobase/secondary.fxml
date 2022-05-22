@@ -254,12 +254,11 @@
                                        <children>
                                           <TableView fx:id="tablaMovimientos" prefHeight="132.0" prefWidth="537.0">
                                             <columns>
-                                                <TableColumn fx:id="columnaNumeroMov" minWidth="0.0" prefWidth="39.2000732421875" text="#" />
-                                              <TableColumn fx:id="columnaFecha" prefWidth="128.7999267578125" text="Fecha" />
-                                                <TableColumn fx:id="columnaDni" prefWidth="101.5999755859375" text="DNI" />
-                                                <TableColumn fx:id="columnaImporte" prefWidth="77.60009765625" text="Importe" />
-                                                <TableColumn fx:id="columnaMotivo" prefWidth="142.4000244140625" text="Motivo" />
-                                                <TableColumn fx:id="columnaTipo" prefWidth="64.0" text="Tipo" />
+                                              <TableColumn fx:id="columnaFecha" prefWidth="134.0" text="Fecha" />
+                                                <TableColumn fx:id="columnaDni" prefWidth="105.0" text="DNI" />
+                                                <TableColumn fx:id="columnaImporte" prefWidth="88.0" text="Importe" />
+                                                <TableColumn fx:id="columnaMotivo" prefWidth="169.0" text="Motivo" />
+                                                <TableColumn fx:id="columnaTipo" prefWidth="61.0" text="Tipo" />
                                             </columns>
                                           </TableView>
                                           <GridPane GridPane.rowIndex="1">
