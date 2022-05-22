@@ -309,7 +309,7 @@
                                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                   </rowConstraints>
                                                    <children>
-                                                      <Button fx:id="importarBD" alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#exportarMovimientosBBDD" prefHeight="39.0" prefWidth="90.0" styleClass="button2" text="  BBDD &#10;Export" textAlignment="CENTER" GridPane.columnIndex="1">
+                                                      <Button fx:id="exportarBD" alignment="TOP_CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#exportarMovimientosBBDD" prefHeight="39.0" prefWidth="90.0" styleClass="button2" text="  BBDD &#10;Export" textAlignment="CENTER" GridPane.columnIndex="1">
                                                          <GridPane.margin>
                                                             <Insets left="10.0" right="30.0" />
                                                          </GridPane.margin>

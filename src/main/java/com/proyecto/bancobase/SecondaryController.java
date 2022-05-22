@@ -245,6 +245,8 @@ public class SecondaryController implements Initializable {
     private Button importarBD;
     @FXML
     private ToggleGroup botonesFiltrado;
+    @FXML
+    private Button exportarBD;
 
     /**
      * Initializes the controller class.
